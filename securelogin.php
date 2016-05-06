@@ -1,4 +1,4 @@
-k<?php
+<?php
 require_once('../../../wp-load.php');
 
 IdcardAuthenticate::login();
@@ -6,7 +6,7 @@ IdcardAuthenticate::login();
 class IdcardAuthenticate {
 
     static function login() {
-
+        echo "Is php curl module installed?";
         $token = $_GET['token'];
         
         //tõmbame sisselogitud inimese andmed
@@ -16,7 +16,7 @@ class IdcardAuthenticate {
         $identityCode = $result->id;
         $userName = "EE" . $identityCode;
 
-        //Otsime üles sisselogitud inimese või tekitame, kui teda vare polnud
+        //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
         $user = IdcardAuthenticate::getUser($identityCode);
         if (($user == NULL) and ( NULL == username_exists($userName))) {
             $user_id = IdcardAuthenticate::createUser($userName, $firstName, $lastName, $identityCode);

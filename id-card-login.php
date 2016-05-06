@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: ID-card Login
+ * Plugin Name: ID-card signing
  * Plugin URI: http://marguspala.com/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card
  * Version: 0.1
@@ -22,6 +22,8 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+include( plugin_dir_path(__FILE__) . 'admin.php');
+
 if (!class_exists("IdCardLogin")) {
 
     class IdCardLogin {
@@ -60,9 +62,27 @@ if (!class_exists("IdCardLogin")) {
             dbDelta($sql);
         }
 
+        function startSession() {
+            if (!session_id()) {
+                session_start();
+            }
+        }
+
+        function endSession() {
+            session_destroy();
+        }
+
     }
 
     //registreerime wordpressiga integratsioonipunktid
     add_action('login_form', 'IdCardLogin::show_id_login');
+    add_action('init', 'IdCardLogin::startSession', 1);
+    add_action('wp_logout', 'IdCardLogin::endSession');
+    add_action('wp_login', 'IdCardLogin::endSession');
+
+
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
+
+    // Hook for adding admin menus
+    add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 }
