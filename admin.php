@@ -15,6 +15,7 @@ class IdcardAdmin {
         }
 
         $siteSecret = get_option("site_secret");
+//        update_option('site_secret', null);
         // See if the user has posted us some information
         // If they did, this hidden field will be set to 'Y'
         if (isset($_POST["status"]) && $_POST["status"] == 'activation_start') {
@@ -22,12 +23,11 @@ class IdcardAdmin {
             $opt_val = $_POST[$data_field_name];
 
             //send api call to proxy to register this WP instance
-            $registerResponse = IdcardAdmin::registerSite();
-
+            $registerResponse = IdcardAdmin::registerSite();            
             //show results based on the registration response
             if (array_key_exists("error", $registerResponse)) {
                 ?>
-                <p>Site registration failed because of: <?php $registerResponse['error'] ?></p>
+                <p>Site registration failed because of: <?php echo $registerResponse['error'] ?></p>
                 <?php
             } else {
                 // Save the posted value in the database
@@ -37,7 +37,7 @@ class IdcardAdmin {
 
                 // Put a "settings saved" message on the screen
                 ?>
-                <div class="updated"><p><strong><?php _e('Site registered to '.get_option("site_owner_id"), 'id-sign'); ?></strong></p></div>                
+                <div class="updated"><p><strong><?php _e('Site registered to ' . get_option("site_owner_id"), 'id-sign'); ?></strong></p></div>                
                 <?php
             }
         }
@@ -92,13 +92,11 @@ class IdcardAdmin {
     static function registerSite() {
 
         $curl = curl_init();
-        $url = "https://idiotos.eu/api/v1/registerapp/?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['session_id'];
+        $url = "https://idiotos.eu/api/v1/registerapp?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['session_id'];
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        $result = json_decode(curl_exec($curl), true);
+        $curlResult = curl_exec($curl);
+        $result = json_decode($curlResult, true);
         curl_close($curl);
         return $result;
     }

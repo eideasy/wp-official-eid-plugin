@@ -41,10 +41,8 @@ class IdAdminLogin {
         $url = "https://idiotos.eu/api/v1/verifytoken/" . $token;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
-        $result = curl_exec($curl);
+        $result = curl_exec($curl);        
         curl_close($curl);
         return $result;
     }
