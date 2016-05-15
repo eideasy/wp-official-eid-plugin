@@ -14,10 +14,17 @@ class IdAdminLogin {
         $result = json_decode(IdAdminLogin::getUserFromIdid($token));
         $identityCode = $result->id;
 
-        //check if id code was returned
+        //check if id code was returned and set session data accordign to login success or not
         if (strlen($identityCode) == 11) {
             $_SESSION['identitycode'] = $identityCode;
+            $_SESSION['id_session_id'] = $result->session_id;
             $_SESSION['admin_id_verified'] = true;
+            $_SESSION['admin_auth_failed'] = false;
+            $_SESSION['admin_firstname'] = $result->firstname;
+            $_SESSION['admin_lastname'] = $result->lastname;
+        } else {
+            $_SESSION['admin_id_verified'] = false;
+            $_SESSION['admin_auth_failed'] = true;
         }
 
         //Jätame admini andmed sessiooni meelde        
@@ -28,16 +35,17 @@ class IdAdminLogin {
         }
     }
 
-    //küsime idid käest inimese andmeid
+    //Kontrollime proxyst kasutaja andmeid
     function getUserFromIdid($token) {
         $curl = curl_init();
-        $url = "https://idid.ee/oauth2/getUser.php?secret=6868b692897ef36042c46295fe51f080&token=" . $token;
+        $url = "http://localhost:8000/api/v1/verifytoken/" . $token;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
         $result = curl_exec($curl);
         curl_close($curl);
-
         return $result;
     }
 

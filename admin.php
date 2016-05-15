@@ -60,7 +60,15 @@ class IdcardAdmin {
                         });
                     </script>
 
-                <?php } ?>
+                <?php
+                } else {
+                    echo "<p>You are authenticated as " . $_SESSION['admin_firstname'] . " " . $_SESSION['admin_lastname']."</p>";
+                }
+                ?>
+
+                <?php if ($_SESSION['admin_auth_failed'] == true) { ?>
+                    <p>Authentication failed. Please try again or contact Heikki Visnapuu</p>
+        <?php } ?>
                 <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Sign') ?>" />
 
 

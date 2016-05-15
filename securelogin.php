@@ -37,7 +37,7 @@ class IdcardAuthenticate {
     //küsime idid käest inimese andmeid
     function getUserFromIdid($token) {
         $curl = curl_init();
-        $url = "https://idid.ee/oauth2/getUser.php?secret=6868b692897ef36042c46295fe51f080&token=" . $token;
+        $url = "https://wpidkaart.dev/api/v1/verifytoken/" . $token;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
