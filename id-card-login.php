@@ -85,4 +85,6 @@ if (!class_exists("IdCardLogin")) {
 
     // Hook for adding admin menus
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
+
+    add_shortcode('id_login', 'IdCardLogin::show_id_login');
 }

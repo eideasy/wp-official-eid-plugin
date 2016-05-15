@@ -37,7 +37,7 @@ class IdcardAuthenticate {
     //küsime idid käest inimese andmeid
     function getUserFromIdid($token) {
         $curl = curl_init();
-        $url = "https://wpidkaart.dev/api/v1/verifytoken/" . $token;
+        $url = "http://localhost:8000/api/v1/verifytoken/" . $token;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
