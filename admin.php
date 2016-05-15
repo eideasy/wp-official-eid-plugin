@@ -14,68 +14,93 @@ class IdcardAdmin {
             wp_die(__('You do not have sufficient permissions to access this page.'));
         }
 
-        // variables for the field and option names 
-        $opt_name = 'mt_favorite_color';
-        $hidden_field_name = 'status';
-        $data_field_name = 'mt_favorite_color';
-
-        // Read in existing option value from database
-        $opt_val = get_option($opt_name);
-
+        $siteSecret = get_option("site_secret");
         // See if the user has posted us some information
         // If they did, this hidden field will be set to 'Y'
-        if (isset($_POST["status"]) && $_POST["status"] == 'sign_start') {
+        if (isset($_POST["status"]) && $_POST["status"] == 'activation_start') {
             // Read their posted value
             $opt_val = $_POST[$data_field_name];
 
             //send api call to proxy to register this WP instance
-            // Save the posted value in the database
-            update_option($opt_name, $opt_val);
+            $registerResponse = IdcardAdmin::registerSite();
 
-            // Put a "settings saved" message on the screen
-            ?>
-            <div class="updated"><p><strong><?php _e('settings saved.', 'id-sign'); ?></strong></p></div>
-            <?php
+            //show results based on the registration response
+            if (array_key_exists("error", $registerResponse)) {
+                ?>
+                <p>Site registration failed because of: <?php $registerResponse['error'] ?></p>
+                <?php
+            } else {
+                // Save the posted value in the database
+                update_option("site_secret", $registerResponse['site_secret']);
+                update_option("site_owner_id", $registerResponse['site_owner_id']);
+                $siteSecret = $registerResponse['site_secret'];
+
+                // Put a "settings saved" message on the screen
+                ?>
+                <div class="updated"><p><strong><?php _e('Site registered to '.get_option("site_owner_id"), 'id-sign'); ?></strong></p></div>                
+                <?php
+            }
         }
         ?>
 
-        <div class="wrap">
-
-            <form name="form1" method="post" action="">
-                <input type="hidden" name="status" value="sign_start">
-
-                <div>
-                    This is the contract you are about to sign. Better read it carefully before signing. 
-                </div>
-
-
-                <?php if ($_SESSION['admin_id_verified'] != true) { ?>
-                    <p>You are not yet authenticated digitally, please authenticate yourself</p>
-                    <div id="idid"></div>
-                    <script src="https://idid.ee/js/button.js"></script>
-                    <script>
-                        new Button({img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5'}, function (token) {
-                            console.log(token);
-                            window.location = '<?php echo plugins_url() ?>/id-card-login/adminlogin.php?token=' + token + '&redirect_to=' + window.location.href;
-                        });
-                    </script>
-
-                <?php
-                } else {
-                    echo "<p>You are authenticated as " . $_SESSION['admin_firstname'] . " " . $_SESSION['admin_lastname']."</p>";
-                }
-                ?>
-
-                <?php if ($_SESSION['admin_auth_failed'] == true) { ?>
-                    <p>Authentication failed. Please try again or contact Heikki Visnapuu</p>
-        <?php } ?>
-                <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Sign') ?>" />
-
-
-            </form>
-        </div>
-
         <?php
+        if (strlen($siteSecret) == 0) {
+            ?>        
+            <div class="wrap">
+
+                <form name="form1" method="post" action="">
+                    <input type="hidden" name="status" value="activation_start">
+
+                    <div>
+                        This is the contract you are about to sign. Better read it carefully before signing. 
+                    </div>
+
+
+                    <?php if ($_SESSION['admin_id_verified'] != true) { ?>
+                        <p>You are not yet authenticated digitally, please authenticate yourself</p>
+                        <div id="idid"></div>
+                        <script src="https://idid.ee/js/button.js"></script>
+                        <script>
+                            new Button({img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5'}, function (token) {
+                                console.log(token);
+                                window.location = '<?php echo plugins_url() ?>/id-card-login/adminlogin.php?token=' + token + '&redirect_to=' + window.location.href;
+                            });
+                        </script>
+
+                        <?php
+                    } else {
+                        echo "<p>You are authenticated as " . $_SESSION['admin_firstname'] . " " . $_SESSION['admin_lastname'] . "</p>";
+                        ?>
+                        <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Activate this site') ?>" />
+                        <?php
+                    }
+                    ?>
+
+                    <?php if ($_SESSION['admin_auth_failed'] == true) { ?>
+                        <p>Authentication failed. Please try again or contact Heikki Visnapuu</p>
+                    <?php } ?>
+
+                </form>
+            </div>
+
+            <?php
+        } else {
+            echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret");
+        }
+    }
+
+    static function registerSite() {
+
+        $curl = curl_init();
+        $url = "https://idiotos.eu/api/v1/registerapp/?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['session_id'];
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $result = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+        return $result;
     }
 
     static function admin_login() {
