@@ -1,4 +1,5 @@
 <?php
+
 require_once('../../../wp-load.php');
 
 IdcardAuthenticate::login();
@@ -8,22 +9,23 @@ class IdcardAuthenticate {
     static function login() {
         echo "Is php curl module installed?";
         $token = $_GET['token'];
-        
+
         //tõmbame sisselogitud inimese andmed
         $result = json_decode(IdcardAuthenticate::getUserFromIdid($token));
         $firstName = $result->firstname;
         $lastName = $result->lastname;
         $identityCode = $result->id;
+        $email = $result->email;
         $userName = "EE" . $identityCode;
 
         //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
         $user = IdcardAuthenticate::getUser($identityCode);
         if (($user == NULL) and ( NULL == username_exists($userName))) {
-            $user_id = IdcardAuthenticate::createUser($userName, $firstName, $lastName, $identityCode);
+            $user_id = IdcardAuthenticate::createUser($userName, $firstName, $lastName, $email, $identityCode);
         } else {
             $user_id = $user->userid;
         }
-        
+
         //logime inimese ka wordpressi sisse
         IdcardAuthenticate::setSession($identityCode, $firstName, $lastName);
         wp_set_auth_cookie($user_id);
@@ -48,7 +50,7 @@ class IdcardAuthenticate {
     }
 
     //sisestame inimese andmebaasi
-    private static function createUser($userName, $firstName, $lastName, $identityCode) {
+    private static function createUser($userName, $firstName, $lastName, $email, $identityCode) {
         global $wpdb;
         $user_data = array(
             'user_pass' => wp_generate_password(64, true),
@@ -56,6 +58,7 @@ class IdcardAuthenticate {
             'display_name' => "$firstName $lastName",
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'user_email' => $email,
             'role' => get_option('default_role') // Use default role or another role, e.g. 'editor'
         );
         $user_id = wp_insert_user($user_data);
