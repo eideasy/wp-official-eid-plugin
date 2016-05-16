@@ -63,7 +63,7 @@ class IdcardAdmin {
                         <script>
                             new Button({img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5'}, function (token) {
                                 console.log(token);
-                                window.location = '<?php echo plugins_url() ?>/id-card-login/adminlogin.php?token=' + token + '&redirect_to=' + window.location.href;
+                                window.location = '<?php echo plugins_url() ?>/id-card-login/adminlogin.php?token=' + token + '&redir_to=' + window.location.href;
                             });
                         </script>
 

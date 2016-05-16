@@ -28,8 +28,8 @@ class IdAdminLogin {
         }
 
         //Jätame admini andmed sessiooni meelde        
-        if (array_key_exists('redirect_to', $_GET)) {
-            header('Location: ' . $_GET['redirect_to']);
+        if (array_key_exists('redir_to', $_GET)) {
+            header('Location: ' . $_GET['redir_to']);
         } else {
             header('Location: ' . home_url());
         }
