@@ -32,7 +32,7 @@ if (!class_exists("IdCardLogin")) {
         static function show_id_login() {
             $pUrl = plugins_url();
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
-            echo '<div id="idid"></div>'
+            return '<div id="idid"></div>'
             . '<script src="https://idid.ee/js/button.js"></script>'
             . '<script>'
             . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
