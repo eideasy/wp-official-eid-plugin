@@ -18,13 +18,18 @@ class IdcardAuthenticate {
         $email = $result->email;
         $userName = "EE" . $identityCode;
 
-        //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
-        $user = IdcardAuthenticate::getUser($identityCode);
-        if (($user == NULL) and ( NULL == username_exists($userName))) {
-            $user_id = IdcardAuthenticate::createUser($userName, $firstName, $lastName, $email, $identityCode);
-        } else {
-            $user_id = $user->userid;
+        //Kontrollime, et saime ikka õige inimese andmed
+        //Kui ei saand sisi silent ignoreerime
+        if (strlen($identityCode) == 11) {
+            //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
+            $user = IdcardAuthenticate::getUser($identityCode);
+            if (($user == NULL) and ( NULL == username_exists($userName))) {
+                $user_id = IdcardAuthenticate::createUser($userName, $firstName, $lastName, $email, $identityCode);
+            } else {
+                $user_id = $user->userid;
+            }
         }
+
 
         //logime inimese ka wordpressi sisse
         IdcardAuthenticate::setSession($identityCode, $firstName, $lastName);
@@ -43,9 +48,8 @@ class IdcardAuthenticate {
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($curl);
+        $result = curl_exec($curl);       
         curl_close($curl);
-
         return $result;
     }
 
@@ -61,6 +65,8 @@ class IdcardAuthenticate {
             'user_email' => $email,
             'role' => get_option('default_role') // Use default role or another role, e.g. 'editor'
         );
+        die($firstName);
+        die($user_data['display_name']);
         $user_id = wp_insert_user($user_data);
         $wpdb->insert($wpdb->prefix . "idcard_users", array(
             'firstname' => $firstName,
