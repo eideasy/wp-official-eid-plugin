@@ -65,8 +65,6 @@ class IdcardAuthenticate {
             'user_email' => $email,
             'role' => get_option('default_role') // Use default role or another role, e.g. 'editor'
         );
-        die($firstName);
-        die($user_data['display_name']);
         $user_id = wp_insert_user($user_data);
         $wpdb->insert($wpdb->prefix . "idcard_users", array(
             'firstname' => $firstName,

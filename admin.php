@@ -35,7 +35,7 @@ class IdcardAdmin {
                 update_option("site_owner_id", $registerResponse['site_owner_id']);
                 $siteSecret = $registerResponse['site_secret'];
 
-                // Put a "settings saved" message on the screen
+                // Show confirmation
                 ?>
                 <div class="updated"><p><strong><?php _e('Site registered to ' . get_option("site_owner_id"), 'id-sign'); ?></strong></p></div>                
                 <?php
@@ -52,7 +52,7 @@ class IdcardAdmin {
                     <input type="hidden" name="status" value="activation_start">
 
                     <div>
-                        This is the contract you are about to sign. Better read it carefully before signing. 
+                        <?php include("terms.html"); ?>
                     </div>
 
 
@@ -129,5 +129,5 @@ class IdcardAdmin {
             header('Location: ' . home_url());
         }
     }
-
+    
 }
