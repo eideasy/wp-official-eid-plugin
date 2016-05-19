@@ -19,7 +19,7 @@ class IdcardAuthenticate {
         $userName = "EE" . $identityCode;
 
         //Kontrollime, et saime ikka õige inimese andmed
-        //Kui ei saand sisi silent ignoreerime
+        //Kui ei saand siis silent ignoreerime
         if (strlen($identityCode) == 11) {
             //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
             $user = IdcardAuthenticate::getUser($identityCode);
@@ -28,6 +28,9 @@ class IdcardAuthenticate {
             } else {
                 $user_id = $user->userid;
             }
+        } else {
+            //At least some form of error handling
+            die("   ERROR: Idcode not received - ".$token);
         }
 
 
