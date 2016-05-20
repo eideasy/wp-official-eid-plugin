@@ -7,7 +7,7 @@ IdcardAuthenticate::login();
 class IdcardAuthenticate {
 
     static function login() {
-        echo "Is php curl module installed?";
+        echo "Is php curl module installed?";         
         $token = $_GET['token'];
 
         //tõmbame sisselogitud inimese andmed

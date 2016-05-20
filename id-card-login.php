@@ -29,16 +29,23 @@ if (!class_exists("IdCardLogin")) {
     class IdCardLogin {
 
         //tekitame login nupu
-        static function show_id_login() {
+        static function echo_id_login() {
+            echo IdCardLogin::getLoginButtonCode();
+        }
+
+        static function return_id_login() {
+            return IdCardLogin::getLoginButtonCode();
+        }
+
+        static function getLoginButtonCode() {
             $pUrl = plugins_url();
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
-            return '<div id="idid"></div>'
-            . '<script src="https://idid.ee/js/button.js"></script>'
-            . '<script>'
-            . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
-            . "console.log(token); "
-            . 'window.location="' . $pUrl . '/id-card-login/securelogin.php?token="+token+"' . $redirect_url . '"'
-            . "});</script>";
+            return '<span id="idid"></span>'
+                    . '<script src="https://idid.ee/js/button.js"></script>'
+                    . '<script>'
+                    . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "                    
+                    . 'window.location="' . $pUrl . '/id-card-login/securelogin.php?token="+token+"' . $redirect_url . '"'
+                    . "});</script>";
         }
 
         //konfime andmebaasi
@@ -75,7 +82,7 @@ if (!class_exists("IdCardLogin")) {
     }
 
     //registreerime wordpressiga integratsioonipunktid
-    add_action('login_form', 'IdCardLogin::show_id_login');
+    add_action('login_form', 'IdCardLogin::echo_id_login');
     add_action('init', 'IdCardLogin::startSession', 1);
     add_action('wp_logout', 'IdCardLogin::endSession');
     add_action('wp_login', 'IdCardLogin::endSession');
@@ -86,5 +93,5 @@ if (!class_exists("IdCardLogin")) {
     // Hook for adding admin menus
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
-    add_shortcode('id_login', 'IdCardLogin::show_id_login');
+    add_shortcode('id_login', 'IdCardLogin::return_id_login');
 }
