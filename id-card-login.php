@@ -39,12 +39,14 @@ if (!class_exists("IdCardLogin")) {
 
         static function getLoginButtonCode() {
             $pUrl = plugins_url();
+            $baseName = plugin_basename(__FILE__);
+            $pluginFolder = explode(DIRECTORY_SEPARATOR, $baseName)[0];
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
             return '<span id="idid"></span>'
-                    . '<script src="'.$pUrl.'/id-card-login/js/button.js"></script>'
+                    . '<script src="' . $pUrl . '/' . $pluginFolder . '/js/button.js"></script>'
                     . '<script>'
                     . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
-                    . 'window.location="' . $pUrl . '/id-card-login/securelogin.php?token="+token+"' . $redirect_url . '"'
+                    . 'window.location="' . $pUrl . '/' . $pluginFolder . '/securelogin.php?token="+token+"' . $redirect_url . '"'
                     . "});</script>";
         }
 
@@ -120,8 +122,6 @@ if (!class_exists("IdCardLogin")) {
             jal_install();
         }
     }
-
-    
 
     //registreerime wordpressiga integratsioonipunktid
     add_action('login_form', 'IdCardLogin::echo_id_login');
