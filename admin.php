@@ -85,7 +85,9 @@ class IdcardAdmin {
 
             <?php
         } else {
-            echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret");
+            echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret")."<br>";
+            echo "Enter your contract template below";
+            include('adminform.php');
         }
     }
 

@@ -4,7 +4,7 @@
  * Plugin Name: ID-card signing
  * Plugin URI: http://marguspala.com/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card
- * Version: 0.1
+ * Version: 0.3
  * Author: Margus Pala
  * Author URI: http://marguspala.com/
  * License: GPLv2 or later
@@ -43,7 +43,7 @@ if (!class_exists("IdCardLogin")) {
             return '<span id="idid"></span>'
                     . '<script src="https://idid.ee/js/button.js"></script>'
                     . '<script>'
-                    . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "                    
+                    . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
                     . 'window.location="' . $pUrl . '/id-card-login/securelogin.php?token="+token+"' . $redirect_url . '"'
                     . "});</script>";
         }
@@ -54,7 +54,7 @@ if (!class_exists("IdCardLogin")) {
 
             $table_name = $wpdb->prefix . "idcard_users";
 
-            $sql = "CREATE TABLE $table_name (
+            $sql = "CREATE TABLE if not exists $table_name (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,                
                 firstname tinytext NOT NULL,
                 lastname tinytext NOT NULL,
@@ -65,8 +65,41 @@ if (!class_exists("IdCardLogin")) {
                 UNIQUE KEY identitycode (identitycode)
                   );";
 
+
+            $contractHtmlTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_html (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,                
+                html text NOT NULL,                
+                created_at datetime NOT NULL,
+                active boolean default true,
+                UNIQUE KEY id (id)        
+                  );";
+
+            $contractFieldsTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_fields (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,                
+                contract_id mediumint(9) NOT NULL,
+                tag varchar(255) NOT NULL,        
+                name varchar(255) NOT NULL,
+                created_at datetime NOT NULL,
+                UNIQUE KEY id (id),          
+                FOREIGN KEY (contract_id) REFERENCES " . $wpdb->prefix . "contract_html(id)
+                  );";
+
+            $responsesTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_responses (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,                
+                contract_id mediumint(9) NOT NULL,
+                identitycode VARCHAR(11) NOT NULL,
+                signing_time datetime NOT NULL,
+                response_id mediumint(9) NOT NULL,
+                UNIQUE KEY id (id),    
+                UNIQUE KEY response_id (response_id),                   
+                FOREIGN KEY (contract_id) REFERENCES " . $wpdb->prefix . "contract_html(id)
+                  );";
+
             require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
             dbDelta($sql);
+            dbDelta($contractHtmlTable);
+            dbDelta($contractFieldsTable);
+            dbDelta($responsesTable);
         }
 
         function startSession() {
@@ -81,14 +114,24 @@ if (!class_exists("IdCardLogin")) {
 
     }
 
+    function myplugin_update_db_check() {
+        global $jal_db_version;
+        if (get_site_option('jal_db_version') != $jal_db_version) {
+            jal_install();
+        }
+    }
+
+    
+
     //registreerime wordpressiga integratsioonipunktid
     add_action('login_form', 'IdCardLogin::echo_id_login');
     add_action('init', 'IdCardLogin::startSession', 1);
     add_action('wp_logout', 'IdCardLogin::endSession');
     add_action('wp_login', 'IdCardLogin::endSession');
 
-
+    //database install
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
+    add_action('plugins_loaded', 'IdCardLogin::idcard_install');
 
     // Hook for adding admin menus
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
