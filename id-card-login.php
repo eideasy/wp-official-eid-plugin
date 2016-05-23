@@ -114,13 +114,10 @@ if (!class_exists("IdCardLogin")) {
             session_destroy();
         }
 
-    }
-
-    function myplugin_update_db_check() {
-        global $jal_db_version;
-        if (get_site_option('jal_db_version') != $jal_db_version) {
-            jal_install();
+        function disable_password_reset() {
+            return false;
         }
+
     }
 
     //registreerime wordpressiga integratsioonipunktid
@@ -137,4 +134,8 @@ if (!class_exists("IdCardLogin")) {
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
     add_shortcode('id_login', 'IdCardLogin::return_id_login');
+
+    //disable password reset
+    add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
+    add_filter('login_errors',create_function('$a', "return 'Not allowed!';"));
 }
