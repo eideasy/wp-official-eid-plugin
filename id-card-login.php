@@ -23,6 +23,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 include( plugin_dir_path(__FILE__) . 'admin.php');
+include( plugin_dir_path(__FILE__) . 'contract.php');
 
 if (!class_exists("IdCardLogin")) {
 
@@ -134,6 +135,7 @@ if (!class_exists("IdCardLogin")) {
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
     add_shortcode('id_login', 'IdCardLogin::return_id_login');
+    add_shortcode('show_contract_form', 'IdContract::showContract');
 
     //disable password reset
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');

@@ -1,4 +1,4 @@
-<!--create contract text edit textarea-->
+Adminformis
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script>tinymce.init({
         selector: 'textarea',
@@ -7,22 +7,10 @@
 
 <?php
 global $wpdb;
-
 //If contract text was submitted then deactivate previous and activate new
-//Small risk of concurrency issues when contract is updated as there are no transactions
 if (isset($_POST["contract_save"]) && $_POST["contract_save"] == 'yes') {
-    $wpdb->update($wpdb->prefix . "contract_html", [
-        "active" => false
-            ], [
-        "active" => true
-    ]);
-
-    $wpdb->insert($wpdb->prefix . "contract_html", [
-        'html' => $_POST["contract_html"],
-        'created_at' => current_time('mysql'),
-        "active" => true
-            ]
-    );
+    
+    IdContract::saveContract($_POST["contract_html"]);
 }
 
 //get current contract_html value from DB
@@ -38,7 +26,7 @@ if ($contract == NULL) {
 }
 ?>
 
-<form  name="contractSaveForm" method="post" action="">
+<form name="contractSaveForm" method="post" action="">
     <input type="hidden" name="contract_save" value="yes">
     <textarea name="contract_html"><?php echo $contract_html ?></textarea>
     <button type="submit" >Save</button>
