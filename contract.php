@@ -5,7 +5,39 @@ if (!class_exists("IdContract")) {
     class IdContract {
 
         public function showContract() {
-            return IdContract::getContractHtml();
+            if (!session_id()) {
+                session_start();
+            }
+            $newHtml = IdContract::submitForm();
+
+            if ($newHtml == null) {
+                return IdContract::getContractHtml();
+            } else {
+                return $newHtml;
+            }
+        }
+
+        public function submitForm() {
+            //First view nothing happens yet                  
+            if (array_key_exists('issubmit', $_POST) && $_POST['issubmit'] == "yes") {
+                $contractId = $_SESSION['contract_id'];
+                $validateResult = IdContract::validateTags($contractId, $_POST);
+                return $validateResult . IdContract::getContractHtml();
+            } else {
+                return NULL;
+            }
+        }
+
+        //returns null if validation succeeded and error message with contract if failed
+        private function validateTags($contractId, $post) {
+            global $wpdb;
+            $tags = $wpdb->get_results("select * from " . $wpdb->prefix . "contract_fields where contract_id=$contractId", ARRAY_A);            
+            foreach ($tags as $tag) {
+                if (!array_key_exists($tag['tag'], $post) || strlen($post[$tag['tag']])==0) {
+                    return "<p>Please make sure that all fields are filled. <b>" . $tag['name'] . "</b> was not filled right now.</p>";
+                }
+            }
+            return NULL;
         }
 
         //get current contract_html value from DB
@@ -16,11 +48,16 @@ if (!class_exists("IdContract")) {
                     "select * from " . $wpdb->prefix . "contract_html where active=1"
             );
             if ($contract == NULL) {
-                return "No contract to sign available right now";
+                return "No available contract to sign right now.";
                 $_SESSION['contract_id'] = NULL;
             } else {
-                return IdContract::replaceTags($contract->html);
+                $formStartHtml = '<form action="" method="post">';
+                $contractHtml = IdContract::replaceTags($contract->html);
+                $submitButtonHtml = '<input type="hidden" name="issubmit" value="yes">' .
+                        '<button type="submit">Confirm</button></form>';
+                $contractHtml = $formStartHtml . $contractHtml . $submitButtonHtml;
                 $_SESSION['contract_id'] = $contract->id;
+                return $contractHtml;
             }
         }
 
@@ -48,7 +85,7 @@ if (!class_exists("IdContract")) {
             );
 
             $contractId = $wpdb->insert_id;
-            
+
             $tags = [];
             preg_match_all("/{{(.*?)=(.*?)}}/", $html, $tags);
 
