@@ -4,7 +4,7 @@
  * Plugin Name: ID-card signing
  * Plugin URI: http://marguspala.com/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card
- * Version: 0.6
+ * Version: 0.7
  * Author: Margus Pala
  * Author URI: http://marguspala.com/
  * License: GPLv2 or later

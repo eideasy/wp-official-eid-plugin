@@ -4,7 +4,7 @@ function Button(options, callback) {
     var width = options.width;
 
     window.onmessage = function (data) {
-        if (JSON.stringify(data.data).length <= 40) {
+        if (JSON.stringify(data.data).length == 34) {
             callback(data.data);
         } else {
             console.log("Probably in customize.php, skipping the login: "+JSON.stringify(data.data).length);

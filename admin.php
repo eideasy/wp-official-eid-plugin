@@ -63,8 +63,13 @@ if (!class_exists("IdcardAdmin")) {
                             <script src="https://idid.ee/js/button.js"></script>
                             <script>
                                 new Button({img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5'}, function (token) {
-                                    console.log(token);
-                                    window.location = '<?php echo plugins_url() ?>/id-card-login/adminlogin.php?token=' + token + '&redir_to=' + window.location.href;
+                    <?php
+                    $baseName = plugin_basename(__FILE__);
+                    $pluginFolder = explode(DIRECTORY_SEPARATOR, $baseName)[0];
+                    ?>
+                                    if (JSON.stringify(token).length == 34) {
+                                        window.location = '<?php echo plugins_url() . "/" . $pluginFolder ?>/adminlogin.php?token=' + token + '&redir_to=' + window.location.href;
+                                    }
                                 });
                             </script>
 
@@ -78,7 +83,7 @@ if (!class_exists("IdcardAdmin")) {
                         ?>
 
                         <?php if ($_SESSION['admin_auth_failed'] == true) { ?>
-                            <p>Authentication failed. Please try again or contact Heikki Visnapuu</p>
+                            <p>Authentication failed. Please try again or contact Heikki Visnapuu and tell the error time <?php echo date(DATE_RFC2822);?></p>
                         <?php } ?>
 
                     </form>
@@ -87,7 +92,8 @@ if (!class_exists("IdcardAdmin")) {
                 <?php
             } else {
                 echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret") . "<br>";
-                echo "Enter your contract template below";
+                echo "Enter your contract template below. You can use tags for customers to fill in values in the format {{tag=Tag visible name}}. Tag must contain lowercase latin letters and Tag visible name can be anything<br>";
+                echo "For example {{firstname=Your first name}} and {{phoneno=Phone number}}";
                 include('adminform.php');
             }
         }
