@@ -14,11 +14,15 @@ if (!class_exists("IdcardAdmin")) {
             if (!current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
+            if (isset($_POST["status"]) && $_POST["status"] == 'reset_site_secret') {
+                update_option("site_secret", null);
+            }
 
             $siteSecret = get_option("site_secret");
 //        update_option('site_secret', null);
             // See if the user has posted us some information
             // If they did, this hidden field will be set to 'Y'
+
             if (isset($_POST["status"]) && $_POST["status"] == 'activation_start') {
                 // Read their posted value
                 $opt_val = $_POST[$data_field_name];
@@ -83,7 +87,7 @@ if (!class_exists("IdcardAdmin")) {
                         ?>
 
                         <?php if ($_SESSION['admin_auth_failed'] == true) { ?>
-                            <p>Authentication failed. Please try again or contact Heikki Visnapuu and tell the error time <?php echo date(DATE_RFC2822);?></p>
+                            <p>Authentication failed. Please try again or contact Heikki Visnapuu and tell the error time <?php echo date(DATE_RFC2822); ?></p>
                         <?php } ?>
 
                     </form>
@@ -91,7 +95,14 @@ if (!class_exists("IdcardAdmin")) {
 
                 <?php
             } else {
-                echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret") . "<br>";
+                echo "This site is registered to " . get_option("site_owner_id") . " and site secret is " . get_option("site_secret");
+                ?>
+                <form name = "form1" method = "post" action = "">
+                    <input type = "hidden" name = "status" value = "reset_site_secret">
+                    <input type = "submit" name = "Submit" class = "button-primary" value = "<?php esc_attr_e('Reset secret') ?>" />
+                </form>
+                <br>
+                <?php
                 echo "Enter your contract template below. You can use tags for customers to fill in values in the format {{tag=Tag visible name}}. Tag must contain lowercase latin letters and Tag visible name can be anything<br>";
                 echo "For example {{firstname=Your first name}} and {{phoneno=Phone number}}";
                 include('adminform.php');
@@ -100,13 +111,13 @@ if (!class_exists("IdcardAdmin")) {
 
         static function registerSite() {
 
-            $curl = curl_init();
-            $url = "https://idiotos.eu/api/v1/registerapp?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['session_id'];
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            $curlResult = curl_exec($curl);
+            $ch = curl_init();
+            $url = "https://idiotos.eu/api/v1/registerapp?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'];
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $curlResult = curl_exec($ch);
             $result = json_decode($curlResult, true);
-            curl_close($curl);
+            curl_close($ch);
             return $result;
         }
 

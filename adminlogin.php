@@ -17,7 +17,7 @@ class IdAdminLogin {
         //check if id code was returned and set session data accordign to login success or not
         if (strlen($identityCode) == 11) {
             $_SESSION['identitycode'] = $identityCode;
-            $_SESSION['session_id'] = $result->session_id;
+            $_SESSION['auth_key'] = $result->auth_key;
             $_SESSION['admin_id_verified'] = true;
             $_SESSION['admin_auth_failed'] = false;
             $_SESSION['admin_firstname'] = $result->firstname;
@@ -37,13 +37,13 @@ class IdAdminLogin {
 
     //Kontrollime proxyst kasutaja andmeid
     function getUserFromIdid($token) {
-        $curl = curl_init();
+        $ch = curl_init();
         $url = "https://idiotos.eu/api/v1/verifytoken/" . $token;
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($curl);        
-        curl_close($curl);
+        $result = curl_exec($ch);        
+        curl_close($ch);
         return $result;
     }
 

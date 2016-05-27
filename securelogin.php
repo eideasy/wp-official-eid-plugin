@@ -7,7 +7,7 @@ IdcardAuthenticate::login();
 class IdcardAuthenticate {
 
     static function login() {
-        echo "Is php curl module installed?";         
+        echo "Is php curl module installed?";
         $token = $_GET['token'];
 
         //tõmbame sisselogitud inimese andmed
@@ -16,7 +16,8 @@ class IdcardAuthenticate {
         $lastName = $result->lastname;
         $identityCode = $result->id;
         $email = $result->email;
-        $userName = "EE" . $identityCode;
+        $authKey = $result->auth_key;
+        $userName = "EST" . $identityCode;
 
         //Kontrollime, et saime ikka õige inimese andmed
         //Kui ei saand siis silent ignoreerime
@@ -30,12 +31,12 @@ class IdcardAuthenticate {
             }
         } else {
             //At least some form of error handling
-            die("   ERROR: Idcode not received - ".$token);
+            die("   ERROR: Idcode not received - " . $token);
         }
 
 
         //logime inimese ka wordpressi sisse
-        IdcardAuthenticate::setSession($identityCode, $firstName, $lastName);
+        IdcardAuthenticate::setSession($identityCode, $firstName, $lastName, $authKey);
         wp_set_auth_cookie($user_id);
         if (array_key_exists('redirect_to', $_GET)) {
             header('Location: ' . $_GET['redirect_to']);
@@ -46,13 +47,13 @@ class IdcardAuthenticate {
 
     //küsime idid käest inimese andmeid
     function getUserFromIdid($token) {
-        $curl = curl_init();
+        $ch = curl_init();
         $url = "https://idiotos.eu/api/v1/verifytoken/" . $token;
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($curl);       
-        curl_close($curl);
+        $result = curl_exec($ch);
+        curl_close($ch);
         return $result;
     }
 
@@ -94,10 +95,11 @@ class IdcardAuthenticate {
     }
 
     //jätame kasutaja andmed sessiooni meelde
-    private static function setSession($identityCode, $firstName, $lastName) {
+    private static function setSession($identityCode, $firstName, $lastName, $authKey) {
         $_SESSION['identitycode'] = $identityCode;
         $_SESSION['firstname'] = $firstName;
         $_SESSION['lastname'] = $lastName;
+        $_SESSION['auth_key'] = $authKey;
     }
 
 }

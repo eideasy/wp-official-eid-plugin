@@ -38,7 +38,14 @@ if (!class_exists("IdCardLogin")) {
             return IdCardLogin::getLoginButtonCode();
         }
 
+        public function isUserIdLogged() {
+            return array_key_exists("auth_key", $_SESSION) && strlen($_SESSION['auth_key']) == 32;
+        }
+
         static function getLoginButtonCode() {
+            if (IdCardLogin::isUserIdLogged()) {
+                return null;
+            }
             $pUrl = plugins_url();
             $baseName = plugin_basename(__FILE__);
             $pluginFolder = explode(DIRECTORY_SEPARATOR, $baseName)[0];
@@ -139,5 +146,5 @@ if (!class_exists("IdCardLogin")) {
 
     //disable password reset
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
-    add_filter('login_errors',create_function('$a', "return 'Not allowed!';"));
+    add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
 }
