@@ -18,6 +18,7 @@ class IdcardAuthenticate {
         $email = $result->email;
         $authKey = $result->auth_key;
         $userName = "EST" . $identityCode;
+        var_dump($result);
 
         //Kontrollime, et saime ikka õige inimese andmed
         //Kui ei saand siis silent ignoreerime
@@ -48,9 +49,11 @@ class IdcardAuthenticate {
     //küsime idid käest inimese andmeid
     function getUserFromIdid($token) {
         $ch = curl_init();
-        $url = "https://idiotos.eu/api/v1/verifytoken/" . $token;
+        $url = "https://wpidkaartproxy.dev/api/v1/verifytoken/" . $token;
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
         $result = curl_exec($ch);
         curl_close($ch);

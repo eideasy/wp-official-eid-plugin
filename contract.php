@@ -1,5 +1,4 @@
 <?php
-
 defined('ABSPATH') or die('No script kiddies please!');
 
 require_once(ABSPATH . 'wp-load.php');
@@ -35,10 +34,73 @@ if (!class_exists("IdContract")) {
                 if (array_key_exists("error", $pdfLocation)) {
                     return "<b>Form submit failed because of: " . $pdfLocation['error'] . "</b><br>" . IdContract::getContractHtml();
                 }
-                return '<a href="https://idiotos.eu/storage/pdf/' . $pdfLocation['pdfUrl'] . '">Download PDF to be signed from here</a>';
+                return '<a href="https://wpidkaartproxy.dev/storage/pdf/' . $pdfLocation['pdfUrl'] . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode($pdfLocation['contract_id']);
             } else {
                 return NULL;
             }
+        }
+
+        private function getSigningCode($contractId) {
+            ?>
+            <button onclick="startSigning()">Start signing</button>
+            <script type="text/javascript" src="<?php echo IdCardLogin::getPluginBaseUrl() ?>/js/hwcrypto.js"></script>
+            <script type="text/javascript">
+                if (typeof jQuery == 'undefined') {
+                    var oScriptElem = document.createElement("script");
+                    oScriptElem.type = "text/javascript";
+                    oScriptElem.src = "https://code.jquery.com/jquery-2.2.4.min.js";
+                    document.head.insertBefore(oScriptElem, document.head.getElementsByTagName("script")[0])
+                }
+            </script>
+            <script>
+                function startSigning() {
+                    window.hwcrypto.getCertificate({lang: "EST"}).then(function (cert) {
+                        jQuery.ajax({
+                            url: "https://wpidkaartproxy.dev/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
+                            // Tell jQuery we're expecting JSONP
+                            dataType: "JSONP",
+                            type: 'GET',
+                            // Tell YQL what we want and that we want JSON
+                            data: {
+                                certificate: cert.hex
+                            },
+                            // Work with the response
+                            success: function (status_resp) {
+                                console.log("Got response: "+status_resp);
+                                idSign(cert, status_resp.signedInfoDigest, status_resp.signatureId)
+                            },
+                            fail: function (data) {
+                                alert(data.status + '-' + data.statusText);
+                            }
+                        });
+                    }, function (reason) {
+                        console.log('error occured when getting certificate ' + reason);
+                    });
+                }
+                ;
+                function idSign(cert, signatureDigest, signatureId) {
+                    console.log("Starting to sign: "+signatureDigest);
+                    window.hwcrypto
+                            .sign(cert, {
+                                hex: signatureDigest,
+                                type: "SHA-256",
+                            }, {lang: 'en'})
+                            .then(function (signature) {
+                                console.log("Signature created: "+signature.hex);
+                                var form = jQuery('<form action="/sign/id/finish" method="post">' +
+                                        '<input type="text" name="signature_id" value="' + signatureId + '" />' +
+                                        '<input type="text" name="signature_value" value="' + signature.hex + '" />' +
+                                        '</form>'
+                                        );
+                                jQuery('body').append(form);
+                                form.submit();
+                            }, function (reason) {
+                                console.log('error occurred when started signing document' + reason);
+                            });
+                }
+            </script>
+
+            <?php
         }
 
         private function generatePdf($contractId, $post) {
@@ -58,10 +120,12 @@ if (!class_exists("IdContract")) {
                     "&auth_key=" . $_SESSION['auth_key'] .
                     "&idcode=" . $_SESSION['identitycode'];
 
-            $ch = curl_init();            
-            $url = "https://idiotos.eu/api/v1/generatepdf?" . $params;
+            $ch = curl_init();
+            $url = "https://wpidkaartproxy.dev/api/v1/generatepdf?" . $params;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, "html=" . urlencode(base64_encode($html)));
 
