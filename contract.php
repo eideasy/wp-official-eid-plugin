@@ -53,12 +53,12 @@ if (!class_exists("IdContract")) {
             }
 
             $params = "site_secret=" . get_option("site_secret") .
-                    "&tags=" . $tagsString .
+                    "&tags=" . urlencode($tagsString) .
                     "&site_url=" . urlencode(get_site_url()) .
                     "&auth_key=" . $_SESSION['auth_key'] .
                     "&idcode=" . $_SESSION['identitycode'];
 
-            $ch = curl_init();
+            $ch = curl_init();            
             $url = "https://idiotos.eu/api/v1/generatepdf?" . $params;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -68,7 +68,7 @@ if (!class_exists("IdContract")) {
             $curlResult = curl_exec($ch);
             $result = json_decode($curlResult, true);
             curl_close($ch);
-            
+
             return $result;
         }
 
