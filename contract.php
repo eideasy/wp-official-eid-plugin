@@ -12,13 +12,37 @@ if (!class_exists("IdContract")) {
                 session_start();
             }
 
-            $newHtml = IdContract::submitForm();
+            $newHtml = NULL;
+
+            if (array_key_exists('issubmit', $_POST) && $_POST['issubmit'] == "yes") {
+                $newHtml = IdContract::submitForm();
+            } elseif (array_key_exists('signature_created', $_POST) && $_POST['signature_created'] == "yes") {
+                $newHtml = IdContract::signatureCreated();
+            }
 
             if ($newHtml == null) {
                 return IdContract::getContractHtml();
             } else {
                 return $newHtml;
             }
+        }
+
+        public function signatureCreated() {
+            $params = [
+                "signature_id" => $_POST['signature_id'],
+                "signature_value" => $_POST['signature_value'],
+                "contract_id" => $_POST['contract_id']
+            ];
+
+            $signatureResult = IdCardLogin::curlCall("api/v1/sign/finishidsign", $params);
+            if (array_key_exists("error", $signatureResult)) {
+                return "<b>Form submit failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
+            }
+            if (array_key_exists("error", $signatureResult)) {
+                return "<b>Signing failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
+            }
+            return '<a href="https://wpidkaartproxy.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                    . '">Document successfully signed. Download signed contract from here</a>';
         }
 
         public function submitForm() {
@@ -66,7 +90,7 @@ if (!class_exists("IdContract")) {
                             },
                             // Work with the response
                             success: function (status_resp) {
-                                console.log("Got response: "+status_resp);
+                                console.log("Got response: " + status_resp);
                                 idSign(cert, status_resp.signedInfoDigest, status_resp.signatureId)
                             },
                             fail: function (data) {
@@ -79,17 +103,19 @@ if (!class_exists("IdContract")) {
                 }
                 ;
                 function idSign(cert, signatureDigest, signatureId) {
-                    console.log("Starting to sign: "+signatureDigest);
+                    console.log("Starting to sign: " + signatureDigest);
                     window.hwcrypto
                             .sign(cert, {
                                 hex: signatureDigest,
                                 type: "SHA-256",
                             }, {lang: 'en'})
                             .then(function (signature) {
-                                console.log("Signature created: "+signature.hex);
-                                var form = jQuery('<form action="/sign/id/finish" method="post">' +
+                                console.log("Signature created: " + signature.hex);
+                                var form = jQuery('<form action="" method="post">' +
                                         '<input type="text" name="signature_id" value="' + signatureId + '" />' +
                                         '<input type="text" name="signature_value" value="' + signature.hex + '" />' +
+                                        '<input type="hidden" name="signature_created" value="yes" />' +
+                                        '<input type="hidden" name="contract_id" value="<?php echo $contractId ?>" />' +
                                         '</form>'
                                         );
                                 jQuery('body').append(form);

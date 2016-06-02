@@ -63,6 +63,30 @@ if (!class_exists("IdCardLogin")) {
             return $pUrl . '/' . $pluginFolder;
         }
 
+        static function curlCall($apiPath, $params) {
+
+            $paramString = "?siteurl=" . urlencode(get_site_url());
+            $paramString = $paramString . '&idcode=' . (array_key_exists("identitycode", $_SESSION) ? $_SESSION['identitycode'] : "");
+            $paramString.= "&auth_key=" . (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : "");
+            $paramString.= "&site_Secret=" . get_option("site_secret");
+            foreach ($params as $key => $value) {
+                $paramString.="&$key=$value";
+            }
+
+            $ch = curl_init();
+            $url = "https://wpidkaartproxy.dev/" . $apiPath . $paramString;
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $curlResult = curl_exec($ch);
+            $result = json_decode($curlResult, true);
+//echo curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+//die();
+            curl_close($ch);
+            return $result;
+        }
+
         //konfime andmebaasi
         static function idcard_install() {
             global $wpdb;
