@@ -49,7 +49,7 @@ class IdcardAuthenticate {
     //küsime idid käest inimese andmeid
     function getUserFromIdid($token) {
         $ch = curl_init();
-        $url = "https://wpidkaartproxy.dev/api/v1/verifytoken/" . $token;
+        $url = "https://idiotos.eu/api/v1/verifytoken/" . $token;
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

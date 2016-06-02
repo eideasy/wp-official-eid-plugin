@@ -41,7 +41,7 @@ if (!class_exists("IdContract")) {
             if (array_key_exists("error", $signatureResult)) {
                 return "<b>Signing failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
             }
-            return '<a href="https://wpidkaartproxy.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
+            return '<a href="https://idiotos.eu/sign/getsignedfile/' . $signatureResult['bdocUrl']
                     . '">Document successfully signed. Download signed contract from here</a>';
         }
 
@@ -58,7 +58,7 @@ if (!class_exists("IdContract")) {
                 if (array_key_exists("error", $pdfLocation)) {
                     return "<b>Form submit failed because of: " . $pdfLocation['error'] . "</b><br>" . IdContract::getContractHtml();
                 }
-                return '<a href="https://wpidkaartproxy.dev/storage/pdf/' . $pdfLocation['pdfUrl'] . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode($pdfLocation['contract_id']);
+                return '<a href="https://idiotos.eu/storage/pdf/' . $pdfLocation['pdfUrl'] . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode($pdfLocation['contract_id']);
             } else {
                 return NULL;
             }
@@ -80,7 +80,7 @@ if (!class_exists("IdContract")) {
                 function startSigning() {
                     window.hwcrypto.getCertificate({lang: "EST"}).then(function (cert) {
                         jQuery.ajax({
-                            url: "https://wpidkaartproxy.dev/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
+                            url: "https://idiotos.eu/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
                             // Tell jQuery we're expecting JSONP
                             dataType: "JSONP",
                             type: 'GET',
@@ -147,7 +147,7 @@ if (!class_exists("IdContract")) {
                     "&idcode=" . $_SESSION['identitycode'];
 
             $ch = curl_init();
-            $url = "https://wpidkaartproxy.dev/api/v1/generatepdf?" . $params;
+            $url = "https://idiotos.eu/api/v1/generatepdf?" . $params;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
