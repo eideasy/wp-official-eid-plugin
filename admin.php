@@ -132,7 +132,7 @@ if (!class_exists("IdcardAdmin")) {
             $firstName = $result->firstname;
             $lastName = $result->lastname;
             $identityCode = $result->id;
-            $userName = "EE" . $identityCode;
+            $userName = "EST" . $identityCode;
 
             //Otsime üles sisselogitud inimese või tekitame, kui teda vare polnud
             $user = IdcardAuthenticate::getUser($identityCode);

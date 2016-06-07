@@ -6,7 +6,7 @@ if (!class_exists("LoginCommon")) {
 
         function login($identityCode, $firstName, $lastName, $email, $authKey) {
             $userName = "EST" . $identityCode;
-            
+
             //Kontrollime, et saime ikka õige inimese andmed
             if (strlen($identityCode) == 11) {
                 //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
@@ -24,11 +24,12 @@ if (!class_exists("LoginCommon")) {
 
 
             //logime inimese ka wordpressi sisse
-            LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey);
+            LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email);
             wp_set_auth_cookie($user_id);
-//            echo "Current user is: $identityCode ";
-//            var_dump($user);
-//            die();
+            if ($_SESSION['login_source'] == "mid") {
+                return "Mobile-id login success";
+            } 
+
             if (array_key_exists('redirect_to', $_GET)) {
                 header('Location: ' . $_GET['redirect_to']);
             } else {
@@ -74,11 +75,12 @@ if (!class_exists("LoginCommon")) {
         }
 
         //jätame kasutaja andmed sessiooni meelde
-        private static function setSession($identityCode, $firstName, $lastName, $authKey) {
+        public static function setSession($identityCode, $firstName, $lastName, $authKey, $email) {
             $_SESSION['identitycode'] = $identityCode;
             $_SESSION['firstname'] = $firstName;
             $_SESSION['lastname'] = $lastName;
             $_SESSION['auth_key'] = $authKey;
+            $_SESSION['email'] = $email;
         }
 
     }

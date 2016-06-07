@@ -40,34 +40,11 @@ if (!class_exists("MobileId")) {
             return MobileId::getRefreshCode($challengeResponse['challenge']);
         }
 
-        
-        //used to check if user has already entered pin1 on his mobile
-        function midLoginRefresh() {
-            $params = [];
-            $params['sess_id'] = session_id();
-            $challengeResponse = IdCardLogin::curlCall("api/v1/mid/loginrefresh", $params);
-
-            if (array_key_exists("error", $challengeResponse)) {
-                return "Mobile-ID login failed because of " . $challengeResponse["error"];
-            }
-
-            if (array_key_exists("status", $challengeResponse) && $challengeResponse['status'] == "OUTSTANDING_TRANSACTION") {
-                return MobileId::getRefreshCode($_SESSION['challenge']);
-            } elseif (array_key_exists("status", $challengeResponse) && $challengeResponse['status'] == "OK") {
-                $firstName = $challengeResponse['firstname'];
-                $lastName = $challengeResponse['lastname'];
-                $identityCode = $challengeResponse['idcode'];
-                $email = $challengeResponse['email'];
-                $authKey = $challengeResponse['auth_key'];
-                LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey);
-            } else {
-                return "This should not happen. Mobile-ID login failed because ";
-            }
-        }
 
         function getRefreshCode($challengeCode) {
+            $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "?redirect_to=" . urlencode($_GET['redirect_to']) : "";
             $refreshForm = '<div>Please enter PIN1 in your mobile. Challenge code is <b>' . $challengeCode . '</b></div>'
-                    . '<form id="mid_login_refresh_form" action="" method="post">'
+                    . '<form id="mid_login_refresh_form" action="'.IdCardLogin::getPluginBaseUrl() . '/midlogin.php'.$redirect_url.'" method="post">'
                     . '<input type="hidden" name="mid_login_refresh_form" value="yes">'
                     . '</form>'
                     . '<script>'
