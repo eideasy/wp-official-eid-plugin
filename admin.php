@@ -112,7 +112,7 @@ if (!class_exists("IdcardAdmin")) {
         static function registerSite() {
 
             $ch = curl_init();
-            $url = "https://idiotos.eu/api/v1/registerapp?siteurl=" . urlencode(get_site_url()) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'];
+            $url = "https://api.idapi.ee/api/v1/registerapp?siteurl=" . urlencode(explode("://",get_site_url())[1]) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'];
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

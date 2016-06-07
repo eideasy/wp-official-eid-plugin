@@ -22,16 +22,19 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-include( plugin_dir_path(__FILE__) . 'admin.php');
-include( plugin_dir_path(__FILE__) . 'contract.php');
-
 if (!class_exists("IdCardLogin")) {
+
+    require_once( plugin_dir_path(__FILE__) . 'admin.php');
+    require_once( plugin_dir_path(__FILE__) . 'contract.php');
+    require_once( plugin_dir_path(__FILE__) . 'mobileid.php');
 
     class IdCardLogin {
 
         //tekitame login nupu
         static function echo_id_login() {
-            echo IdCardLogin::getLoginButtonCode();
+            echo '<div style="margin:auto" align="center">'
+            . IdCardLogin::getLoginButtonCode()
+            . "</div>";
         }
 
         static function return_id_login() {
@@ -47,8 +50,25 @@ if (!class_exists("IdCardLogin")) {
                 return null;
             }
 
+            $midLoginStatus = MobileId::midLoginStatus();
+            if ($midLoginStatus != NULL) {
+                return $midLoginStatus;
+            }
+
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
-            return '<span id="idid"></span>'
+            return '<span>'
+                    . '<img id="idid" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img>'
+                    . '<img id="mid_login" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mid.gif"></img>'
+                    . '</span>'
+                    . '<form id="mid_login_form" action="" method="post">'
+                    . '<input type="hidden" name="mid_login_start" value="yes">'
+                    . '</form>'
+                    . '<script>'
+                    . 'var form = document.getElementById("mid_login_form");'
+                    . 'document.getElementById("mid_login").addEventListener("click", function () {'
+                    . 'form.submit();'
+                    . '});'
+                    . '</script>'
                     . '<script src="' . IdCardLogin::getPluginBaseUrl() . '/js/button.js"></script>'
                     . '<script>'
                     . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
@@ -65,16 +85,24 @@ if (!class_exists("IdCardLogin")) {
 
         static function curlCall($apiPath, $params) {
 
-            $paramString = "?siteurl=" . urlencode(get_site_url());
+            $paramString = "?site_url=" . urlencode(urlencode(explode("://", get_site_url())[1]));
             $paramString = $paramString . '&idcode=' . (array_key_exists("identitycode", $_SESSION) ? $_SESSION['identitycode'] : "");
             $paramString.= "&auth_key=" . (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : "");
-            $paramString.= "&site_Secret=" . get_option("site_secret");
-            foreach ($params as $key => $value) {
-                $paramString.="&$key=$value";
+            $paramString.= "&site_secret=" . get_option("site_secret");
+            if ($params != NULL) {
+                foreach ($params as $key => $value) {
+                    $paramString.="&$key=$value";
+                }
             }
 
+
+//            if ($apiPath=="api/v1/mid/loginrefresh") {
+//                var_dump("https://api.idapi.ee/" . $apiPath . $paramString);
+//                die();
+//            }
+
             $ch = curl_init();
-            $url = "https://idiotos.eu/" . $apiPath . $paramString;
+            $url = "https://api.idapi.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -158,7 +186,7 @@ if (!class_exists("IdCardLogin")) {
     }
 
     //registreerime wordpressiga integratsioonipunktid
-    add_action('login_form', 'IdCardLogin::echo_id_login');
+    add_action('login_footer', 'IdCardLogin::echo_id_login');
     add_action('init', 'IdCardLogin::startSession', 1);
     add_action('wp_logout', 'IdCardLogin::endSession');
     add_action('wp_login', 'IdCardLogin::endSession');
