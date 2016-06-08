@@ -18,7 +18,7 @@ class IdcardAuthenticate {
         $identityCode = $result->id;
         $email = $result->email;
         $authKey = $result->auth_key;
-
+        $_SESSION['login_source'] = "id";
         LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey);
     }
 

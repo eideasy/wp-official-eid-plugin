@@ -18,6 +18,8 @@ if (!class_exists("IdContract")) {
                 $newHtml = IdContract::submitForm();
             } elseif (array_key_exists('signature_created', $_POST) && $_POST['signature_created'] == "yes") {
                 $newHtml = IdContract::signatureCreated();
+            } elseif (array_key_exists('mid_sign_refresh_form', $_POST) && $_POST['mid_sign_refresh_form'] == "yes") {
+                $newHtml = IdContract::waitMidSigning();
             }
 
             if ($newHtml == null) {
@@ -27,14 +29,46 @@ if (!class_exists("IdContract")) {
             }
         }
 
+        function waitMidSigning() {
+            $signatureResult = IdCardLogin::curlCall("api/v1/sign/finishmidsign/" . $_SESSION['signing_contract_id'], []);
+            if ($signatureResult['status'] == "OUTSTANDING_TRANSACTION") {
+                return IdContract::midRefreshWaitSignature($_SESSION['challenge']);
+            } elseif (($signatureResult['status'] == "SIGNATURE")) {
+                return '<a href="https://api.idapi.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                        . '">Document successfully signed. Download signed contract from here</a>';
+            }
+        }
+
+        function midRefreshWaitSignature($challengeCode) {
+            $refreshForm = '<div>Please enter PIN2 in your mobile to sign the contract. Challenge code is <b>' . $challengeCode . '</b></div>'
+                    . '<form id="mid_sign_refresh_form" action="" method="post">'
+                    . '<input type="hidden" name="mid_sign_refresh_form" value="yes">'
+                    . '</form>'
+                    . '<script>'
+                    . 'var form = document.getElementById("mid_sign_refresh_form");'
+                    . 'setTimeout(function(){ form.submit(); }, 5000);'
+                    . '</script>';
+            return $refreshForm;
+        }
+
         public function signatureCreated() {
             $params = [
-                "signature_id" => $_POST['signature_id'],
-                "signature_value" => $_POST['signature_value'],
-                "contract_id" => $_POST['contract_id']
+                "contract_id" => $_SESSION['signing_contract_id'],
+                "sess_id" => session_id()
             ];
 
-            $signatureResult = IdCardLogin::curlCall("api/v1/sign/finishidsign", $params);
+            if ($_SESSION['login_source'] == "id") {
+                $params["signature_id"] = $_POST['signature_id'];
+                $params["signature_value"] = $_POST['signature_value'];
+                $signatureResult = IdCardLogin::curlCall("api/v1/sign/finishidsign", $params);
+            } else {
+                $signatureResult = IdCardLogin::curlCall("api/v1/sign/startmidsign/" . $_SESSION['signing_contract_id'], $params);
+                if ($signatureResult['status'] == "OK") {
+                    $_SESSION['challenge'] = $signatureResult["challenge"];
+                    return IdContract::midRefreshWaitSignature($signatureResult["challenge"]);
+                }
+            }
+
             if (array_key_exists("error", $signatureResult)) {
                 return "<b>Form submit failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
             }
@@ -58,13 +92,19 @@ if (!class_exists("IdContract")) {
                 if (array_key_exists("error", $pdfLocation)) {
                     return "<b>Form submit failed because of: " . $pdfLocation['error'] . "</b><br>" . IdContract::getContractHtml();
                 }
-                return '<a href="https://api.idapi.ee/storage/pdf/' . $pdfLocation['pdfUrl'] . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode($pdfLocation['contract_id']);
+                $_SESSION['signing_contract_id'] = $pdfLocation['contract_id'];
+                return '<a href="https://api.idapi.ee/storage/pdf/' . $pdfLocation['pdfUrl']
+                        . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode();
             } else {
                 return NULL;
             }
         }
 
-        private function getSigningCode($contractId) {
+        private function getSigningCode() {
+            $contractId = $_SESSION['signing_contract_id'];
+            if ($_SESSION['login_source'] == "mid") {
+                return IdContract::getMidSigningCode($contractId);
+            }
             ?>
             <button onclick="startSigning()">Start signing</button>
             <script type="text/javascript" src="<?php echo IdCardLogin::getPluginBaseUrl() ?>/js/hwcrypto.js"></script>
@@ -84,7 +124,6 @@ if (!class_exists("IdContract")) {
                             // Tell jQuery we're expecting JSONP
                             dataType: "JSONP",
                             type: 'GET',
-                            // Tell YQL what we want and that we want JSON
                             data: {
                                 certificate: cert.hex
                             },
@@ -115,7 +154,6 @@ if (!class_exists("IdContract")) {
                                         '<input type="text" name="signature_id" value="' + signatureId + '" />' +
                                         '<input type="text" name="signature_value" value="' + signature.hex + '" />' +
                                         '<input type="hidden" name="signature_created" value="yes" />' +
-                                        '<input type="hidden" name="contract_id" value="<?php echo $contractId ?>" />' +
                                         '</form>'
                                         );
                                 jQuery('body').append(form);
@@ -127,6 +165,14 @@ if (!class_exists("IdContract")) {
             </script>
 
             <?php
+        }
+
+        private function getMidSigningCode() {
+            $signingCode = '<form action="" method="post">'
+                    . '<input type="hidden" name="signature_created" value="yes" />'
+                    . '<input type="Submit" value="Sign with Mobile-ID">'
+                    . '</form>';
+            return $signingCode;
         }
 
         private function generatePdf($contractId, $post) {

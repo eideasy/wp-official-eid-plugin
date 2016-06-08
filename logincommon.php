@@ -26,9 +26,6 @@ if (!class_exists("LoginCommon")) {
             //logime inimese ka wordpressi sisse
             LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email);
             wp_set_auth_cookie($user_id);
-            if ($_SESSION['login_source'] == "mid") {
-                return "Mobile-id login success";
-            } 
 
             if (array_key_exists('redirect_to', $_GET)) {
                 header('Location: ' . $_GET['redirect_to']);

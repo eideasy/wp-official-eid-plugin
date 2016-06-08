@@ -27,6 +27,7 @@ class MidLogin {
             $identityCode = $challengeResponse['idcode'];
             $email = $challengeResponse['email'];
             $authKey = $challengeResponse['auth_key'];
+            $_SESSION['login_source'] = "mid";
             LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey);
         } else {
             echo "This should not happen. Mobile-ID login failed because ";

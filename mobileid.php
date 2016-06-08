@@ -13,8 +13,6 @@ if (!class_exists("MobileId")) {
                     "mobileno" => $_POST['mobileno']
                 ];
                 return MobileId::midLoginStartSubmit($params);
-            } elseif (array_key_exists("mid_login_refresh_form", $_POST) && $_POST['mid_login_refresh_form'] == "yes") {
-                return MobileId::midLoginRefresh();
             } else {
                 return NULL;
             }
