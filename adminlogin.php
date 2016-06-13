@@ -11,7 +11,7 @@ class IdAdminLogin {
         $token = $_GET['token'];
 
         //tõmbame sisselogitud inimese andmed
-        $result = json_decode(IdAdminLogin::getUserFromIdid($token));
+        $result = json_decode(IdAdminLogin::getUserData($token));
         $identityCode = $result->id;
 
         //check if id code was returned and set session data accordign to login success or not
@@ -36,7 +36,7 @@ class IdAdminLogin {
     }
 
     //Kontrollime proxyst kasutaja andmeid
-    function getUserFromIdid($token) {
+    function getUserData($token) {
         $ch = curl_init();
         $url = "https://api.idapi.ee/api/v1/verifytoken/" . $token;
         curl_setopt($ch, CURLOPT_URL, $url);

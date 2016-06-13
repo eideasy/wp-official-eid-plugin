@@ -12,7 +12,7 @@ class IdcardAuthenticate {
         $token = $_GET['token'];
 
         //tõmbame sisselogitud inimese andmed
-        $result = json_decode(IdcardAuthenticate::getUserFromIdid($token));
+        $result = json_decode(IdcardAuthenticate::getUserData($token));
         $firstName = $result->firstname;
         $lastName = $result->lastname;
         $identityCode = $result->id;
@@ -22,8 +22,8 @@ class IdcardAuthenticate {
         LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey);
     }
 
-    //küsime idid käest inimese andmeid
-    function getUserFromIdid($token) {
+    //küsime serverist käest inimese andmeid
+    function getUserData($token) {
         $ch = curl_init();
         $url = "https://api.idapi.ee/api/v1/verifytoken/" . $token;
         curl_setopt($ch, CURLOPT_URL, $url);

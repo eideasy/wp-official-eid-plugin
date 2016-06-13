@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name: ID-card signing
- * Plugin URI: http://marguspala.com/
- * Description: This plugin allows you to login to wordpress with Estonian ID-card
+ * Plugin URI: https://idapi.ee/
+ * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
  * Version: 0.11
- * Author: Margus Pala
- * Author URI: http://marguspala.com/
+ * Author: Heikki Visnapuu
+ * Author URI: https://idapi.ee/
  * License: GPLv2 or later
 
   This program is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ if (!class_exists("IdCardLogin")) {
 
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
             return '<span>'
-                    . '<img id="idid" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img>'
+                    . '<img id="idLogin" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img>'
                     . '<img id="mid_login" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mid.gif"></img>'
                     . '</span>'
                     . '<form id="mid_login_form" action="" method="post">'

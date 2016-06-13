@@ -63,16 +63,13 @@ if (!class_exists("IdcardAdmin")) {
 
                         <?php if ($_SESSION['admin_id_verified'] != true) { ?>
                             <p>You are not yet authenticated digitally, please authenticate yourself</p>
-                            <div id="idid"></div>
-                            <script src="https://idid.ee/js/button.js"></script>
+                            <img id="idLogin" style="cursor:pointer" src=" <?php echo IdCardLogin::getPluginBaseUrl() ?>/img/idkaart.gif"></img>
+                            <script src="<?php echo IdCardLogin::getPluginBaseUrl() ?>/js/button.js"></script>
                             <script>
                                 new Button({img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5'}, function (token) {
-                    <?php
-                    $baseName = plugin_basename(__FILE__);
-                    $pluginFolder = explode(DIRECTORY_SEPARATOR, $baseName)[0];
-                    ?>
+
                                     if (JSON.stringify(token).length == 34) {
-                                        window.location = '<?php echo plugins_url() . "/" . $pluginFolder ?>/adminlogin.php?token=' + token + '&redir_to=' + window.location.href;
+                                        window.location = '<?php echo IdCardLogin::getPluginBaseUrl() ?>/adminlogin.php?token=' + token + '&redir_to=' + window.location.href;
                                     }
                                 });
                             </script>
@@ -110,16 +107,10 @@ if (!class_exists("IdcardAdmin")) {
         }
 
         static function registerSite() {
-
-            $ch = curl_init();
-            $url = "https://api.idapi.ee/api/v1/registerapp?siteurl=" . urlencode(explode("://",get_site_url())[1]) . "&idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'];
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            $curlResult = curl_exec($ch);
-            $result = json_decode($curlResult, true);
-            curl_close($ch);
+            $params = [
+                "siteurl" => urlencode(explode("://", get_site_url())[1])
+            ];
+            $result = IdCardLogin::curlCall("api/v1/registerapp", $params);
             return $result;
         }
 
@@ -128,7 +119,7 @@ if (!class_exists("IdcardAdmin")) {
             $token = $_GET['token'];
 
             //tõmbame sisselogitud inimese andmed
-            $result = json_decode(IdcardAuthenticate::getUserFromIdid($token));
+            $result = json_decode(IdcardAuthenticate::getUserData($token));
             $firstName = $result->firstname;
             $lastName = $result->lastname;
             $identityCode = $result->id;

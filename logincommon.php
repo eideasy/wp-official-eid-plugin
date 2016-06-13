@@ -5,7 +5,7 @@ if (!class_exists("LoginCommon")) {
     class LoginCommon {
 
         function login($identityCode, $firstName, $lastName, $email, $authKey) {
-            $userName = "EST" . $identityCode;
+            $userName = "EST" . $identityCode;            
 
             //Kontrollime, et saime ikka õige inimese andmed
             if (strlen($identityCode) == 11) {
