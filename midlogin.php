@@ -20,7 +20,7 @@ class MidLogin {
         }
 
         if (array_key_exists("status", $challengeResponse) && $challengeResponse['status'] == "OUTSTANDING_TRANSACTION") {
-            echo MobileId::getRefreshCode($_SESSION['challenge']);
+            echo MobileId::getRefreshCode($_SESSION['challenge'], 2000);
         } elseif (array_key_exists("status", $challengeResponse) && $challengeResponse['status'] == "OK") {
             $firstName = $challengeResponse['firstname'];
             $lastName = $challengeResponse['lastname'];

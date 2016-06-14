@@ -16,9 +16,8 @@ function Button(options, callback) {
         var myPopup = window.open('https://api.idapi.ee/idcard/oauth2?client_id=' + options.clientId, 'myWindow');
 
         refreshIntervalId = setInterval(function () {
-            var message = 'Hello!  The time is: ' + (new Date().getTime());
             console.log('Attempting ID-card login');
-            myPopup.postMessage(message, "https://api.idapi.ee"); //send the message and target URI
+            myPopup.postMessage("login", "https://api.idapi.ee"); //send the message and target URI
         }, 2000);
 
     };

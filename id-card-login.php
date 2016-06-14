@@ -4,7 +4,7 @@
  * Plugin Name: ID-card signing
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.11
+ * Version: 0.12
  * Author: Heikki Visnapuu
  * Author URI: https://idapi.ee/
  * License: GPLv2 or later
