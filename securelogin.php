@@ -25,7 +25,7 @@ class IdcardAuthenticate {
     //küsime serverist käest inimese andmeid
     function getUserData($token) {
         $ch = curl_init();
-        $url = "https://api.idapi.ee/api/v1/verifytoken/" . $token;
+        $url = "https://wpidkaartproxy.dev/api/v1/verifytoken/" . $token;
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

@@ -9,9 +9,14 @@ if (!class_exists("MobileId")) {
             if (array_key_exists("mid_login_start", $_POST) && $_POST['mid_login_start'] == "yes") {
                 return MobileId::midLoginStart();
             } elseif (array_key_exists("mid_login_start_form", $_POST) && $_POST['mid_login_start_form'] == "yes") {
+                $mobileno = $_POST['mobileno'];
+                if (substr($mobileno, 0, 4) == "372") {
+                    $mobileno = "+" . $mobileno;
+                } else if (substr($mobileno, 0, 4) != "+372") {
+                    $mobileno = "+372" . $mobileno;
+                }
                 $params = [
-                    "idcode" => $_POST['idcode'],
-                    "mobileno" => $_POST['mobileno']
+                    "mobileno" => $mobileno
                 ];
                 return MobileId::midLoginStartSubmit($params);
             } else {
@@ -22,8 +27,11 @@ if (!class_exists("MobileId")) {
         function midLoginStart() {
             $midDataFrom = '<form id="mid_login_start_form" action="" method="post">'
                     . '<input type="hidden" name="mid_login_start_form" value="yes">'
-                    . '<input type="text" name="idcode" placeholder="Idcode">'
-                    . '<input type="text" name="mobileno" placeholder="+3725xxxxx">'
+                    . '<table style="border:none">'
+                    . '<tr style="border:none">'
+                    . '<td width="20%" style="border:none;text-align:right">+372&nbsp;</td>'
+                    . '<td style="border:none"><input type="text" name="mobileno" placeholder="5xxxxx"></td>'
+                    . '</tr></table>'
                     . '<input type="submit" value="Start Mobile-ID login">'
                     . '</form>';
             return $midDataFrom;
