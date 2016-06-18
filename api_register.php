@@ -42,7 +42,7 @@
     <input id="auth_key" type="hidden">
     <input id="domain" name="domain" type="hidden" value="<?php echo get_site_url() ?>">   
     <h3>By registering you accept the below terms and conditions</h3>
-    <button id="registerbutton" class="page-title-action" style="height:70px;font-size:200%" onclick="apiRegister()">Click here to get the API key</button>
+    <button id="registerbutton" class="page-title-action" style="height:70px;font-size:200%" onclick="apiRegister()">Activate registration</button>
     <br>
     <div>
         <?php include("terms.html"); ?>

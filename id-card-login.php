@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Plugin Name: ID-card signing
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.14
+ * Version: 0.16
  * Author: Heikki Visnapuu
  * Author URI: https://idapi.ee/
  * License: GPLv2 or later
@@ -27,6 +26,21 @@ if (!class_exists("IdCardLogin")) {
     require_once( plugin_dir_path(__FILE__) . 'contract.php');
 
     class IdCardLogin {
+
+        static function admin_notice() {
+            if (get_option("site_client_id") == null) {
+                ?>
+                <div class="notice notice-success is-dismissible">
+                    <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) ?>">ID-API Settings</a> to Activate.</p>
+                </div>
+                <?php
+            }
+        }
+
+        static function get_settings_url($links) {
+            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) . '">ID-API Settings</a>';
+            return $links;
+        }
 
         //tekitame login nupu
         static function echo_id_login() {
@@ -102,10 +116,10 @@ if (!class_exists("IdCardLogin")) {
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postParamString);
             }
-            
+
 //            echo curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 //            die();
-            
+
             $curlResult = curl_exec($ch);
             $result = json_decode($curlResult, true);
             curl_close($ch);
@@ -114,6 +128,7 @@ if (!class_exists("IdCardLogin")) {
 
         //konfime andmebaasi
         static function idcard_install() {
+
             global $wpdb;
 
             $table_name = $wpdb->prefix . "idcard_users";
@@ -164,6 +179,7 @@ if (!class_exists("IdCardLogin")) {
             dbDelta($contractHtmlTable);
             dbDelta($contractFieldsTable);
             dbDelta($responsesTable);
+            return "Thank you for installing ID-API. Now please open ID-API settings to activate the service";
         }
 
         function startSession() {
@@ -191,6 +207,7 @@ if (!class_exists("IdCardLogin")) {
     //database install
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
     add_action('plugins_loaded', 'IdCardLogin::idcard_install');
+    add_action('admin_notices', 'IdCardLogin::admin_notice');
 
     // Hook for adding admin menus
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
@@ -201,4 +218,5 @@ if (!class_exists("IdCardLogin")) {
     //disable password reset
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
     add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
+    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');
 } 
