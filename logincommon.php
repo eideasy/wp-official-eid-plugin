@@ -4,8 +4,8 @@ if (!class_exists("LoginCommon")) {
 
     class LoginCommon {
 
-        function login($identityCode, $firstName, $lastName, $email, $authKey) {
-            $userName = "EST" . $identityCode;            
+        function login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource) {
+            $userName = "EST" . $identityCode;
 
             //Kontrollime, et saime ikka õige inimese andmed
             if (strlen($identityCode) == 11) {
@@ -22,9 +22,8 @@ if (!class_exists("LoginCommon")) {
                 die();
             }
 
-
             //logime inimese ka wordpressi sisse
-            LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email);
+            LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource);
             wp_set_auth_cookie($user_id);
 
             if (array_key_exists('redirect_to', $_GET)) {
@@ -72,12 +71,13 @@ if (!class_exists("LoginCommon")) {
         }
 
         //jätame kasutaja andmed sessiooni meelde
-        public static function setSession($identityCode, $firstName, $lastName, $authKey, $email) {
+        public static function setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource) {
             $_SESSION['identitycode'] = $identityCode;
             $_SESSION['firstname'] = $firstName;
             $_SESSION['lastname'] = $lastName;
             $_SESSION['auth_key'] = $authKey;
             $_SESSION['email'] = $email;
+            $_SESSION['login_source'] = $loginSource;
         }
 
     }

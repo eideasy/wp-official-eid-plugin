@@ -4,7 +4,7 @@
  * Plugin Name: ID-card signing
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.13
+ * Version: 0.14
  * Author: Heikki Visnapuu
  * Author URI: https://idapi.ee/
  * License: GPLv2 or later
@@ -25,7 +25,6 @@
 if (!class_exists("IdCardLogin")) {
     require_once( plugin_dir_path(__FILE__) . 'admin.php');
     require_once( plugin_dir_path(__FILE__) . 'contract.php');
-    require_once( plugin_dir_path(__FILE__) . 'mobileid.php');
 
     class IdCardLogin {
 
@@ -48,29 +47,15 @@ if (!class_exists("IdCardLogin")) {
             if (IdCardLogin::isUserIdLogged()) {
                 return null;
             }
-
-            $midLoginStatus = MobileId::midLoginStatus();
-            if ($midLoginStatus != NULL) {
-                return $midLoginStatus;
+            if (get_option("site_client_id") == NULL) {
+                return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
 
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
-            return '<span>'
-                    . '<img id="idLogin" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img>'
-                    . '<img id="mid_login" style="cursor:pointer" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mid.gif"></img>'
-                    . '</span>'
-                    . '<form id="mid_login_form" action="" method="post">'
-                    . '<input type="hidden" name="mid_login_start" value="yes">'
-                    . '</form>'
+            return '<div id="idlogin">'
+                    . '<script src="https://wpidkaartproxy.dev/js/button.js"></script>'
                     . '<script>'
-                    . 'var form = document.getElementById("mid_login_form");'
-                    . 'document.getElementById("mid_login").addEventListener("click", function () {'
-                    . 'form.submit();'
-                    . '});'
-                    . '</script>'
-                    . '<script src="' . IdCardLogin::getPluginBaseUrl() . '/js/button.js"></script>'
-                    . '<script>'
-                    . "new Button({ img: 5, width: 240, clientId: '022f8d04772c174a926572a125871156bb5ec12e361268407dd63530ce2523e5' }, function(token) { "
+                    . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+token+"' . $redirect_url . '"'
                     . "});</script>";
         }
@@ -82,7 +67,14 @@ if (!class_exists("IdCardLogin")) {
             return $pUrl . '/' . $pluginFolder;
         }
 
-        static function curlCall($apiPath, $params) {
+        /**
+         * 
+         * @param type $apiPath API path where to send the request
+         * @param type $params GET parameters in array format
+         * @param type $postParams if not null then call will be post and these params will be added to the POST 
+         * @return type
+         */
+        static function curlCall($apiPath, $params, $postParams = null) {
 
             $paramString = "?site_url=" . urlencode(urlencode(explode("://", get_site_url())[1]));
             $paramString = $paramString . '&idcode=' . (array_key_exists("identitycode", $_SESSION) ? $_SESSION['identitycode'] : "");
@@ -94,12 +86,26 @@ if (!class_exists("IdCardLogin")) {
                 }
             }
 
+            if ($postParams != NULL) {
+                foreach ($postParams as $key => $value) {
+                    $postParamString.="$key=$value&";
+                }
+            }
+
             $ch = curl_init();
-            $url = "https://api.idapi.ee/" . $apiPath . $paramString;
+            $url = "https://wpidkaartproxy.dev/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            if ($postParams != NULL) {
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postParamString);
+            }
+            
+//            echo curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+//            die();
+            
             $curlResult = curl_exec($ch);
             $result = json_decode($curlResult, true);
             curl_close($ch);

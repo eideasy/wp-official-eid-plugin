@@ -34,7 +34,7 @@ if (!class_exists("IdContract")) {
             if ($signatureResult['status'] == "OUTSTANDING_TRANSACTION") {
                 return IdContract::midRefreshWaitSignature($_SESSION['challenge']);
             } elseif (($signatureResult['status'] == "SIGNATURE")) {
-                return '<a href="https://api.idapi.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                return '<a href="https://wpidkaartproxy.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
                         . '">Document successfully signed. Download signed contract from here</a>';
             }
         }
@@ -53,29 +53,30 @@ if (!class_exists("IdContract")) {
 
         public function signatureCreated() {
             $params = [
-                "contract_id" => $_SESSION['signing_contract_id'],
-                "sess_id" => session_id()
+                "contract_id" => $_SESSION['signing_contract_id']
             ];
 
-            if ($_SESSION['login_source'] == "id") {
+            if ($_SESSION['login_source'] == "id-card") {
                 $params["signature_id"] = $_POST['signature_id'];
                 $params["signature_value"] = $_POST['signature_value'];
                 $signatureResult = IdCardLogin::curlCall("api/v1/sign/finishidsign", $params);
-            } else {
+            } else if ($_SESSION['login_source'] == "mobile-id") {
+
                 $signatureResult = IdCardLogin::curlCall("api/v1/sign/startmidsign/" . $_SESSION['signing_contract_id'], $params);
                 if ($signatureResult['status'] == "OK") {
                     $_SESSION['challenge'] = $signatureResult["challenge"];
                     return IdContract::midRefreshWaitSignature($signatureResult["challenge"]);
+                } else {
+                    return "Mobile-id signing failed because of: " . $signatureResult['message'];
                 }
+            } else {
+                return "Signing failed, cannot determine if logged in with id-card or mobile-id";
             }
 
-            if (array_key_exists("error", $signatureResult)) {
-                return "<b>Form submit failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
+            if ($signatureResult["status"] === "error") {
+                return "<b>Signing failed because of: " . $signatureResult['message'] . "</b><br>" . IdContract::getContractHtml();
             }
-            if (array_key_exists("error", $signatureResult)) {
-                return "<b>Signing failed because of: " . $signatureResult['error'] . "</b><br>" . IdContract::getContractHtml();
-            }
-            return '<a href="https://api.idapi.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+            return '<a href="https://wpidkaartproxy.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
                     . '">Document successfully signed. Download signed contract from here</a>';
         }
 
@@ -89,12 +90,16 @@ if (!class_exists("IdContract")) {
                     return $validateResult . IdContract::getContractHtml();
                 }
                 $pdfLocation = IdContract::generatePdf($contractId, $_POST);
-                if (array_key_exists("error", $pdfLocation)) {
-                    return "<b>Form submit failed because of: " . $pdfLocation['error'] . "</b><br>" . IdContract::getContractHtml();
+                if ($pdfLocation["status"] === "error") {
+                    return "<b>Form submit failed because of: " . $pdfLocation['message'] . "</b><br>" . IdContract::getContractHtml();
                 }
-                $_SESSION['signing_contract_id'] = $pdfLocation['contract_id'];
-                return '<a href="https://api.idapi.ee/storage/pdf/' . $pdfLocation['pdfUrl']
-                        . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode();
+                if ($pdfLocation['status'] === "OK") {
+                    $_SESSION['signing_contract_id'] = $pdfLocation['contract_id'];
+                    return '<a href="https://wpidkaartproxy.dev/storage/pdf/' . $pdfLocation['pdfUrl']
+                            . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode();
+                } else {
+                    return "Something went wrong and PDF cannt be created, Please contact info@idapi.ee";
+                }
             } else {
                 return NULL;
             }
@@ -102,7 +107,7 @@ if (!class_exists("IdContract")) {
 
         private function getSigningCode() {
             $contractId = $_SESSION['signing_contract_id'];
-            if ($_SESSION['login_source'] == "mid") {
+            if ($_SESSION['login_source'] == "mobile-id") {
                 return IdContract::getMidSigningCode($contractId);
             }
             ?>
@@ -120,7 +125,7 @@ if (!class_exists("IdContract")) {
                 function startSigning() {
                     window.hwcrypto.getCertificate({lang: "EST"}).then(function (cert) {
                         jQuery.ajax({
-                            url: "https://api.idapi.ee/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
+                            url: "https://wpidkaartproxy.dev/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
                             // Tell jQuery we're expecting JSONP
                             dataType: "JSONP",
                             type: 'GET',
@@ -186,24 +191,10 @@ if (!class_exists("IdContract")) {
                 $tagsString.=$tag['tag'] . "," . $post[$tag['tag']];
             }
 
-            $params = "site_secret=" . get_option("site_secret") .
-                    "&tags=" . urlencode($tagsString) .
-                    "&site_url=" . urlencode(urlencode(explode("://", get_site_url())[1])) .
-                    "&auth_key=" . $_SESSION['auth_key'] .
-                    "&idcode=" . $_SESSION['identitycode'];
+            $params = ["tags" => urlencode($tagsString)];
+            $postParams = ["html" => urlencode(base64_encode($html))];
 
-            $ch = curl_init();
-            $url = "https://api.idapi.ee/api/v1/generatepdf?" . $params;
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "html=" . urlencode(base64_encode($html)));
-
-            $curlResult = curl_exec($ch);
-            $result = json_decode($curlResult, true);
-            curl_close($ch);
+            $result = IdCardLogin::curlCall("api/v1/generatepdf", $params, $postParams);
 
             return $result;
         }
