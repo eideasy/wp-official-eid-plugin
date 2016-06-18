@@ -53,7 +53,7 @@ if (!class_exists("IdCardLogin")) {
 
             $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
             return '<div id="idlogin">'
-                    . '<script src="https://wpidkaartproxy.dev/js/button.js"></script>'
+                    . '<script src="https://api.idapi.ee/js/button.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+token+"' . $redirect_url . '"'
@@ -93,7 +93,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://wpidkaartproxy.dev/" . $apiPath . $paramString;
+            $url = "https://api.idapi.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

@@ -2,7 +2,7 @@
     <div id="loginBlock" class="col-md-offset-3 col-md-6" style="display: <?php echo array_key_exists("auth_key", $_SESSION) ? "none" : "block" ?>">
         <h1>Please authenticate yourself before activating the ID-API service</h1>
         <div id="idlogin"></div>
-        <script src="https://wpidkaartproxy.dev/js/button.js"></script>
+        <script src="https://api.idapi.ee/js/button.js"></script>
         <script>
             new Button({clientId: 'new_api'}, function (token) {
                 document.getElementById("register_form").style.display = "block";
@@ -12,7 +12,7 @@
             });
 
             function apiRegister() {
-                jQuery.ajax('https://wpidkaartproxy.dev/api/v1/register_api', {
+                jQuery.ajax('https://api.idapi.ee/api/v1/register_api', {
                     dataType: "jsonp",
                     data: {
                         auth_key: document.getElementById("form_auth_key").value,
