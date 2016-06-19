@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: ID-card signing
+ * Plugin Name: ID-API
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
  * Version: 0.16
@@ -69,8 +69,8 @@ if (!class_exists("IdCardLogin")) {
             return '<div id="idlogin">'
                     . '<script src="https://api.idapi.ee/js/button.js"></script>'
                     . '<script>'
-                    . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(token) { "
-                    . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+token+"' . $redirect_url . '"'
+                    . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
+                    . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+auth_token+"' . $redirect_url . '"'
                     . "});</script>";
         }
 
@@ -92,7 +92,7 @@ if (!class_exists("IdCardLogin")) {
 
             $paramString = "?site_url=" . urlencode(urlencode(explode("://", get_site_url())[1]));
             $paramString = $paramString . '&idcode=' . (array_key_exists("identitycode", $_SESSION) ? $_SESSION['identitycode'] : "");
-            $paramString.= "&auth_key=" . (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : "");
+            $paramString.= (array_key_exists("auth_key", $_SESSION) ? "&auth_key=" . $_SESSION['auth_key'] : "");
             $paramString.= "&site_secret=" . get_option("site_secret");
             if ($params != NULL) {
                 foreach ($params as $key => $value) {

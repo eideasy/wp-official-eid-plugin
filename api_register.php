@@ -4,11 +4,11 @@
         <div id="idlogin"></div>
         <script src="https://api.idapi.ee/js/button.js"></script>
         <script>
-            new Button({clientId: 'new_api'}, function (token) {
+            new Button({clientId: 'new_api'}, function (auth_token) {
                 document.getElementById("register_form").style.display = "block";
                 document.getElementById("loginBlock").style.display = "none";
-                document.getElementById("auth_key").value = token;
-                document.getElementById("form_auth_key").value = token;
+                document.getElementById("auth_key").value = auth_token;
+                document.getElementById("form_auth_key").value = auth_token;
             });
 
             function apiRegister() {

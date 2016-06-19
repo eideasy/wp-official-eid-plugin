@@ -76,8 +76,13 @@ if (!class_exists("IdContract")) {
             if ($signatureResult["status"] === "error") {
                 return "<b>Signing failed because of: " . $signatureResult['message'] . "</b><br>" . IdContract::getContractHtml();
             }
-            return '<a href="https://api.idapi.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
-                    . '">Document successfully signed. Download signed contract from here</a>';
+
+            if (array_key_exists("status", $signatureResult) && $signatureResult["status"] === "OK") {
+                return '<a href="https://api.idapi.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                        . '">Document successfully signed. Download signed contract from here</a>';
+            } else {
+                return "Technical problem signing the document, please contact help@idapi.ee";
+            }
         }
 
         public function submitForm() {

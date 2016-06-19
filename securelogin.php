@@ -13,6 +13,7 @@ class IdcardAuthenticate {
 
         //tõmbame sisselogitud inimese andmed
         $result = IdcardAuthenticate::getUserData($token);
+        var_dump($result);
         $firstName = $result['firstname'];
         $lastName = $result['lastname'];
         $identityCode = $result['id'];
@@ -24,8 +25,11 @@ class IdcardAuthenticate {
 
     //küsime serverist käest inimese andmeid
     function getUserData($token) {
-
-        $result = IdCardLogin::curlCall("api/v1/verifytoken/" . $token, null);
+        $params = [
+            "auth_key" => $token
+        ];
+                
+        $result = IdCardLogin::curlCall("api/v1/user_data", $params);
 
         return $result;
     }
