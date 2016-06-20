@@ -19,6 +19,7 @@ if (!class_exists("LoginCommon")) {
             } else {
                 //At least some form of error handling
                 echo "ERROR: Idcode not received from the login. Please try again";
+                echo "$identityCode, $firstName, $lastName, $email, $authKey, $loginSource";
                 die();
             }
 

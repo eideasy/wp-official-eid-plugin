@@ -13,13 +13,17 @@ class IdcardAuthenticate {
 
         //tõmbame sisselogitud inimese andmed
         $result = IdcardAuthenticate::getUserData($token);
-        var_dump($result);
         $firstName = $result['firstname'];
         $lastName = $result['lastname'];
         $identityCode = $result['id'];
         $email = $result['email'];
         $authKey = $result['auth_key'];
         $loginSource = $result['login_source'];
+        if (strlen($identityCode) != 11) {
+            echo "ERROR: Idcode not received from the login. Please contact help@idapi.ee <br>";
+            var_dump($result);
+            die();
+        }
         LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource);
     }
 
@@ -28,7 +32,7 @@ class IdcardAuthenticate {
         $params = [
             "auth_key" => $token
         ];
-                
+
         $result = IdCardLogin::curlCall("api/v1/user_data", $params);
 
         return $result;
