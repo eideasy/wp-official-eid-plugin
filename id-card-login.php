@@ -3,7 +3,7 @@
  * Plugin Name: ID-API
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.18
+ * Version: 0.19
  * Author: Heikki Visnapuu
  * Author URI: https://idapi.ee/
  * License: GPLv2 or later
@@ -53,8 +53,13 @@ if (!class_exists("IdCardLogin")) {
             return IdCardLogin::getLoginButtonCode();
         }
 
+        /**
+         * 
+         * @return false if login button needs to be shown. Happens when auth_key is missing 
+         * or auth key is present but WP user is not logged in.
+         */
         public function isUserIdLogged() {
-            return array_key_exists("auth_key", $_SESSION) && strlen($_SESSION['auth_key']) == 32;
+            return (array_key_exists("auth_key", $_SESSION) && strlen($_SESSION['auth_key']) == 32) && is_user_logged_in();
         }
 
         static function getLoginButtonCode() {
@@ -195,6 +200,10 @@ if (!class_exists("IdCardLogin")) {
         function disable_password_reset() {
             return false;
         }
+        
+        function authCookieExpiration () {
+            return 30*60;
+        }
 
     }
 
@@ -219,4 +228,5 @@ if (!class_exists("IdCardLogin")) {
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
     add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
     add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');
+    add_filter('auth_cookie_expiration', 'IdCardLogin::authCookieExpiration');
 } 
