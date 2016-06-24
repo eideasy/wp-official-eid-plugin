@@ -1,69 +1,45 @@
-<div class="container">
-    <div id="loginBlock" class="col-md-offset-3 col-md-6" style="display: <?php echo array_key_exists("auth_key", $_SESSION) ? "none" : "block" ?>">
-        <h1>Please authenticate yourself before activating the ID-API service</h1>
-        <div id="idlogin"></div>
-        <script src="https://api.idapi.ee/js/button.js"></script>
-        <script>
-            new Button({clientId: 'new_api'}, function (auth_token) {
-                document.getElementById("register_form").style.display = "block";
-                document.getElementById("loginBlock").style.display = "none";
-                document.getElementById("auth_key").value = auth_token;
-                document.getElementById("form_auth_key").value = auth_token;
-            });
-
-            function apiRegister() {
-                jQuery.ajax('https://api.idapi.ee/api/v1/register_api', {
-                    dataType: "jsonp",
-                    data: {
-                        auth_key: document.getElementById("form_auth_key").value,
-                        domain: document.getElementById("domain").value
-                    },
-                    success: function (result) {
-                        console.log("Register api call done, client_id=" + result.client_id);
-                        if (result.status === "OK") {                            
-                            document.getElementById("form_client_id").value = result.client_id;
-                            document.getElementById("form_secret").value = result.secret;
-                            document.getElementById("registerSuccessForm").submit();
-                        }
-                    }
+<?php
+defined('ABSPATH') or die('No script kiddies please!');
+if (array_key_exists("auth_key", $_SESSION) == false) {
+    ?>
+    <div class = "container">
+        <div id = "loginBlock" class = "col-md-offset-3 col-md-6">
+            <h1>Please authenticate yourself before activating the ID-API service</h1>
+            <div id = "idlogin"></div>
+            <script src = "https://api.idapi.ee/js/button.js"></script>
+            <script>
+                new Button({clientId: "<?php echo (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : 'new_api'); ?>"}, function (auth_token) {
+                    document.getElementById("auth_key").value = auth_token;
+                    document.getElementById("admin_login_form").submit();
                 });
-            }
-        </script>
-        <form id="registerSuccessForm" action="" method="post">
-            <input name="status" value="activation_done" type="hidden">
-            <input id="form_client_id" name="form_client_id" value="" type="hidden">
-            <input id="form_secret" name="form_secret" value="" type="hidden">
-            <input id="form_auth_key" name="form_auth_key" value="<?php echo (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : "") ?>" type="hidden">
-        </form>
+            </script>
+            <form id="admin_login_form" action="" method="post">
+                <input name="status" value="admin_login_done" type="hidden">
+                <input id="auth_key" name="auth_key" type="hidden">
+            </form>
+        </div>
     </div>
-</div>
-
-<div id="register_form" class="container" style="display: <?php echo array_key_exists("auth_key", $_SESSION) ? "block" : "none" ?>">
-    <input id="auth_key" type="hidden">
-    <input id="domain" name="domain" type="hidden" value="<?php echo get_site_url() ?>">   
-    <h3>By registering you accept the below terms and conditions</h3>
-    <button id="registerbutton" class="page-title-action" style="height:70px;font-size:200%" onclick="apiRegister()">Activate registration</button>
-    <br>
-    <div>
-        <?php include("terms.html"); ?>
+<?php } else {
+    ?>
+    <div class = "container">
+        <div id="register_form" class="container">     
+            <h3>By registering you accept the below terms and conditions</h3>
+            <form id="admin_login_form" action="" method="post">
+                <input name="status" value="register_api" type="hidden">
+                <button id="registerbutton" class="page-title-action" style="height:70px;font-size:200%">Activate registration</button>
+            </form>
+            <br>
+            <div>
+                <?php include("terms.html"); ?>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    window.onload = function () {
-        if (typeof jQuery === 'undefined') {
-            console.log("jQuery missing, loading...");
-            var headTag = document.getElementsByTagName("head")[0];
-            var jqTag = document.createElement('script');
-            jqTag.type = 'text/javascript';
-            jqTag.src = 'https://code.jquery.com/jquery-2.2.4.min.js';
-            jqTag.onload = myJQueryCode;
-            headTag.appendChild(jqTag);
-        } else {
-            console.log("Great jQuery present, all good");
-        }
-    };
-</script>
+<?php } ?>
+
+
+
+
 
 
 

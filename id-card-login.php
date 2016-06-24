@@ -3,7 +3,7 @@
  * Plugin Name: ID-API
  * Plugin URI: https://idapi.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.19
+ * Version: 0.20
  * Author: Heikki Visnapuu
  * Author URI: https://idapi.ee/
  * License: GPLv2 or later
@@ -28,7 +28,7 @@ if (!class_exists("IdCardLogin")) {
     class IdCardLogin {
 
         static function admin_notice() {
-            if (get_option("site_client_id") == null) {
+            if (get_option("site_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "id-signing-settings") {
                 ?>
                 <div class="notice notice-success is-dismissible">
                     <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) ?>">ID-API Settings</a> to Activate.</p>
@@ -70,7 +70,9 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
 
-            $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ? "&redirect_to=" . urlencode($_GET['redirect_to']) : "";
+            $redirect_url = strlen(array_key_exists('redirect_to', $_GET)) > 0 ?
+                    "&redirect_to=" . urlencode($_GET['redirect_to']) :
+                    '&redirect_to=http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
             return '<div id="idlogin">'
                     . '<script src="https://api.idapi.ee/js/button.js"></script>'
                     . '<script>'
@@ -121,11 +123,14 @@ if (!class_exists("IdCardLogin")) {
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postParamString);
             }
+//            if ($apiPath == "api/v1/verify_domains") {
+//                echo curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+//                die();
+//            }
 
-//            echo curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-//            die();
 
             $curlResult = curl_exec($ch);
+
             $result = json_decode($curlResult, true);
             curl_close($ch);
             return $result;
@@ -200,9 +205,9 @@ if (!class_exists("IdCardLogin")) {
         function disable_password_reset() {
             return false;
         }
-        
-        function authCookieExpiration () {
-            return 30*60;
+
+        function authCookieExpiration() {
+            return 30 * 60;
         }
 
     }
