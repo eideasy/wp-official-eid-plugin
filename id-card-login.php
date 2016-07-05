@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: ID-API
- * Plugin URI: https://idapi.ee/
+ * Plugin URI: https://smartid.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.20
+ * Version: 0.21
  * Author: Heikki Visnapuu
- * Author URI: https://idapi.ee/
+ * Author URI: https://smartid.ee/
  * License: GPLv2 or later
 
   This program is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ if (!class_exists("IdCardLogin")) {
                     "&redirect_to=" . urlencode($_GET['redirect_to']) :
                     '&redirect_to=http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
             return '<div id="idlogin">'
-                    . '<script src="https://api.idapi.ee/js/button.js"></script>'
+                    . '<script src="https://api.smartid.ee/js/button.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+auth_token+"' . $redirect_url . '"'
@@ -114,7 +114,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.idapi.ee/" . $apiPath . $paramString;
+            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
