@@ -14,6 +14,7 @@ if (!class_exists("IdcardAdmin")) {
             if (!current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
+
 //            if (isset($_POST["status"]) && $_POST["status"] == 'reset_site_secret') {
 //                update_option("site_secret", null);
 //                update_option("site_client_id", null);
@@ -30,7 +31,7 @@ if (!class_exists("IdcardAdmin")) {
                 if ($registerResult["status"] == "error") {
                     ?>
                     <div class="updated"><p><strong>Failed to activate registration <?php echo $registerResult["message"] ?></strong></p></div>                
-                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.ee/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
+                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.idapi.dev/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
                     <?php
                     return;
                 }

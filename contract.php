@@ -34,7 +34,7 @@ if (!class_exists("IdContract")) {
             if ($signatureResult['status'] == "OUTSTANDING_TRANSACTION") {
                 return IdContract::midRefreshWaitSignature($_SESSION['challenge']);
             } elseif (($signatureResult['status'] == "SIGNATURE")) {
-                return '<a href="https://api.smartid.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                return '<a href="https://api.idapi.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
                         . '">Document successfully signed. Download signed contract from here</a>';
             }
         }
@@ -78,7 +78,7 @@ if (!class_exists("IdContract")) {
             }
 
             if (array_key_exists("status", $signatureResult) && $signatureResult["status"] === "OK") {
-                return '<a href="https://api.smartid.ee/sign/getsignedfile/' . $signatureResult['bdocUrl']
+                return '<a href="https://api.idapi.dev/sign/getsignedfile/' . $signatureResult['bdocUrl']
                         . '">Document successfully signed. Download signed contract from here</a>';
             } else {
                 return "Technical problem signing the document, please contact help@idapi.ee";
@@ -100,7 +100,7 @@ if (!class_exists("IdContract")) {
                 }
                 if ($pdfLocation['status'] === "OK") {
                     $_SESSION['signing_contract_id'] = $pdfLocation['contract_id'];
-                    return '<a href="https://api.smartid.ee/storage/pdf/' . $pdfLocation['pdfUrl']
+                    return '<a href="https://api.idapi.dev/storage/pdf/' . $pdfLocation['pdfUrl']
                             . '">Download PDF to be signed from here</a>' . IdContract::getSigningCode();
                 } else {
                     return "Something went wrong and PDF cannt be created, Please contact info@idapi.ee";
@@ -130,7 +130,7 @@ if (!class_exists("IdContract")) {
                 function startSigning() {
                     window.hwcrypto.getCertificate({lang: "EST"}).then(function (cert) {
                         jQuery.ajax({
-                            url: "https://api.smartid.ee/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
+                            url: "https://api.idapi.dev/sign/startidsign/<?php echo $contractId . "?idcode=" . $_SESSION['identitycode'] . "&auth_key=" . $_SESSION['auth_key'] ?>",
                             // Tell jQuery we're expecting JSONP
                             dataType: "JSONP",
                             type: 'GET',

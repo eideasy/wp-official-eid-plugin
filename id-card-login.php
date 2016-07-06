@@ -3,7 +3,7 @@
  * Plugin Name: ID-API
  * Plugin URI: https://smartid.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.21
+ * Version: 0.22
  * Author: Heikki Visnapuu
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -63,9 +63,11 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function getLoginButtonCode() {
+            echo "login nupp";
             if (IdCardLogin::isUserIdLogged()) {
                 return null;
             }
+
             if (get_option("site_client_id") == NULL) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
@@ -74,7 +76,7 @@ if (!class_exists("IdCardLogin")) {
                     "&redirect_to=" . urlencode($_GET['redirect_to']) :
                     '&redirect_to=http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
             return '<div id="idlogin">'
-                    . '<script src="https://api.smartid.ee/js/button.js"></script>'
+                    . '<script src="https://api.idapi.dev/js/button.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+auth_token+"' . $redirect_url . '"'
@@ -114,7 +116,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
+            $url = "https://api.idapi.dev/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -210,6 +212,24 @@ if (!class_exists("IdCardLogin")) {
             return 30 * 60;
         }
 
+        function apiRegisterEasifier() {
+            console.log("processing");
+            $authKey = $_SESSION['auth_key'];
+            if (strlen($authKey) != 32) {
+                return;
+            }
+            ?>
+            <script type="text/javascript">
+                var authKey ="<?php echo $authKey ?>";
+                window.onload = function (e) {
+                    var elems = document.getElementsByTagName("a");
+                    for (var i = 0; i < elems.length; i++)
+                        elems[i]["href"] = elems[i]["href"].replace('https://api.idapi.dev/register_api', 'https://api.idapi.dev/register_api?auth_key=' + authKey);
+                };
+            </script>
+            <?php
+        }
+
     }
 
     //registreerime wordpressiga integratsioonipunktid
@@ -217,6 +237,7 @@ if (!class_exists("IdCardLogin")) {
     add_action('init', 'IdCardLogin::startSession', 1);
     add_action('wp_logout', 'IdCardLogin::endSession');
     add_action('wp_login', 'IdCardLogin::endSession');
+    add_action('wp_head', 'IdCardLogin::apiRegisterEasifier');
 
     //database install
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
