@@ -76,7 +76,7 @@ if (!class_exists("IdCardLogin")) {
                     "&redirect_to=" . urlencode($_GET['redirect_to']) :
                     '&redirect_to=http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
             return '<div id="idlogin">'
-                    . '<script src="https://api.idapi.dev/js/button.js"></script>'
+                    . '<script src="https://api.smartid.ee/js/button.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+auth_token+"' . $redirect_url . '"'
@@ -116,7 +116,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.idapi.dev/" . $apiPath . $paramString;
+            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -224,7 +224,7 @@ if (!class_exists("IdCardLogin")) {
                 window.onload = function (e) {
                     var elems = document.getElementsByTagName("a");
                     for (var i = 0; i < elems.length; i++)
-                        elems[i]["href"] = elems[i]["href"].replace('https://api.idapi.dev/register_api', 'https://api.idapi.dev/register_api?auth_key=' + authKey);
+                        elems[i]["href"] = elems[i]["href"].replace('https://api.smartid.ee/register_api', 'https://api.smartid.ee/register_api?auth_key=' + authKey);
                 };
             </script>
             <?php

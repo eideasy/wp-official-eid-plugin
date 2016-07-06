@@ -31,7 +31,7 @@ if (!class_exists("IdcardAdmin")) {
                 if ($registerResult["status"] == "error") {
                     ?>
                     <div class="updated"><p><strong>Failed to activate registration <?php echo $registerResult["message"] ?></strong></p></div>                
-                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.idapi.dev/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
+                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.ee/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
                     <?php
                     return;
                 }
