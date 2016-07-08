@@ -11,7 +11,7 @@ class IdcardAuthenticate {
         echo "Is php curl module installed?";
         $token = $_GET['token'];
 
-        //tõmbame sisselogitud inimese andmed
+
         $result = IdcardAuthenticate::getUserData($token);
         $firstName = $result['firstname'];
         $lastName = $result['lastname'];
@@ -27,7 +27,7 @@ class IdcardAuthenticate {
         LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource);
     }
 
-    //küsime serverist käest inimese andmeid
+
     function getUserData($token) {
         $params = [
             "auth_key" => $token
