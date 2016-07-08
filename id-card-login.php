@@ -23,7 +23,6 @@
  */
 if (!class_exists("IdCardLogin")) {
     require_once( plugin_dir_path(__FILE__) . 'admin.php');
-    require_once( plugin_dir_path(__FILE__) . 'contract.php');
 
     class IdCardLogin {
 
@@ -156,40 +155,10 @@ if (!class_exists("IdCardLogin")) {
                   );";
 
 
-            $contractHtmlTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_html (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,                
-                html text NOT NULL,                
-                created_at datetime NOT NULL,
-                active boolean default true,
-                UNIQUE KEY id (id)        
-                  );";
-
-            $contractFieldsTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_fields (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,                
-                contract_id mediumint(9) NOT NULL,
-                tag varchar(255) NOT NULL,        
-                name varchar(255) NOT NULL,
-                created_at datetime NOT NULL,
-                UNIQUE KEY id (id),          
-                FOREIGN KEY (contract_id) REFERENCES " . $wpdb->prefix . "contract_html(id)
-                  );";
-
-            $responsesTable = "CREATE TABLE if not exists " . $wpdb->prefix . "contract_responses (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,                
-                contract_id mediumint(9) NOT NULL,
-                identitycode VARCHAR(11) NOT NULL,
-                signing_time datetime NOT NULL,
-                response_id mediumint(9) NOT NULL,
-                UNIQUE KEY id (id),    
-                UNIQUE KEY response_id (response_id),                   
-                FOREIGN KEY (contract_id) REFERENCES " . $wpdb->prefix . "contract_html(id)
-                  );";
+           
 
             require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
             dbDelta($sql);
-            dbDelta($contractHtmlTable);
-            dbDelta($contractFieldsTable);
-            dbDelta($responsesTable);
             return "Thank you for installing ID-API. Now please open ID-API settings to activate the service";
         }
 
@@ -247,7 +216,6 @@ if (!class_exists("IdCardLogin")) {
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
     add_shortcode('id_login', 'IdCardLogin::return_id_login');
-//    add_shortcode('show_contract_form', 'IdContract::showContract');
 
     //disable password reset
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');

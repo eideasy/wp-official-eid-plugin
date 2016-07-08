@@ -96,16 +96,8 @@ if (!class_exists("IdcardAdmin")) {
                     <li>
                         <b>[id_login]</b> - creates login ID-card and Mobile-ID login buttons
                     </li>
-<!--                    <li>
-                        <b>[show_contract_form]</b> - shows contract template where user can enter fill blanks and sign the contract.
-                    </li>-->
                 </ol>
 
-                <?php
-//                echo "<b>Enter your contract template below</b>. <br>You can use tags for customers to fill in values in the format {{tag=Tag visible name}}. Tag must contain lowercase latin letters and Tag visible name can be anything<br>";
-//                echo "For example {{firstname=Your first name}} and {{phoneno=Phone number}}";
-//                include('adminform.php');
-                ?>
                 <br>
                 All questions and support at <a href="mailto:help@idapi.ee">help@idapi.ee</a>
                 <?php
