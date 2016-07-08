@@ -1,7 +1,7 @@
 === Smart-ID ===
 Contributors: Smart ID Estonia OÜ
-Author URI: http://ottopress.com/
-Plugin URL: http://ottopress.com/wordpress-plugins/theme-check/
+Author URI: https://smartid.ee
+Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, mobile-ID, identification, signing, digital signing, security
 Requires at least: na
 Tested up to: na
