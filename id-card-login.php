@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: ID-API
+ * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
- * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.24
- * Author: Heikki Visnapuu
+ * Description: Allow your visitors to login to wordpress with Estonian ID-card and mobile-ID
+ * Version: 0.25
+ * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
 
@@ -37,11 +37,10 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function get_settings_url($links) {
-            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) . '">ID-API Settings</a>';
+            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) . '">Smart-ID</a>';
             return $links;
         }
 
-        //tekitame login nupu
         static function echo_id_login() {
             echo '<div style="margin:auto" align="center">'
             . IdCardLogin::getLoginButtonCode()
@@ -136,7 +135,6 @@ if (!class_exists("IdCardLogin")) {
             return $result;
         }
 
-        //konfime andmebaasi
         static function idcard_install() {
 
             global $wpdb;
@@ -159,7 +157,7 @@ if (!class_exists("IdCardLogin")) {
 
             require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
             dbDelta($sql);
-            return "Thank you for installing ID-API. Now please open ID-API settings to activate the service";
+            return "Thank you for installing Smart-ID. Open Smart-ID settings to activate the service";
         }
 
         function startSession() {
@@ -200,24 +198,24 @@ if (!class_exists("IdCardLogin")) {
 
     }
 
-    //registreerime wordpressiga integratsioonipunktid
+
     add_action('login_footer', 'IdCardLogin::echo_id_login');
     add_action('init', 'IdCardLogin::startSession', 1);
     add_action('wp_logout', 'IdCardLogin::endSession');
     add_action('wp_login', 'IdCardLogin::endSession');
     add_action('wp_head', 'IdCardLogin::apiRegisterEasifier');
 
-    //database install
+
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
     add_action('plugins_loaded', 'IdCardLogin::idcard_install');
     add_action('admin_notices', 'IdCardLogin::admin_notice');
 
-    // Hook for adding admin menus
+
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
     add_shortcode('id_login', 'IdCardLogin::return_id_login');
 
-    //disable password reset
+
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
     add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
     add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');
