@@ -4,13 +4,13 @@ if (!class_exists("IdcardAdmin")) {
     class IdcardAdmin {
 
         static function id_settings_page() {
-            add_menu_page('ID-API settins', 'ID-API settings', 'manage_options', 'id-signing-settings', 'IdcardAdmin::create_id_settings_page');
+            add_menu_page('Smart-ID', 'Smart-ID', 'manage_options', 'id-signing-settings', 'IdcardAdmin::create_id_settings_page');
         }
 
-        //Tekitab html millega konfida ID allkirjastamise pluginat
+
         static function create_id_settings_page() {
-            echo "<h2> ID-API settings </h2>";
-            //must check that the user has the required capability 
+            echo "<h2> Smart-ID </h2>";
+
             if (!current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
@@ -74,7 +74,7 @@ if (!class_exists("IdcardAdmin")) {
             }
 
 
-            //Site has not activated ID-API yet
+            //Site has not activated Smart-ID yet
             if (get_option("site_client_id") == null) {
                 ?>        
                 <div class="wrap">
@@ -83,7 +83,7 @@ if (!class_exists("IdcardAdmin")) {
 
                 <?php
             } else {
-                echo "This site ID-API is active. client_id=" . get_option("site_client_id");
+                echo "This site Smart-ID is active. client_id=" . get_option("site_client_id");
                 ?>
 <!--                <form name = "form1" method = "post" action = "">
                     <input type = "hidden" name = "status" value = "reset_site_secret">
@@ -91,15 +91,15 @@ if (!class_exists("IdcardAdmin")) {
                 </form>-->
                 <br>                
                 <br> 
-                ID-API has shortcode that wordpress will replace on runtime:
+                Smart-ID has shortcode that wordpress will replace on runtime:
                 <ol>
                     <li>
-                        <b>[id_login]</b> - creates login ID-card and Mobile-ID login buttons
+                        <b>[id_login]</b> - creates login ID-card and Mobile-ID (Premium) login buttons
                     </li>
                 </ol>
 
                 <br>
-                All questions and support at <a href="mailto:help@idapi.ee">help@idapi.ee</a>
+                All questions and support at <a href="mailto:help@smartid.ee">help@smartid.ee</a>
                 <?php
             }
         }
