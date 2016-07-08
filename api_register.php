@@ -6,7 +6,7 @@ if (array_key_exists("auth_key", $_SESSION) == false) {
         <div id = "loginBlock" class = "col-md-offset-3 col-md-6">
             <h1>Please authenticate yourself before activating the ID-API service</h1>
             <div id = "idlogin"></div>
-            <script src = "https://api.smartid.dev/js/idbutton.js"></script>
+            <script src = "https://api.smartid.ee/js/idbutton.js"></script>
             <script>
                 new Button({clientId: "<?php echo (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : 'new_api'); ?>"}, function (auth_token) {
                     document.getElementById("auth_key").value = auth_token;
