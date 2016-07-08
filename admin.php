@@ -31,7 +31,7 @@ if (!class_exists("IdcardAdmin")) {
                 if ($registerResult["status"] == "error") {
                     ?>
                     <div class="updated"><p><strong>Failed to activate registration <?php echo $registerResult["message"] ?></strong></p></div>                
-                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.ee/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
+                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.dev/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
                     <?php
                     return;
                 }
@@ -90,20 +90,21 @@ if (!class_exists("IdcardAdmin")) {
                     <input type = "submit" name = "Submit" class = "button-primary" value = "Reset secret" />
                 </form>-->
                 <br>                
-                ID-API has 2 different shortcodes that wordpress will replace on runtime:
+                <br> 
+                ID-API has shortcode that wordpress will replace on runtime:
                 <ol>
                     <li>
                         <b>[id_login]</b> - creates login ID-card and Mobile-ID login buttons
                     </li>
-                    <li>
+<!--                    <li>
                         <b>[show_contract_form]</b> - shows contract template where user can enter fill blanks and sign the contract.
-                    </li>
+                    </li>-->
                 </ol>
 
                 <?php
-                echo "<b>Enter your contract template below</b>. <br>You can use tags for customers to fill in values in the format {{tag=Tag visible name}}. Tag must contain lowercase latin letters and Tag visible name can be anything<br>";
-                echo "For example {{firstname=Your first name}} and {{phoneno=Phone number}}";
-                include('adminform.php');
+//                echo "<b>Enter your contract template below</b>. <br>You can use tags for customers to fill in values in the format {{tag=Tag visible name}}. Tag must contain lowercase latin letters and Tag visible name can be anything<br>";
+//                echo "For example {{firstname=Your first name}} and {{phoneno=Phone number}}";
+//                include('adminform.php');
                 ?>
                 <br>
                 All questions and support at <a href="mailto:help@idapi.ee">help@idapi.ee</a>

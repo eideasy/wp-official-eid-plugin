@@ -3,7 +3,7 @@
  * Plugin Name: ID-API
  * Plugin URI: https://smartid.ee/
  * Description: This plugin allows you to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 0.22
+ * Version: 0.24
  * Author: Heikki Visnapuu
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -63,7 +63,6 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function getLoginButtonCode() {
-            echo "login nupp";
             if (IdCardLogin::isUserIdLogged()) {
                 return null;
             }
@@ -76,7 +75,7 @@ if (!class_exists("IdCardLogin")) {
                     "&redirect_to=" . urlencode($_GET['redirect_to']) :
                     '&redirect_to=http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
             return '<div id="idlogin">'
-                    . '<script src="https://api.smartid.ee/js/button.js"></script>'
+                    . '<script src="https://api.smartid.dev/js/idbutton.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
                     . 'window.location="' . IdCardLogin::getPluginBaseUrl() . '/securelogin.php?token="+auth_token+"' . $redirect_url . '"'
@@ -116,7 +115,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
+            $url = "https://api.smartid.dev/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -224,7 +223,7 @@ if (!class_exists("IdCardLogin")) {
                 window.onload = function (e) {
                     var elems = document.getElementsByTagName("a");
                     for (var i = 0; i < elems.length; i++)
-                        elems[i]["href"] = elems[i]["href"].replace('https://api.smartid.ee/register_api', 'https://api.smartid.ee/register_api?auth_key=' + authKey);
+                        elems[i]["href"] = elems[i]["href"].replace('https://api.smartid.dev/register_api', 'https://api.smartid.dev/register_api?auth_key=' + authKey);
                 };
             </script>
             <?php
@@ -248,7 +247,7 @@ if (!class_exists("IdCardLogin")) {
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
     add_shortcode('id_login', 'IdCardLogin::return_id_login');
-    add_shortcode('show_contract_form', 'IdContract::showContract');
+//    add_shortcode('show_contract_form', 'IdContract::showContract');
 
     //disable password reset
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
