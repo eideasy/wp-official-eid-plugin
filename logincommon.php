@@ -7,7 +7,7 @@ if (!class_exists("LoginCommon")) {
         function login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource) {
             $userName = "EST" . $identityCode;
 
-            //Kontrollime, et saime ikka õige inimese andmed
+
             if (strlen($identityCode) == 11) {
                 //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
                 $user = LoginCommon::getUser($identityCode);
@@ -23,7 +23,7 @@ if (!class_exists("LoginCommon")) {
                 die();
             }
 
-            //logime inimese ka wordpressi sisse
+
             LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource);
             wp_set_auth_cookie($user_id);
 
@@ -34,7 +34,7 @@ if (!class_exists("LoginCommon")) {
             }
         }
 
-        //sisestame inimese andmebaasi
+
         private static function createUser($userName, $firstName, $lastName, $email, $identityCode) {
             global $wpdb;
             $user_data = array(
@@ -58,7 +58,7 @@ if (!class_exists("LoginCommon")) {
             return $user_id;
         }
 
-        //vaatame, kas selle isikukoodiga inimene on juba baasis olemas
+
         private static function getUser($identityCode) {
             global $wpdb;
             $user = $wpdb->get_row(
@@ -71,7 +71,7 @@ if (!class_exists("LoginCommon")) {
             return $user;
         }
 
-        //jätame kasutaja andmed sessiooni meelde
+
         public static function setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource) {
             $_SESSION['identitycode'] = $identityCode;
             $_SESSION['firstname'] = $firstName;
