@@ -301,8 +301,7 @@ if (!class_exists("IdCardLogin")) {
 
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
-    add_shortcode('id_login', 'IdCardLogin::return_id_login');
-
+    add_shortcode('smart-id', 'IdCardLogin::return_id_login');
 
     add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
     add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
