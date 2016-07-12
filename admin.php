@@ -5,7 +5,7 @@ if (!class_exists("IdcardAdmin")) {
     class IdcardAdmin {
 
         static function id_settings_page() {
-            add_menu_page('Smart-ID', 'Smart-ID', 'manage_options', 'id-signing-settings', 'IdcardAdmin::create_id_settings_page');
+            add_menu_page('Smart-ID', 'Smart-ID', 'manage_options', 'smart-id-settings', 'IdcardAdmin::create_id_settings_page');
         }
 
         static function create_id_settings_page() {

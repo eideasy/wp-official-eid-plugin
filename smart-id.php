@@ -108,17 +108,17 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function admin_notice() {
-            if (get_option("site_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "id-signing-settings") {
+            if (get_option("site_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "smart-id-settings") {
                 ?>
                 <div class="notice notice-success is-dismissible">
-                    <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) ?>">ID-API Settings</a> to Activate.</p>
+                    <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) ?>">Smart-ID Settings</a> to Activate.</p>
                 </div>
                 <?php
             }
         }
 
         static function get_settings_url($links) {
-            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=id-signing-settings')) . '">Smart-ID</a>';
+            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) . '">Smart-ID Settings</a>';
             return $links;
         }
 
