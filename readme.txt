@@ -33,6 +33,7 @@ update our APIs, so that you can be sure that Smart-ID will always run smoothly 
 API calls.
 
 == Frequently Asked Questions ==
+Use shortcode [smart-id] to get login button
 Support email: help@gsmartid.ee
 
 == Screenshots ==
