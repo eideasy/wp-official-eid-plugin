@@ -7,9 +7,17 @@ if (!class_exists("IdcardAdmin")) {
             add_menu_page('Smart-ID', 'Smart-ID', 'manage_options', 'id-signing-settings', 'IdcardAdmin::create_id_settings_page');
         }
 
-
         static function create_id_settings_page() {
             echo "<h2> Smart-ID </h2>";
+            
+            if (!session_id()) {
+                session_start(); //use session in Smart-ID settings page where it is needed
+            }
+            
+            if (!function_exists('curl_version')) {
+                echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart-ID secure logins";
+                return;
+            }
 
             if (!current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
@@ -19,8 +27,6 @@ if (!class_exists("IdcardAdmin")) {
 //                update_option("site_secret", null);
 //                update_option("site_client_id", null);
 //            }
-
-
             //Check what is registration status for this domain
             if (isset($_POST["status"]) && $_POST["status"] == 'register_api') {
                 $params = [
@@ -31,7 +37,7 @@ if (!class_exists("IdcardAdmin")) {
                 if ($registerResult["status"] == "error") {
                     ?>
                     <div class="updated"><p><strong>Failed to activate registration <?php echo $registerResult["message"] ?></strong></p></div>                
-                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.ee/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
+                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.dev/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
                     <?php
                     return;
                 }
@@ -78,17 +84,17 @@ if (!class_exists("IdcardAdmin")) {
             if (get_option("site_client_id") == null) {
                 ?>        
                 <div class="wrap">
-                    <?php include("api_register.php"); ?>
+                <?php include("api_register.php"); ?>
                 </div>
 
-                <?php
-            } else {
-                echo "This site Smart-ID is active. client_id=" . get_option("site_client_id");
-                ?>
-<!--                <form name = "form1" method = "post" action = "">
-                    <input type = "hidden" name = "status" value = "reset_site_secret">
-                    <input type = "submit" name = "Submit" class = "button-primary" value = "Reset secret" />
-                </form>-->
+                    <?php
+                } else {
+                    echo "This site Smart-ID is active. client_id=" . get_option("site_client_id");
+                    ?>
+                <!--                <form name = "form1" method = "post" action = "">
+                                    <input type = "hidden" name = "status" value = "reset_site_secret">
+                                    <input type = "submit" name = "Submit" class = "button-primary" value = "Reset secret" />
+                                </form>-->
                 <br>                
                 <br> 
                 Smart-ID has shortcode that wordpress will replace on runtime:

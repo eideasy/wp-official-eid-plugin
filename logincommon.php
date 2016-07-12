@@ -7,7 +7,6 @@ if (!class_exists("LoginCommon")) {
         function login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource) {
             $userName = "EST" . $identityCode;
 
-
             if (strlen($identityCode) == 11) {
                 //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
                 $user = LoginCommon::getUser($identityCode);
@@ -23,17 +22,10 @@ if (!class_exists("LoginCommon")) {
                 die();
             }
 
-
-            LoginCommon::setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource);
+            LoginCommon::setSession($identityCode, $authKey);            
             wp_set_auth_cookie($user_id);
-
-            if (array_key_exists('redirect_to', $_GET)) {
-                header('Location: ' . $_GET['redirect_to']);
-            } else {
-                header('Location: ' . home_url());
-            }
+            //redirect handeled by javascript
         }
-
 
         private static function createUser($userName, $firstName, $lastName, $email, $identityCode) {
             global $wpdb;
@@ -58,7 +50,6 @@ if (!class_exists("LoginCommon")) {
             return $user_id;
         }
 
-
         private static function getUser($identityCode) {
             global $wpdb;
             $user = $wpdb->get_row(
@@ -70,15 +61,18 @@ if (!class_exists("LoginCommon")) {
             );
             return $user;
         }
-
-
-        public static function setSession($identityCode, $firstName, $lastName, $authKey, $email, $loginSource) {
+        
+        
+        /**
+         * Sessions will be used only for the users who have logged in with Estonian ID-card or Mobile-ID
+         * 
+         * @param type $identityCode
+         * @param type $authKey
+         */
+        public static function setSession($identityCode, $authKey) {
+            //Session already started from the curl call of getting user data
             $_SESSION['identitycode'] = $identityCode;
-            $_SESSION['firstname'] = $firstName;
-            $_SESSION['lastname'] = $lastName;
             $_SESSION['auth_key'] = $authKey;
-            $_SESSION['email'] = $email;
-            $_SESSION['login_source'] = $loginSource;
         }
 
     }
