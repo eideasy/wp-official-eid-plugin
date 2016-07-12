@@ -6,7 +6,7 @@ if (get_transient( "site_temp_key" ) == null) {
         <div id = "loginBlock" class = "col-md-offset-3 col-md-6">
             <h1>Please authenticate yourself before activating the ID-API service</h1>
             <div id = "idlogin"></div>
-            <script src = "https://api.smartid.dev/js/idbutton.js"></script>
+            <script src = "https://api.smartid.ee/js/idbutton.js"></script>
             <script>
                 new Button({clientId: "<?php echo ((IdCardLogin::getAuthKey() == null) ? 'new_api' : IdCardLogin::getAuthKey()); ?>"}, function (auth_token) {
                     document.getElementById("auth_key").value = auth_token;

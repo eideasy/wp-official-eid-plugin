@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -163,7 +163,7 @@ if (!class_exists("IdCardLogin")) {
             $redirect_url = "&redirect_to=$redirect_to";
 
             return '<div id="idlogin">'
-                    . '<script src="https://api.smartid.dev/js/idbutton.js"></script>'
+                    . '<script src="https://api.smartid.ee/js/idbutton.js"></script>'
                     . '<script>'
                     . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
                     . 'window.location=window.location.href+'
@@ -204,7 +204,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.smartid.dev/" . $apiPath . $paramString;
+            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -277,7 +277,7 @@ if (!class_exists("IdCardLogin")) {
                 window.onload = function (e) {
                     var elems = document.getElementsByTagName("iframe");
                     for (var i = 0; i < elems.length; i++)
-                        elems[i]["src"] = elems[i]["src"].replace('https://api.smartid.dev/register_api', 'https://api.smartid.dev/register_api?auth_key=' + authKey);
+                        elems[i]["src"] = elems[i]["src"].replace('https://api.smartid.ee/register_api', 'https://api.smartid.ee/register_api?auth_key=' + authKey);
                 };
             </script>
             <?php
