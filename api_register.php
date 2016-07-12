@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') or die('No script kiddies please!');
-if (array_key_exists("auth_key", $_SESSION) == false) {
+if (get_transient( "site_temp_key" ) == null) {
     ?>
     <div class = "container">
         <div id = "loginBlock" class = "col-md-offset-3 col-md-6">
@@ -8,7 +8,7 @@ if (array_key_exists("auth_key", $_SESSION) == false) {
             <div id = "idlogin"></div>
             <script src = "https://api.smartid.dev/js/idbutton.js"></script>
             <script>
-                new Button({clientId: "<?php echo (array_key_exists("auth_key", $_SESSION) ? $_SESSION['auth_key'] : 'new_api'); ?>"}, function (auth_token) {
+                new Button({clientId: "<?php echo ((IdCardLogin::getAuthKey() == null) ? 'new_api' : IdCardLogin::getAuthKey()); ?>"}, function (auth_token) {
                     document.getElementById("auth_key").value = auth_token;
                     document.getElementById("admin_login_form").submit();
                 });

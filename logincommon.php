@@ -11,7 +11,7 @@ if (!class_exists("LoginCommon")) {
                 //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
                 $user = LoginCommon::getUser($identityCode);
                 if (($user == NULL) and ( NULL == username_exists($userName))) {
-                    $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode);
+                    $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $authKey);
                 } else {
                     $user_id = $user->userid;
                 }
@@ -22,12 +22,13 @@ if (!class_exists("LoginCommon")) {
                 die();
             }
 
-            LoginCommon::setSession($identityCode, $authKey);            
             wp_set_auth_cookie($user_id);
+            LoginCommon::setSession($authKey, $user_id);
+
             //redirect handeled by javascript
         }
 
-        private static function createUser($userName, $firstName, $lastName, $email, $identityCode) {
+        private static function createUser($userName, $firstName, $lastName, $email, $identityCode, $authKey) {
             global $wpdb;
             $user_data = array(
                 'user_pass' => wp_generate_password(64, true),
@@ -45,6 +46,7 @@ if (!class_exists("LoginCommon")) {
                 'identitycode' => $identityCode,
                 'userid' => $user_id,
                 'created_at' => current_time('mysql'),
+                'auth_key' => $authKey,
                     )
             );
             return $user_id;
@@ -55,24 +57,20 @@ if (!class_exists("LoginCommon")) {
             $user = $wpdb->get_row(
                     $wpdb->prepare(
                             "select * from $wpdb->prefix" . "idcard_users
-		 WHERE identitycode=%s		 
-		", $identityCode
+		 WHERE identitycode=%s", $identityCode
                     )
             );
             return $user;
         }
-        
-        
+
         /**
          * Sessions will be used only for the users who have logged in with Estonian ID-card or Mobile-ID
          * 
          * @param type $identityCode
          * @param type $authKey
          */
-        public static function setSession($identityCode, $authKey) {
-            //Session already started from the curl call of getting user data
-            $_SESSION['identitycode'] = $identityCode;
-            $_SESSION['auth_key'] = $authKey;
+        public static function setSession($authKey, $userId) {
+            IdCardLogin::setAuthKey($authKey, $userId);
         }
 
     }

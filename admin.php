@@ -1,4 +1,5 @@
 <?php
+require_once( plugin_dir_path(__FILE__) . 'securelogin.php');
 if (!class_exists("IdcardAdmin")) {
 
     class IdcardAdmin {
@@ -9,11 +10,6 @@ if (!class_exists("IdcardAdmin")) {
 
         static function create_id_settings_page() {
             echo "<h2> Smart-ID </h2>";
-            
-            if (!session_id()) {
-                session_start(); //use session in Smart-ID settings page where it is needed
-            }
-            
             if (!function_exists('curl_version')) {
                 echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart-ID secure logins";
                 return;
@@ -30,20 +26,22 @@ if (!class_exists("IdcardAdmin")) {
             //Check what is registration status for this domain
             if (isset($_POST["status"]) && $_POST["status"] == 'register_api') {
                 $params = [
-                    "domain" => get_site_url()
+                    "domain" => get_site_url(),
+                    "auth_key" => get_transient("site_temp_key")
                 ];
+
                 $registerResult = IdCardLogin::curlCall("api/v1/register_api", $params);
 
                 if ($registerResult["status"] == "error") {
                     ?>
                     <div class="updated"><p><strong>Failed to activate registration <?php echo $registerResult["message"] ?></strong></p></div>                
-                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.dev/register_api?auth_key=<?php echo $_SESSION["auth_key"]; ?>">here</a></strong></p></div>    
+                    <div class="updated"><p><strong>Manual activation available at <a href="https://api.smartid.dev/register_api?auth_key=<?php echo get_transient("site_temp_key"); ?>">here</a></strong></p></div>    
                     <?php
                     return;
                 }
                 $verification = $registerResult["verification"];
                 $client_id = $registerResult["client_id"];
-                if (strlen($verification) === 32 && $_SESSION['auth_key'] != NULL) {
+                if (strlen($verification) === 32 && get_transient("site_temp_key") != NULL) {
                     $path = get_home_path();
                     $file = fopen("$path$verification.html", "w");
                     fwrite($file, htmlentities($verification));
@@ -51,7 +49,8 @@ if (!class_exists("IdcardAdmin")) {
                 }
 
                 $verifyParams = [
-                    "client_id" => $client_id
+                    "client_id" => $client_id,
+                    "auth_key" => get_transient("site_temp_key")
                 ];
 
                 $verifyResult = IdCardLogin::curlCall("api/v1/verify_domain", $verifyParams);
@@ -66,7 +65,7 @@ if (!class_exists("IdcardAdmin")) {
                 // Save the posted value in the database
                 update_option("site_secret", $verifyResult['secret']);
                 update_option("site_client_id", $verifyResult['client_id']);
-
+                set_transient("site_temp_key", NULL, 300);
 
                 // Show confirmation
                 ?>
@@ -76,7 +75,7 @@ if (!class_exists("IdcardAdmin")) {
 
             //Check what is registration status for this domain
             if (isset($_POST["status"]) && $_POST["status"] == 'admin_login_done') {
-                $_SESSION['auth_key'] = $_POST['auth_key'];
+                set_transient("site_temp_key", $_POST['auth_key'], 300);
             }
 
 
@@ -84,13 +83,13 @@ if (!class_exists("IdcardAdmin")) {
             if (get_option("site_client_id") == null) {
                 ?>        
                 <div class="wrap">
-                <?php include("api_register.php"); ?>
+                    <?php include("api_register.php"); ?>
                 </div>
 
-                    <?php
-                } else {
-                    echo "This site Smart-ID is active. client_id=" . get_option("site_client_id");
-                    ?>
+                <?php
+            } else {
+                echo "This site Smart-ID is active. client_id=" . get_option("site_client_id");
+                ?>
                 <!--                <form name = "form1" method = "post" action = "">
                                     <input type = "hidden" name = "status" value = "reset_site_secret">
                                     <input type = "submit" name = "Submit" class = "button-primary" value = "Reset secret" />

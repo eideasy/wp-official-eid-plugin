@@ -1,11 +1,10 @@
 <?php
+
 require_once('logincommon.php');
 
 class IdcardAuthenticate {
 
-    static function login() {
-        $token = $_GET['token'];
-
+    static function login($token) {
         $result = IdcardAuthenticate::getUserData($token);
         $firstName = $result['firstname'];
         $lastName = $result['lastname'];
@@ -20,7 +19,6 @@ class IdcardAuthenticate {
         }
         LoginCommon::login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource);
     }
-
 
     function getUserData($token) {
         $params = [
