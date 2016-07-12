@@ -34,7 +34,7 @@ API calls.
 
 == Frequently Asked Questions ==
 Use shortcode [smart-id] to get login button
-Support email: help@gsmartid.ee
+Support email: help@smartid.ee
 
 == Screenshots ==
 
