@@ -8,9 +8,11 @@ Tested up to: na
 Stable tag: trunk
 
 == Description==
-Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID
-Installation very easy, just install & enjoy.
-Any problem, please check FAQ Tab.
+Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID.
+Smart-ID is authentication method that uses external servers to identify customers. 
+User name, identitycode and e-mail are identified. 
+In addition dynamic javascript, needed for logging in, is downloaded from Smart-ID servers and Apache webserver records website user IP address into its standard access.log
+Installation very easy, just install & use shortcode [smart-id] to have login buttons.
 
 == Installation ==
 
