@@ -5,7 +5,7 @@ Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, mobile-ID, identification, signing, digital signing, security
 Requires at least: na
 Tested up to: na
-Stable tag: 1.0
+Stable tag: trunk
 
 == Description==
 Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID
