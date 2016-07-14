@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -26,15 +26,13 @@ if (!class_exists("IdCardLogin")) {
 
     class IdCardLogin {
 
-        function setAuthKey($authKey, $userId = null) {
+        static function setAuthKey($authKey, $userId = null) {
             global $wpdb;
             if ($userId == null) {
                 $current_user = wp_get_current_user();
                 $userId = $current_user->ID;
             }
 
-
-            error_log("keys $authKey $userId");
             $wpdb->update(
                     "$wpdb->prefix" . "idcard_users", [
                 'auth_key' => $authKey
@@ -44,7 +42,7 @@ if (!class_exists("IdCardLogin")) {
             );
         }
 
-        function getAuthKey() {
+        static function getAuthKey() {
             $user = IdCardLogin::getStoredUserData();
             if ($user != null) {
                 return $user->auth_key;
@@ -53,7 +51,7 @@ if (!class_exists("IdCardLogin")) {
             }
         }
 
-        function getStoredUserData() {
+        static function getStoredUserData() {
             global $wpdb;
             $current_user = wp_get_current_user();
             $user = $wpdb->get_row(
@@ -65,27 +63,27 @@ if (!class_exists("IdCardLogin")) {
             return $user;
         }
 
-        function endSession() {
+        static function endSession() {
             IdCardLogin::setAuthKey(NULL);
             set_transient("site_temp_key", NULL, 300);
         }
 
-        function isLogin() {
+        static function isLogin() {
             return array_key_exists('id-login', $_GET) && $_GET['id-login'] === "yes";
         }
 
-        function wpInitProcess() {
+        static function wpInitProcess() {
             if (IdCardLogin::isLogin()) {
                 require_once( plugin_dir_path(__FILE__) . 'securelogin.php');
                 IdcardAuthenticate::login($_GET['token']);
             }
         }
 
-        function wpHeadProcess() {
+        static function wpHeadProcess() {
             IdCardLogin::echoJsRedirectCode();
         }
 
-        function echoJsRedirectCode() {
+        static function echoJsRedirectCode() {
             if (IdCardLogin::isLogin()) {
                 if (array_key_exists('redirect_to', $_GET)) {
                     $redirectUrl = $_GET['redirect_to'];
@@ -95,7 +93,6 @@ if (!class_exists("IdCardLogin")) {
                 if (strpos($redirectUrl, "wp-login") > 0) {
                     $redirectUrl = home_url("/");
                 }
-                error_log("Redirectime: $redirectUrl " . strpos($redirectUrl, "wp-login"));
                 ?>
 
                 <script type="text/javascript">
@@ -136,7 +133,7 @@ if (!class_exists("IdCardLogin")) {
          * @return false if login button needs to be shown. Happens when auth_key is missing 
          * or auth key is present but WP user is not logged in.
          */
-        public function isUserIdLogged() {
+        static function isUserIdLogged() {
             if (!is_user_logged_in()) {
                 return false;
             } else {
@@ -244,20 +241,20 @@ if (!class_exists("IdCardLogin")) {
             return "Thank you for installing Smart-ID. Open Smart-ID settings to activate the service";
         }
 
-        function disable_password_reset() {
+        static function disable_password_reset() {
             return false;
         }
 
-        function authCookieExpiration() {
+        static function authCookieExpiration() {
             return 30 * 60;
         }
 
-        function enqueueJquery() {
+        static function enqueueJquery() {
             wp_enqueue_script('jquery');
         }
 
         //hack for smartid.ee page only, not affecting anybody else with the sessions nor caching
-        function apiRegisterEasifier() {
+        static function apiRegisterEasifier() {
             if ($_SERVER['HTTP_HOST'] != "smartid.ee") {
                 return;
             }
