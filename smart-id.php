@@ -161,7 +161,7 @@ if (!class_exists("IdCardLogin")) {
 //            }
 //            $redirect_url = "&redirect_to=$redirect_to";
 
-            return '<a href="https://api.smartid.dev/oauth/authorize'
+            return '<a href="https://api.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
                     . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img></a>';
@@ -196,7 +196,7 @@ if (!class_exists("IdCardLogin")) {
             }        
 
             $ch = curl_init();
-            $url = "https://api.smartid.dev/" . $apiPath . $paramString;
+            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
