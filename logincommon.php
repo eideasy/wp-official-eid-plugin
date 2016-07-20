@@ -4,31 +4,28 @@ if (!class_exists("LoginCommon")) {
 
     class LoginCommon {
 
-        function login($identityCode, $firstName, $lastName, $email, $authKey, $loginSource) {
+        function login($identityCode, $firstName, $lastName, $email) {
             $userName = "EST" . $identityCode;
 
             if (strlen($identityCode) == 11) {
                 //Otsime üles sisselogitud inimese või tekitame, kui teda varem polnud
                 $user = LoginCommon::getUser($identityCode);
                 if (($user == NULL) and ( NULL == username_exists($userName))) {
-                    $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $authKey);
+                    $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode);
                 } else {
                     $user_id = $user->userid;
                 }
             } else {
                 //At least some form of error handling
                 echo "ERROR: Idcode not received from the login. Please try again";
-                echo "$identityCode, $firstName, $lastName, $email, $authKey, $loginSource";
+                echo "$identityCode, $firstName, $lastName, $email";
                 die();
             }
 
             wp_set_auth_cookie($user_id);
-            LoginCommon::setSession($authKey, $user_id);
-
-            //redirect handeled by javascript
         }
 
-        private static function createUser($userName, $firstName, $lastName, $email, $identityCode, $authKey) {
+        private static function createUser($userName, $firstName, $lastName, $email, $identityCode) {
             global $wpdb;
             $user_data = array(
                 'user_pass' => wp_generate_password(64, true),
@@ -45,8 +42,7 @@ if (!class_exists("LoginCommon")) {
                 'lastname' => $lastName,
                 'identitycode' => $identityCode,
                 'userid' => $user_id,
-                'created_at' => current_time('mysql'),
-                'auth_key' => $authKey,
+                'created_at' => current_time('mysql')
                     )
             );
             return $user_id;
@@ -61,16 +57,6 @@ if (!class_exists("LoginCommon")) {
                     )
             );
             return $user;
-        }
-
-        /**
-         * Sessions will be used only for the users who have logged in with Estonian ID-card or Mobile-ID
-         * 
-         * @param type $identityCode
-         * @param type $authKey
-         */
-        public static function setSession($authKey, $userId) {
-            IdCardLogin::setAuthKey($authKey, $userId);
         }
 
     }

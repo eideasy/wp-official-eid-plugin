@@ -8,11 +8,11 @@ class EssentialsTest extends WP_UnitTestCase {
 	}
 
 	function testClientActivated() {		
-		update_option("site_client_id", "asdzxc");
+		update_option("smartid_client_id", "asdzxc");
 		$loginCode=IdCardLogin::getLoginButtonCode();
 		$this->assertContains( "asdzxc", $loginCode );
-		$this->assertContains( "button.js", $loginCode );
-		$this->assertContains( "redirect_to", $loginCode );
+		$this->assertContains( "oauth/authorize", $loginCode );
+		$this->assertContains( "idkaart.gif", $loginCode );
 	}
 
 	function testIsUserIdLoggedNotLogged() {
@@ -31,7 +31,6 @@ class EssentialsTest extends WP_UnitTestCase {
 		        'identitycode' => "123123123",
 		        'userid' => $userId,
 		        'created_at' => current_time('mysql'),
-		        'auth_key' => $authKey,
                  )
 	        );
 		$logged=IdCardLogin::isUserIdLogged();

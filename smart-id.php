@@ -69,13 +69,14 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function isLogin() {
-            return array_key_exists('id-login', $_GET) && $_GET['id-login'] === "yes";
+            return array_key_exists('code', $_GET) && strlen($_GET['code']) === 40;
         }
 
         static function wpInitProcess() {
             if (IdCardLogin::isLogin()) {
                 require_once( plugin_dir_path(__FILE__) . 'securelogin.php');
-                IdcardAuthenticate::login($_GET['token']);
+                IdcardAuthenticate::login($_GET['code']);                
+                wp_redirect("/");
             }
         }
 
@@ -105,7 +106,7 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function admin_notice() {
-            if (get_option("site_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "smart-id-settings") {
+            if (get_option("smartid_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "smart-id-settings") {
                 ?>
                 <div class="notice notice-success is-dismissible">
                     <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) ?>">Smart-ID Settings</a> to Activate.</p>
@@ -137,7 +138,7 @@ if (!class_exists("IdCardLogin")) {
             if (!is_user_logged_in()) {
                 return false;
             } else {
-                return IdCardLogin::getAuthKey() != NULL;
+                return IdCardLogin::getStoredUserData() != NULL;
             }
         }
 
@@ -146,27 +147,24 @@ if (!class_exists("IdCardLogin")) {
                 return null;
             }
 
-            if (get_option("site_client_id") == NULL) {
+            if (get_option("smartid_client_id") == NULL) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
 
-            $redirect_to = strlen(array_key_exists('redirect_to', $_GET)) > 0 ?
-                    "" . urlencode($_GET['redirect_to']) :
-                    'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+            //need to think how to use redirect_to
+//            $redirect_to = strlen(array_key_exists('redirect_to', $_GET)) > 0 ?
+//                    "" . urlencode($_GET['redirect_to']) :
+//                    'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+//
+//            if (strpos($redirect_to, "wp-login") > 0) {
+//                $redirect_to = home_url("/");
+//            }
+//            $redirect_url = "&redirect_to=$redirect_to";
 
-            if (strpos($redirect_to, "wp-login") > 0) {
-                $redirect_to = home_url("/");
-            }
-            $redirect_url = "&redirect_to=$redirect_to";
-
-            return '<div id="idlogin">'
-                    . '<script src="https://api.smartid.ee/js/idbutton.js"></script>'
-                    . '<script>'
-                    . "new Button({clientId: '" . get_option("site_client_id") . "' }, function(auth_token) { "
-                    . 'window.location=window.location.href+'
-                    . '(window.location.href.indexOf("?")===-1?"?":"&")+'
-                    . '"id-login=yes&token="+auth_token+"' . $redirect_url . '"'
-                    . "});</script>";
+            return '<a href="https://api.smartid.dev/oauth/authorize'
+                    . '?client_id=' . get_option("smartid_client_id")
+                    . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
+                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img></a>';
         }
 
         static function getPluginBaseUrl() {
@@ -184,10 +182,7 @@ if (!class_exists("IdCardLogin")) {
          * @return type
          */
         static function curlCall($apiPath, $params, $postParams = null) {
-            $paramString = "?site_url=" . urlencode(urlencode(explode("://", get_site_url())[1]));
-            $paramString .= '&idcode=' . (IdCardLogin::getStoredUserData() == null ? IdCardLogin::getStoredUserData()->identitycode : "");
-            $paramString .= "&auth_key=" . (array_key_exists("auth_key", $params) ? $params["auth_key"] : IdCardLogin::getAuthKey());
-            $paramString .= "&site_secret=" . get_option("site_secret");
+            $paramString = "?client_id=" . get_option("smartid_client_id");
             if ($params != NULL) {
                 foreach ($params as $key => $value) {
                     $paramString.="&$key=$value";
@@ -198,10 +193,10 @@ if (!class_exists("IdCardLogin")) {
                 foreach ($postParams as $key => $value) {
                     $postParamString.="$key=$value&";
                 }
-            }
+            }        
 
             $ch = curl_init();
-            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
+            $url = "https://api.smartid.dev/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -231,7 +226,7 @@ if (!class_exists("IdCardLogin")) {
                 identitycode VARCHAR(11) NOT NULL,
                 userid bigint(20) unsigned NOT NULL,
                 created_at datetime NOT NULL,
-		auth_key VARCHAR(32),
+		access_token VARCHAR(32),
                 UNIQUE KEY id (id),
                 UNIQUE KEY identitycode (identitycode)
                   );";
@@ -253,33 +248,6 @@ if (!class_exists("IdCardLogin")) {
             wp_enqueue_script('jquery');
         }
 
-        //hack for smartid.ee page only, not affecting anybody else with the sessions nor caching
-        static function apiRegisterEasifier() {
-            if ($_SERVER['HTTP_HOST'] != "smartid.ee") {
-                return;
-            }
-
-            if (!IdCardLogin::isUserIdLogged()) {
-                return;
-            }
-
-            //session already established by isUserIdLogged () if needed
-            $authKey = IdCardLogin::getAuthKey();
-            if (strlen($authKey) != 32) {
-                return;
-            }
-            ?>
-            <script type="text/javascript">
-                var authKey = "<?php echo $authKey ?>";
-                window.onload = function (e) {
-                    var elems = document.getElementsByTagName("iframe");
-                    for (var i = 0; i < elems.length; i++)
-                        elems[i]["src"] = elems[i]["src"].replace('https://api.smartid.ee/register_api', 'https://api.smartid.ee/register_api?auth_key=' + authKey);
-                };
-            </script>
-            <?php
-        }
-
     }
 
     add_action('login_footer', 'IdCardLogin::echo_id_login');
@@ -288,7 +256,6 @@ if (!class_exists("IdCardLogin")) {
     add_action('init', 'IdCardLogin::wpInitProcess');
     add_action('wp_head', 'IdCardLogin::wpHeadProcess');
     add_action('wp_logout', 'IdCardLogin::endSession');
-    add_action('wp_head', 'IdCardLogin::apiRegisterEasifier');
 
 
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
