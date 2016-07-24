@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 1.0.4
+ * Version: 1.1.1
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -75,8 +75,8 @@ if (!class_exists("IdCardLogin")) {
         static function wpInitProcess() {
             if (IdCardLogin::isLogin()) {
                 require_once( plugin_dir_path(__FILE__) . 'securelogin.php');
-                IdcardAuthenticate::login($_GET['code']);                
-                wp_redirect("/");
+                IdcardAuthenticate::login($_GET['code']);
+                wp_redirect(home_url('/'));
             }
         }
 
@@ -193,7 +193,7 @@ if (!class_exists("IdCardLogin")) {
                 foreach ($postParams as $key => $value) {
                     $postParamString.="$key=$value&";
                 }
-            }        
+            }
 
             $ch = curl_init();
             $url = "https://api.smartid.ee/" . $apiPath . $paramString;
