@@ -45,7 +45,7 @@ if (!class_exists("IdcardAdmin")) {
 
                 // Save the posted value in the database
                 update_option("smartid_client_id", $clientId);
-                update_option("smartid_secret", $secret);                
+                update_option("smartid_secret", $secret);
                 update_option("smartid_redirect_uri", $redirect_uri);
 
                 // Show confirmation
@@ -71,7 +71,11 @@ if (!class_exists("IdcardAdmin")) {
                 Smart-ID has shortcode that wordpress will replace on runtime:
                 <ol>
                     <li>
-                        <b>[smart-id]</b> - creates login ID-card and Mobile-ID (Premium) login buttons
+                        <b>[smart_id]</b> - Creates login ID-card and Mobile-ID (Premium) login buttons
+                    </li>
+                    <li>
+                        <b>[contract id="123"]</b> - Creates iframe where contract can be signed. Contract tempalte and ID can be acquired from 
+                        <a href="https://api.smartid.dev/admin/contract_template" target="_blank">https://api.smartid.dev</a>
                     </li>
                 </ol>
 
