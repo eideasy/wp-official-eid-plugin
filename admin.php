@@ -75,7 +75,7 @@ if (!class_exists("IdcardAdmin")) {
                     </li>
                     <li>
                         <b>[contract id="123"]</b> - Creates iframe where contract can be signed. Contract tempalte and ID can be acquired from 
-                        <a href="https://api.smartid.dev/admin/contract_template" target="_blank">https://api.smartid.dev</a>
+                        <a href="https://api.smartid.ee/admin/contract_template" target="_blank">https://api.smartid.ee</a>
                     </li>
                 </ol>
 

@@ -137,7 +137,7 @@ if (!class_exists("IdCardLogin")) {
             if (!array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://api.smartid.dev/sign_contract?client_id='
+            $code = '<iframe src="https://api.smartid.ee/sign_contract?client_id='
                     . get_option("smartid_client_id") . "&template_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
             return $code;
@@ -174,7 +174,7 @@ if (!class_exists("IdCardLogin")) {
 //            }
 //            $redirect_url = "&redirect_to=$redirect_to";
 
-            return '<a href="https://api.smartid.dev/oauth/authorize'
+            return '<a href="https://api.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
                     . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/idkaart.gif"></img></a>';
@@ -209,7 +209,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.smartid.dev/" . $apiPath . $paramString;
+            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
