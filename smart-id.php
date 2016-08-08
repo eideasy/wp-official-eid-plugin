@@ -2,8 +2,8 @@
 /**
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
- * Description: Allow your visitors to login to wordpress with Estonian ID-card and mobile-ID
- * Version: 1.2
+ * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
+ * Version: 1.2.1
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -138,7 +138,7 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
             $code = '<iframe src="https://api.smartid.ee/sign_contract?client_id='
-                    . get_option("smartid_client_id") . "&template_id=" . $atts["id"] . '"'
+                    . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
             return $code;
         }

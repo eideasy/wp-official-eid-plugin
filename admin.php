@@ -68,14 +68,14 @@ if (!class_exists("IdcardAdmin")) {
                 ?>
                 <br>                
                 <br> 
-                Smart-ID has shortcode that wordpress will replace on runtime:
+                Smart-ID has shortcodes that wordpress will replace on runtime:
                 <ol>
                     <li>
-                        <b>[smart_id]</b> - Creates login ID-card and Mobile-ID (Premium) login buttons
+                        <b>[smart_id]</b> - Creates ID-card and Mobile-ID (Premium) login buttons
                     </li>
                     <li>
-                        <b>[contract id="123"]</b> - Creates iframe where contract can be signed. Contract tempalte and ID can be acquired from 
-                        <a href="https://api.smartid.ee/admin/contract_template" target="_blank">https://api.smartid.ee</a>
+                        <b>[contract id="123"]</b> - Creates contract tepmplate. You can make new contract 
+                        <a href="https://api.smartid.ee/admin/contract_template" target="_blank">here</a>
                     </li>
                 </ol>
 
