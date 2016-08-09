@@ -3,16 +3,16 @@ Contributors: Smart ID Estonia OÜ
 Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, mobile-ID, identification, signing, digital signing, security
-Requires at least: na
-Tested up to: na
+Requires at least: 4.5
+Tested up to: 4.5.3
 Stable tag: trunk
 
 == Description==
 Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID.
 Smart-ID is authentication method that uses external servers to identify customers. 
-User name, identitycode and e-mail are identified. 
-In addition dynamic javascript, needed for logging in, is downloaded from Smart-ID servers and Apache webserver records website user IP address into its standard access.log
-Installation very easy, just install & use shortcode [smart-id] to have login buttons.
+User name, identity code and e-mail are identified. 
+In addition dynamic javascript, needed for logging in, is downloaded from Smart-ID servers and Apache web server records website user IP address into its standard access.log
+Installation very easy, just install & use short code [smart-id] to have login buttons.
 
 == Installation ==
 
@@ -43,3 +43,7 @@ Support email: help@smartid.ee
 == Changelog ==
 = 1.0 =
 * Initial release.
+= 1.2.2 =
+* Oauth2
+* mobil-ID
+* Document signing
