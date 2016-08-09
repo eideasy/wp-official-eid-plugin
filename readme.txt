@@ -12,7 +12,7 @@ Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID.
 Smart-ID is authentication method that uses external servers to identify customers. 
 User name, identity code and e-mail are identified. 
 In addition dynamic javascript, needed for logging in, is downloaded from Smart-ID servers and Apache web server records website user IP address into its standard access.log
-Installation very easy, just install & use short code [smart-id] to have login buttons and [contract_id="123"] to show document template with instant signing.
+Installation very easy, just install & use short code [smart_id] to have login buttons and [contract id="123"] to show document template with instant signing.
 
 == Installation ==
 
@@ -30,12 +30,11 @@ Installation very easy, just install & use short code [smart-id] to have login b
 * Enjoy!
 
 = API Connection =
-Smart-ID APIs are constantly changing and being updated. We monitor these changes and automatically 
-update our APIs, so that you can be sure that Smart-ID will always run smoothly and with the most up-to-date 
-API calls.
+Smart-ID APIs are constantly changing and being updated. We monitor these changes and automatically update our APIs, so that you can be sure that Smart-ID will always run smoothly and with the most up-to-date API calls.
 
 == Frequently Asked Questions ==
-Use shortcode [smart-id] to get login button
+Use shortcode [smart_id] to get login button and [contract id="123"] to show document template with instant signing.
+
 Support email: help@smartid.ee
 
 == Screenshots ==
