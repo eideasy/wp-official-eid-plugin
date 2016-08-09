@@ -33,7 +33,9 @@ Installation very easy, just install & use short code [smart_id] to have login b
 Smart-ID APIs are constantly changing and being updated. We monitor these changes and automatically update our APIs, so that you can be sure that Smart-ID will always run smoothly and with the most up-to-date API calls.
 
 == Frequently Asked Questions ==
-Use shortcode [smart_id] to get login button and [contract id="123"] to show document template with instant signing.
+Use shortcode 
+[smart_id] to get login button, 
+[contract id="123"] to show document template with instant signing.
 
 Support email: help@smartid.ee
 
