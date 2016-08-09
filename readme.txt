@@ -36,6 +36,9 @@ Smart-ID APIs are constantly changing and being updated. We monitor these change
 Use shortcode 
 [smart_id] to get login button, 
 [contract id="123"] to show document template with instant signing.
+If smth wrong its better to restart browser. 
+Working with Mac - restart it, that's goes fast. 
+Don’t work with MS Edge.
 
 Support email: help@smartid.ee
 
