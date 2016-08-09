@@ -43,7 +43,7 @@ Don’t work with MS Edge.
 Support email: help@smartid.ee
 
 == Screenshots ==
-Smart-ID screenshot.jpg
+SmartID_screenshot.jpg
 
 == Changelog ==
 = 1.0 =
