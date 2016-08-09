@@ -40,6 +40,7 @@ Use shortcode
 Support email: help@smartid.ee
 
 == Screenshots ==
+Smart-ID screenshot.jpg
 
 == Changelog ==
 = 1.0 =
