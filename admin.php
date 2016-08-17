@@ -68,7 +68,7 @@ if (!class_exists("IdcardAdmin")) {
                 ?>
                 <br>                
                 <br> 
-                Smart-ID has shortcodes that wordpress will replace on runtime:
+                Smart-ID shortcodes:
                 <ol>
                     <li>
                         <b>[smart_id]</b> - Creates ID-card and Mobile-ID (Premium) login buttons
