@@ -36,11 +36,13 @@ Smart-ID APIs are constantly changing and being updated. We monitor these change
 Use shortcode 
 [smart_id] to get login button, 
 [contract id="123"] to show document template with instant signing.
-If smth wrong its better to restart browser. 
-Working with Mac - just restart it, that's goes fast. 
+
+Identification with ID-card & mobile-ID works everywhere.
+Signing with mobile-ID works everywhere. Safari and Firefox also in incognito works fine.
 ID-card signing don’t work with MS Edge, IE11 and Chrome incognito window.
-Safari and Firefox incognito works fine.
-Mobile-ID works everywhere.
+
+If something goes wrong try to shortly remove ID-card or restart browser. 
+Working with Mac - just restart it, that's goes fast. 
 
 Support email: help@smartid.ee
 
