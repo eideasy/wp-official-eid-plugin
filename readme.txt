@@ -56,5 +56,5 @@ SmartID_screenshot.png
 * Oauth2
 * mobil-ID
 * Document signing
-= 1.2.3 =
-* Minor changes
+= 1.2.4 =
+* Minor changes, tested with WP 4.6
