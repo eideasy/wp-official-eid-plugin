@@ -174,14 +174,14 @@ if (!class_exists("IdCardLogin")) {
 //            }
 //            $redirect_url = "&redirect_to=$redirect_to";
 
-            return '<a href="https://api.smartid.ee/oauth/authorize'
+            return '<a style="display:inline;margin:auto; width:100px;" href="https://api.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
-                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/id_card_logo.png"></img></a>'
-                    .'<a href="https://api.smartid.ee/oauth/authorize'
+                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="31" width="88"></img></a>'
+                    .'<a style="display:inline;margin:auto;width:100px;" href="https://api.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
-                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile_id_logo.png"></img></a>';
+                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88"></img></a>';
         }
 
         static function getPluginBaseUrl() {
