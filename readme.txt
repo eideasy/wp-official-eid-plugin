@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, mobile-ID, identification, signing, digital signing, security
 Requires at least: 4.5
-Tested up to: 4.5.3
+Tested up to: 4.6
 Stable tag: trunk
 
 == Description==
@@ -37,8 +37,10 @@ Use shortcode
 [smart_id] to get login button, 
 [contract id="123"] to show document template with instant signing.
 If smth wrong its better to restart browser. 
-Working with Mac - restart it, that's goes fast. 
-Don’t work with MS Edge.
+Working with Mac - just restart it, that's goes fast. 
+ID-card signing don’t work with MS Edge, IE11 and Chrome incognito window.
+Safari and Firefox incognito works fine.
+Mobile-ID works everywhere.
 
 Support email: help@smartid.ee
 
