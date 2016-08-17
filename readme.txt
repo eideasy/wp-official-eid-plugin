@@ -2,7 +2,7 @@
 Contributors: Smart ID Estonia OÜ
 Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
-Tags: ID-card, mobile-ID, identification, signing, digital signing, security
+Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, sign, signing, digital signing, security, eIDAS, OAuth, OAUTH2, token
 Requires at least: 4.5
 Tested up to: 4.6
 Stable tag: trunk
