@@ -52,3 +52,5 @@ SmartID_screenshot.png
 * Oauth2
 * mobil-ID
 * Document signing
+= 1.2.3 =
+* Minor changes
