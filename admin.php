@@ -50,7 +50,7 @@ if (!class_exists("IdcardAdmin")) {
 
                 // Show confirmation
                 ?>
-                <div class="updated"><p><strong>Client registration done. client_id=<?php echo $clientId ?></strong></p></div>                
+                <div class="updated"><p><strong>Client registration done!</strong></p></div>                
                 <?php
             }
 
@@ -64,7 +64,7 @@ if (!class_exists("IdcardAdmin")) {
 
                 <?php
             } else {
-                echo "This site Smart-ID is active. client_id=" . get_option("smartid_client_id");
+                echo "This site Smart-ID is now active!";
                 ?>
                 <br>                
                 <br> 
