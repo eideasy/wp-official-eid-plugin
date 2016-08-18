@@ -47,7 +47,7 @@ Working with Mac - just restart it, that's goes fast.
 Support email: help@smartid.ee
 
 == Screenshots ==
-SmartID_screenshot.png
+screenshot-1.png
 
 == Changelog ==
 = 1.0 =
