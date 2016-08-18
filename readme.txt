@@ -10,9 +10,8 @@ Stable tag: trunk
 == Description==
 Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID.
 Smart-ID is authentication method that uses external servers to identify customers. 
-User name, identity code and e-mail are identified. 
-In addition dynamic javascript, needed for logging in, is downloaded from Smart-ID servers and Apache web server records website user IP address into its standard access.log
-Installation very easy, just install & use short code [smart_id] to have login buttons and [contract id="123"] to show document template with instant signing.
+User name, identity code and e-mail are identified.
+Installation is very easy, just install & use short code [smart_id] to have login buttons and [contract id="123"] to show document template with instant signing.
 
 == Installation ==
 
@@ -42,7 +41,7 @@ Signing with mobile-ID works everywhere. Safari and Firefox also in incognito wo
 ID-card signing don’t work with MS Edge, IE11 and Chrome incognito window.
 
 If something goes wrong try to shortly remove ID-card or restart browser. 
-Working with Mac - just restart it, that's goes fast. 
+Working with Mac - just restart it, that's goes fast.
 
 Support email: help@smartid.ee
 
