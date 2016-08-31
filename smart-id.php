@@ -26,31 +26,6 @@ if (!class_exists("IdCardLogin")) {
 
     class IdCardLogin {
 
-        static function setAuthKey($authKey, $userId = null) {
-            global $wpdb;
-            if ($userId == null) {
-                $current_user = wp_get_current_user();
-                $userId = $current_user->ID;
-            }
-
-            $wpdb->update(
-                    "$wpdb->prefix" . "idcard_users", [
-                'auth_key' => $authKey
-                    ], [
-                'userid' => $userId
-                    ]
-            );
-        }
-
-        static function getAuthKey() {
-            $user = IdCardLogin::getStoredUserData();
-            if ($user != null) {
-                return $user->auth_key;
-            } else {
-                return NULL;
-            }
-        }
-
         static function getStoredUserData() {
             global $wpdb;
             $current_user = wp_get_current_user();
@@ -61,11 +36,6 @@ if (!class_exists("IdCardLogin")) {
                     )
             );
             return $user;
-        }
-
-        static function endSession() {
-            IdCardLogin::setAuthKey(NULL);
-            set_transient("site_temp_key", NULL, 300);
         }
 
         static function isLogin() {
@@ -164,24 +134,14 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
 
-            //need to think how to use redirect_to
-//            $redirect_to = strlen(array_key_exists('redirect_to', $_GET)) > 0 ?
-//                    "" . urlencode($_GET['redirect_to']) :
-//                    'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-//
-//            if (strpos($redirect_to, "wp-login") > 0) {
-//                $redirect_to = home_url("/");
-//            }
-//            $redirect_url = "&redirect_to=$redirect_to";
+            $stringStart = '<a style="display:inline;margin:auto; width:100px;" href="https://api.smartid.ee/oauth/authorize'
+                    . '?client_id=' . get_option("smartid_client_id")
+                    . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
+                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl();
 
-            return '<a style="display:inline;margin:auto; width:100px;" href="https://api.smartid.ee/oauth/authorize'
-                    . '?client_id=' . get_option("smartid_client_id")
-                    . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
-                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="31" width="88"></img></a>'
-                    .'<a style="display:inline;margin:auto;width:100px;" href="https://api.smartid.ee/oauth/authorize'
-                    . '?client_id=' . get_option("smartid_client_id")
-                    . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
-                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88"></img></a>';
+            return $stringStart . '/img/id-card.svg" height="31" width="88" style="display:inline"></img></a>'
+                    . $stringStart . '/img/mobile-id.svg" height="31" width="88" style="display:inline"></img></a>'
+                    . $stringStart . '/img/facebook.png" height="31" width="110" style="display:block"></img></a>';
         }
 
         static function getPluginBaseUrl() {
@@ -272,7 +232,6 @@ if (!class_exists("IdCardLogin")) {
 
     add_action('init', 'IdCardLogin::wpInitProcess');
     add_action('wp_head', 'IdCardLogin::wpHeadProcess');
-    add_action('wp_logout', 'IdCardLogin::endSession');
 
 
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
