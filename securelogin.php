@@ -31,6 +31,12 @@ class IdcardAuthenticate {
 
         $accessTokenResult = IdCardLogin::curlCall("oauth/access_token", [], $postParams);
         $accessToken = $accessTokenResult["access_token"];
+        if (strlen($accessToken) != 40) {
+            echo "ERROR: getting access token failed. Please contact help@smartid.ee <br>";
+            var_dump($accessTokenResult);
+            die();
+        }
+
 
         $params = [
             "access_token" => $accessToken
