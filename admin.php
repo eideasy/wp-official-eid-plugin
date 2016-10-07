@@ -75,7 +75,7 @@ if (!class_exists("IdcardAdmin")) {
                     </li>
                     <li>
                         <b>[contract id="123"]</b> - Creates contract tepmplate. You can make new contract 
-                        <a href="https://api.smartid.ee/admin/contract_template" target="_blank">here</a>
+                        <a href="https://id.smartid.ee/admin/contract_template" target="_blank">here</a>
                     </li>
                 </ol>
 

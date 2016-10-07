@@ -6,7 +6,7 @@ defined('ABSPATH') or die('No script kiddies please!');
         <h1>Click the link below to activate the Smart-ID service.</h1>
         <small>This will take you to Smart-ID admin site where you can register the API keys.</small>
         <br>
-        <a href="https://api.smartid.ee/admin/api_register_client<?php
+        <a href="https://id.smartid.ee/admin/api_register_client<?php
         $hostUri = str_replace("//", "/", "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
         echo "?api_register=yes"
         . "&api_redirect_uri=" . home_url()

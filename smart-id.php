@@ -107,7 +107,7 @@ if (!class_exists("IdCardLogin")) {
             if (!array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://api.smartid.ee/sign_contract?client_id='
+            $code = '<iframe src="https://id.smartid.ee/sign_contract?client_id='
                     . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
             return $code;
@@ -134,7 +134,7 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
 
-            $stringStart = '<a style="display:inline;margin:auto; width:100px;" href="https://api.smartid.ee/oauth/authorize'
+            $stringStart = '<a style="display:inline;margin:auto; width:100px;" href="https://id.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
                     . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl();
@@ -173,7 +173,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://api.smartid.ee/" . $apiPath . $paramString;
+            $url = "https://id.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
