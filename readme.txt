@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, sign, signing, digital signing, security, eIDAS, OAuth, OAUTH2, token
 Requires at least: 4.5
-Tested up to: 4.6
+Tested up to: 4.6.1
 Stable tag: trunk
 
 == Description==
@@ -57,3 +57,5 @@ screenshot-1.png
 * Document signing
 = 1.2.4 =
 * Minor changes, tested with WP 4.6
+= 1.2.5 =
+* Minor changes, tested with WP 4.6.1, social accounts logo changed
