@@ -79,7 +79,7 @@ if (!class_exists("IdCardLogin")) {
             if (get_option("smartid_client_id") == null && array_key_exists("page", $_GET) && $_GET['page'] !== "smart-id-settings") {
                 ?>
                 <div class="notice notice-success is-dismissible">
-                    <p>Your ID-API is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) ?>">Smart-ID Settings</a> to Activate.</p>
+                    <p>Your Smart-ID is almost ready! Please open <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) ?>">Smart-ID Settings</a> to Activate.</p>
                 </div>
                 <?php
             }
