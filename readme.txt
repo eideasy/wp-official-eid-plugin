@@ -59,3 +59,5 @@ screenshot-1.png
 * Minor changes, tested with WP 4.6
 = 1.2.5 =
 * Minor changes, tested with WP 4.6.1, social accounts logo changed
+= 1.2.6 =
+* api subdomain change to id.smartid.ee
