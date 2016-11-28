@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 1.2.6
+ * Version: 1.2.7
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -39,7 +39,8 @@ if (!class_exists("IdCardLogin")) {
         }
 
         static function isLogin() {
-            return array_key_exists('code', $_GET) && strlen($_GET['code']) === 40;
+            return array_key_exists('code', $_GET) && strlen($_GET['code']) === 40 &&
+                    array_key_exists('login', $_GET) && $_GET['login'] === "true";
         }
 
         static function wpInitProcess() {
@@ -133,15 +134,29 @@ if (!class_exists("IdCardLogin")) {
             if (get_option("smartid_client_id") == NULL) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
-
-            $stringStart = '<a style="display:inline;margin:auto; width:100px;" href="https://id.smartid.ee/oauth/authorize'
+            $loginUri = 'https://id.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
-                    . '&response_type=code"><img src="' . IdCardLogin::getPluginBaseUrl();
+                    . '&response_type=code';
 
-            return $stringStart . '/img/id-card.svg" height="31" width="88" style="display:inline"></img></a>'
-                    . $stringStart . '/img/mobile-id.svg" height="31" width="88" style="display:inline"></img></a>'
-                    . $stringStart . '/img/facebook.png" height="31" width="110" style="display:block"></img></a>';
+            $loginCode = '<script src="' . IdCardLogin::getPluginBaseUrl() . '/smartid_functions.js"></script>' .
+                    '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="31" width="88" style="display:inline">' .
+                    '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88" style="display:inline">' .
+                    '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/facebook.png" height="31" width="110" style="display:block">' .
+                    '<script>' .
+                    '    document.getElementById("smartid-id-login").addEventListener("click", function () {' .
+                    '        startSmartIdLogin("' . $loginUri . '");' .
+                    '    });' .
+                    '    document.getElementById("smartid-mid-login").addEventListener("click", function () {' .
+                    '        startSmartIdLogin("' . $loginUri . '");' .
+                    '    });' .
+                    '    document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
+                    '        startSmartIdLogin("' . $loginUri . '");' .
+                    '    });' .
+                    '</script>';
+
+
+            return $loginCode;
         }
 
         static function getPluginBaseUrl() {
@@ -162,13 +177,13 @@ if (!class_exists("IdCardLogin")) {
             $paramString = "?client_id=" . get_option("smartid_client_id");
             if ($params != NULL) {
                 foreach ($params as $key => $value) {
-                    $paramString.="&$key=$value";
+                    $paramString .= "&$key=$value";
                 }
             }
 
             if ($postParams != NULL) {
                 foreach ($postParams as $key => $value) {
-                    $postParamString.="$key=$value&";
+                    $postParamString .= "$key=$value&";
                 }
             }
 
