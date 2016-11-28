@@ -5,14 +5,14 @@ if (!class_exists("IdcardAdmin")) {
     class IdcardAdmin {
 
         static function id_settings_page() {
-            add_menu_page('Smart-ID', 'Smart-ID', 'manage_options', 'smart-id-settings', 'IdcardAdmin::create_id_settings_page');
+            add_menu_page('Smart ID', 'Smart ID', 'manage_options', 'smart-id-settings', 'IdcardAdmin::create_id_settings_page');
         }
 
         static function create_id_settings_page() {
-            echo "<h2> Smart-ID </h2>";
+            echo "<h2> Smart ID </h2>";
 //           update_option("smartid_client_id", null);
             if (!function_exists('curl_version')) {
-                echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart-ID secure logins";
+                echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart ID secure logins";
                 return;
             }
 
@@ -64,11 +64,11 @@ if (!class_exists("IdcardAdmin")) {
 
                 <?php
             } else {
-                echo "This site Smart-ID is now active!";
+                echo "This site Smart ID is now active!";
                 ?>
                 <br>                
                 <br> 
-                Smart-ID shortcodes:
+                Smart ID shortcodes:
                 <ol>
                     <li>
                         <b>[smart_id]</b> - Creates ID-card and Mobile-ID (Premium) login buttons
