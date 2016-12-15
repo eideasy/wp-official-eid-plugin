@@ -1,10 +1,10 @@
 === Smart ID ===
-Contributors: Smart ID Estonia OÜ
+Contributors: Smart ID Estonia OÃœ
 Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, sign, signing, digital signing, security, eIDAS, OAuth, OAUTH2, token
 Requires at least: 4.5
-Tested up to: 4.6.1
+Tested up to: 4.7
 Stable tag: trunk
 
 == Description==
@@ -38,7 +38,7 @@ Use shortcode
 
 Identification with ID-card & mobile-ID works everywhere.
 Signing with mobile-ID works everywhere. Safari and Firefox also in incognito works fine.
-ID-card signing don’t work with MS Edge, IE11 and Chrome incognito window.
+ID-card signing donâ€™t work with MS Edge, IE11 and Chrome incognito window.
 
 If something goes wrong try to shortly remove ID-card or restart browser. 
 Working with Mac - just restart it, that's goes fast.
