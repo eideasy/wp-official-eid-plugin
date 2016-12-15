@@ -46,7 +46,7 @@ Working with Mac - just restart it, that's goes fast.
 Support email: help@smartid.ee
 
 == Screenshots ==
-screenshot-1.png
+1. Admin view
 
 == Changelog ==
 = 1.0 =
