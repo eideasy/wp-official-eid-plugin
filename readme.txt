@@ -38,7 +38,7 @@ Use shortcode
 
 Identification with ID-card & mobile-ID works everywhere.
 Signing with mobile-ID works everywhere. Safari and Firefox also in incognito works fine.
-ID-card signing don’t work with MS Edge, IE11 and Chrome incognito window.
+ID-card signing don’t work with MS Edge and Chrome incognito window.
 
 If something goes wrong try to shortly remove ID-card or restart browser. 
 Working with Mac - just restart it, that's goes fast.
