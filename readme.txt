@@ -8,9 +8,9 @@ Tested up to: 4.6.1
 Stable tag: trunk
 
 == Description==
-Allow your visitors to login to Wordpress with Estonian ID-card and mobile-ID.
-Smart ID is authentication method that uses external servers to identify customers. 
-User name, identity code and e-mail are identified.
+Allow your visitors to login to Wordpress with any ID-card, mobile-ID or other authentication methods eg mobile apps, social accounts, two step verification. Except e-mail and password - this is so outdated!!!
+Smart ID is authentication Gateway, Logis as a Service, that uses external servers to identify customers. 
+User name, identity code and other data are supplied depend of login method.
 Installation is very easy, just install & use short code [smart_id] to have login buttons and [contract id="123"] to show document template with instant signing.
 
 == Installation ==
