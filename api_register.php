@@ -9,7 +9,7 @@ defined('ABSPATH') or die('No script kiddies please!');
         <a href="https://id.smartid.ee/admin/api_register_client<?php
         echo "?api_register=yes"
         . "&api_redirect_uri=" . home_url()
-        . "&api_redirect_back=". admin_url("admin.php?page=smart-id-settings")
+        . "&api_redirect_back=" . admin_url("admin.php?page=smart-id-settings")
         . "&api_home_url=" . home_url();
         ?>" target="_blank">Activate Smart ID login</a>
     </div>

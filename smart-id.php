@@ -26,6 +26,11 @@ if (!class_exists("IdCardLogin")) {
 
     class IdCardLogin {
 
+        static function deleteUserCleanUp($user_id) {
+            global $wpdb;
+            $wpdb->delete($wpdb->prefix . "idcard_users", array('userid' => $user_id));
+        }
+
         static function getStoredUserData() {
             global $wpdb;
             $current_user = wp_get_current_user();
@@ -241,6 +246,8 @@ if (!class_exists("IdCardLogin")) {
         }
 
     }
+
+    add_action('delete_user', 'IdCardLogin::deleteUserCleanUp');
 
     add_action('login_footer', 'IdCardLogin::echo_id_login');
     add_action('login_enqueue_scripts', 'IdCardLogin::enqueueJquery');
