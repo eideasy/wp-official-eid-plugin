@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 1.2.9
+ * Version: 1.2.10
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -144,15 +144,34 @@ if (!class_exists("IdCardLogin")) {
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
                     . '&response_type=code';
 
-            $loginCode = '<script src="' . IdCardLogin::getPluginBaseUrl() . '/smartid_functions.js"></script>' .
-                    '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="31" width="88" style="display:inline">' .
-                    '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88" style="display:inline">' .
-                    '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/facebook.png" height="31" width="110" style="display:block">' .
-                    '<script>' .
+            $loginCode = '<script src="' . IdCardLogin::getPluginBaseUrl() . '/smartid_functions.js"></script>';
+            if (get_option("smartid_idcard_enabled")) {
+                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="31" width="88" style="display:inline">';
+            }
+            if (get_option("smartid_mobileid_enabled")) {
+                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88" style="display:inline">';
+            }
+            if (get_option("smartid_smartid_enabled")) {
+                $loginCode .= '<img id="smartid-smartid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" height="31" width="31" style="display:inline">';
+            }
+            if (get_option("smartid_google_enabled")) {
+                $loginCode .= '<img id="smartid-gp-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" height="31" width="31" style="display:inline">';
+            }
+            if (get_option("smartid_facebook_enabled")) {
+                $loginCode .= '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" height="31" width="31" style="display:inline">';
+            }
+
+            $loginCode .= '<script>' .
                     '    document.getElementById("smartid-id-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
                     '    document.getElementById("smartid-mid-login").addEventListener("click", function () {' .
+                    '        startSmartIdLogin("' . $loginUri . '");' .
+                    '    });' .
+                    '    document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
+                    '        startSmartIdLogin("' . $loginUri . '");' .
+                    '    });' .
+                    '    document.getElementById("smartid-gp-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
                     '    document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
@@ -259,7 +278,6 @@ if (!class_exists("IdCardLogin")) {
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
     add_action('plugins_loaded', 'IdCardLogin::idcard_install');
     add_action('admin_notices', 'IdCardLogin::admin_notice');
-
 
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
 
