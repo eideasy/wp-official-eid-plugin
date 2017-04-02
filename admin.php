@@ -10,7 +10,7 @@ if (!class_exists("IdcardAdmin")) {
 
         static function create_id_settings_page() {
             echo "<h1> Smart ID </h1>";
-//           update_option("smartid_client_id", null);
+//            update_option("smartid_client_id", null);
             if (!function_exists('curl_version')) {
                 echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart ID secure logins";
                 return;
@@ -51,10 +51,10 @@ if (!class_exists("IdcardAdmin")) {
                 // Show confirmation
                 ?>
                 <div class="updated"><p><strong>Client registration done!</strong></p></div>                
-                <?php
-            }
+            <?php }
+            ?>
 
-
+            <?php
             //Site has not activated Smart-ID yet
             if (get_option("smartid_client_id") == null) {
                 ?>        
@@ -70,25 +70,25 @@ if (!class_exists("IdcardAdmin")) {
                     } else {
                         update_option("smartid_idcard_enabled", false);
                     }
-                    
+
                     if ($_POST["login_mobileid"] == "yes") {
                         update_option("smartid_mobileid_enabled", true);
                     } else {
                         update_option("smartid_mobileid_enabled", false);
                     }
-                    
+
                     if ($_POST["login_smartid"] == "yes") {
                         update_option("smartid_smartid_enabled", true);
                     } else {
                         update_option("smartid_smartid_enabled", false);
                     }
-                    
+
                     if ($_POST["login_facebook"] == "yes") {
                         update_option("smartid_facebook_enabled", true);
                     } else {
                         update_option("smartid_facebook_enabled", false);
                     }
-                    
+
                     if ($_POST["login_google"] == "yes") {
                         update_option("smartid_google_enabled", true);
                     } else {
@@ -146,15 +146,18 @@ if (!class_exists("IdcardAdmin")) {
                                 <label for="login_google">Google</label>
                             </td>
                         </tr>
-                        <tr></tr>
-                        <tr></tr>
-                        <tr></tr>
                     </table>
 
                     <?php submit_button(); ?>
                 </form>
                 <?php
             }
+            ?>
+            <div class = "wrap">
+                <?php include("api_manual_setup.php");
+                ?>
+            </div>
+            <?php
         }
 
     }
