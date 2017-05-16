@@ -113,7 +113,7 @@ if (!class_exists("IdCardLogin")) {
             if (!array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://id.smartid.dev/sign_contract?client_id='
+            $code = '<iframe src="https://id.smartid.ee/sign_contract?client_id='
                     . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
             return $code;
@@ -139,7 +139,7 @@ if (!class_exists("IdCardLogin")) {
             if (get_option("smartid_client_id") == NULL) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
             }
-            $loginUri = 'https://id.smartid.dev/oauth/authorize'
+            $loginUri = 'https://id.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
                     . '&redirect_uri=' . urlencode(get_option("smartid_redirect_uri"))
                     . '&response_type=code';
@@ -218,7 +218,7 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $ch = curl_init();
-            $url = "https://id.smartid.dev/" . $apiPath . $paramString;
+            $url = "https://id.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -258,9 +258,9 @@ if (!class_exists("IdCardLogin")) {
             return "Thank you for installing Smart-ID. Open Smart-ID settings to activate the service";
         }
 
-        static function disable_password_reset() {
-            return false;
-        }        
+//        static function disable_password_reset() {
+//            return false;
+//        }        
 
         static function enqueueJquery() {
             wp_enqueue_script('jquery');
@@ -286,7 +286,7 @@ if (!class_exists("IdCardLogin")) {
     add_shortcode('smart_id', 'IdCardLogin::return_id_login');
     add_shortcode('contract', 'IdCardLogin::display_contract_to_sign');
 
-    add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
-    add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
+//    add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
+//    add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
     add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');    
 } 
