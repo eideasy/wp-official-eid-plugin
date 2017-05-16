@@ -152,7 +152,7 @@ if (!class_exists("IdCardLogin")) {
                 $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="31" width="88" style="display:inline; padding: 3px">';
             }
             if (get_option("lveid_enabled")) {
-                $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" height="31" style="display:inline; padding: 3px">';
+                $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" height="31" width="88" style="display:inline; padding: 3px">';
             }
             if (get_option("smartid_smartid_enabled")) {
                 $loginCode .= '<img id="smartid-smartid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" height="31" width="31" style="display:inline; padding: 3px">';
