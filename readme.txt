@@ -65,3 +65,8 @@ Support email: help@smartid.ee
 * tested with WP 4.7, login popup
 = 1.2.9 =
 * Better cleanup after deleting user
+= 1.2.9 =
+* Latvian ID-card Personas apliecība support
+* Login type buttons configurable
+* API keys manually configurable, helpful while going live
+* Contract signing deprecated

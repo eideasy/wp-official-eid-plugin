@@ -65,6 +65,11 @@ if (!class_exists("IdcardAdmin")) {
                 <?php
             } else {
                 if ($_POST["smartid_change_settings"] == "yes") {
+                    if ($_POST["login_lveid"] == "yes") {
+                        update_option("lveid_enabled", true);
+                    } else {
+                        update_option("smartid_idcard_enabled", false);
+                    }
                     if ($_POST["login_idcard"] == "yes") {
                         update_option("smartid_idcard_enabled", true);
                     } else {
@@ -97,14 +102,10 @@ if (!class_exists("IdcardAdmin")) {
                 }
                 ?>
                 <h3> This site Smart ID is now active!</h3>
-                Smart ID shortcodes:
+                Smart ID shortcode:
                 <ol>
                     <li>
-                        <b>[smart_id]</b> - Creates ID-card and Mobile-ID (Premium) login buttons
-                    </li>
-                    <li>
-                        <b>[contract id="123"]</b> - Creates contract tepmplate. You can make new contract 
-                        <a href="https://id.smartid.ee/admin/contract_template" target="_blank">here</a>
+                        <b>[smart_id]</b> - Creates configured login buttons.
                     </li>
                 </ol>
 
@@ -112,20 +113,26 @@ if (!class_exists("IdcardAdmin")) {
                 All questions and support at <a href="mailto:help@smartid.ee">help@smartid.ee</a>
 
                 <h3> Configure visible login method icons</h3>
-                Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.ee">https://id.smartid.ee</a>
+                Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.dev">https://id.smartid.dev</a>
                 <form method="post" action="<?php echo (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>"> 
                     <input type="hidden" name="smartid_change_settings" value="yes">
                     <table>
                         <tr>
                             <td>
+                                <input type="checkbox" name="login_lveid" class="column-cb" value="yes" <?php echo get_option("lveid_enabled") ? "checked" : "" ?> >
+                                <label for="login_idcard">Latvian ID-card</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <input type="checkbox" name="login_idcard" class="column-cb" value="yes" <?php echo get_option("smartid_idcard_enabled") ? "checked" : "" ?> >
-                                <label for="login_idcard">ID-card</label>
+                                <label for="login_idcard">Estonian ID-card</label>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <input type="checkbox" name="login_mobileid" class="column-cb" value="yes" <?php echo get_option("smartid_mobileid_enabled") ? "checked" : "" ?>>
-                                <label for="login_mobileid">Mobile-ID</label>
+                                <label for="login_mobileid">Estonian Mobile-ID</label>
                             </td>
                         </tr>
                         <tr>
