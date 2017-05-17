@@ -68,7 +68,7 @@ if (!class_exists("IdcardAdmin")) {
                     if ($_POST["login_lveid"] == "yes") {
                         update_option("lveid_enabled", true);
                     } else {
-                        update_option("smartid_idcard_enabled", false);
+                        update_option("lveid_enabled", false);
                     }
                     if ($_POST["login_idcard"] == "yes") {
                         update_option("smartid_idcard_enabled", true);

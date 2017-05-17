@@ -47,23 +47,11 @@ Support email: help@smartid.ee
 2. Login view
 
 == Changelog ==
-= 1.0 =
-* Initial release.
-= 1.2.2 =
-* Oauth2
-* mobil-ID
-* Document signing
-= 1.2.4 =
-* Minor changes, tested with WP 4.6
-= 1.2.5 =
-* Minor changes, tested with WP 4.6.1, social accounts logo changed
-= 1.2.6 =
-* api subdomain change to id.smartid.ee
 = 1.2.7 =
 * tested with WP 4.7, login popup
 = 1.2.9 =
 * Better cleanup after deleting user
-= 1.3.0 =
+= 1.3.1 =
 * Latvian ID-card Personas apliecība support
 * Login type buttons configurable
 * API keys manually configurable, helpful while going live

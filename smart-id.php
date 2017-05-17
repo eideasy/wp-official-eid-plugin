@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 1.3
+ * Version: 1.3.1
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -138,6 +138,14 @@ if (!class_exists("IdCardLogin")) {
 
             if (get_option("smartid_client_id") == NULL) {
                 return "<b>ID login not activated yet. Login will be available as soon as admin has activated it.</b>";
+            }
+            if (get_option("smartid_idcard_enabled") == false &&
+                    get_option("smartid_mobileid_enabled") == false &&
+                    get_option("lveid_enabled") == false &&
+                    get_option("smartid_smartid_enabled") == false &&
+                    get_option("smartid_google_enabled") == false &&
+                    get_option("smartid_facebook_enabled") == false) {
+                return "<b>No Secure login methods enabled yet, please contact administrator to enable these from Smart ID config</b>";
             }
             $loginUri = 'https://id.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
@@ -288,5 +296,5 @@ if (!class_exists("IdCardLogin")) {
 
 //    add_filter('allow_password_reset', 'IdCardLogin::disable_password_reset');
 //    add_filter('login_errors', create_function('$a', "return 'Not allowed!';"));
-    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');    
+    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');
 } 
