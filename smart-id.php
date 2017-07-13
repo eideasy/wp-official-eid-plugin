@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -145,7 +145,7 @@ if (!class_exists("IdCardLogin")) {
                     get_option("smartid_smartid_enabled") == false &&
                     get_option("smartid_google_enabled") == false &&
                     get_option("smartid_facebook_enabled") == false) {
-                return "<b>No Secure login methods enabled yet, please contact administrator to enable these from Smart ID config</b>";
+                return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from Smart ID config</b>";
             }
             $loginUri = 'https://id.smartid.ee/oauth/authorize'
                     . '?client_id=' . get_option("smartid_client_id")
@@ -173,22 +173,22 @@ if (!class_exists("IdCardLogin")) {
             }
 
             $loginCode .= '<script>' .
-                    '    document.getElementById("smartid-id-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
-                    '    document.getElementById("smartid-mid-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-mid-login")) document.getElementById("smartid-mid-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
-                    '    document.getElementById("smartid-lveid-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-lveid-login")) document.getElementById("smartid-lveid-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
-                    '    document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
-                    '    document.getElementById("smartid-gp-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-gp-login")) document.getElementById("smartid-gp-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
-                    '    document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
+                    '    if(document.getElementById("smartid-fb-login")) document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
                     '        startSmartIdLogin("' . $loginUri . '");' .
                     '    });' .
                     '</script>';
