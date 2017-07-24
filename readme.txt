@@ -2,9 +2,9 @@
 Contributors: Smart ID Estonia OÜ
 Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/plugins/wp/
-Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība
+Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė
 Requires at least: 4.5
-Tested up to: 4.7.4
+Tested up to: 4.8
 Stable tag: trunk
 
 == Description==
@@ -56,3 +56,5 @@ Support email: help@smartid.ee
 * Login type buttons configurable
 * API keys manually configurable, helpful while going live
 * Contract signing deprecated
+= 1.3.2 =
+* Improved flow if not all methods are enabled
