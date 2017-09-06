@@ -1,15 +1,13 @@
 function startSmartIdLogin(loginUri) {
-    var w = 640;
-    var h = 640;
+    var w = 800;
+    var h = 800;
     var left = (screen.width / 2) - (w / 2);
     var top = (screen.height / 2) - (h / 2);
-
     var win = window.open(loginUri, "Smart ID login", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
     var pollTimer = window.setInterval(function () {
         try {
             console.log(win.document.URL);
-            if (win.document.URL.indexOf("code") !== -1) {
+            if (win.document.URL.indexOf("code=") !== -1) {
                 window.clearInterval(pollTimer);
                 var url = win.document.URL;
                 code = gup(url, 'code');
@@ -17,6 +15,7 @@ function startSmartIdLogin(loginUri) {
                 window.location = url + "&login=true";
             }
         } catch (e) {
+            console.log(e);
         }
     }, 100);
 }
