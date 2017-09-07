@@ -7,15 +7,15 @@ class IdcardAuthenticate {
 	static function login( $token ) {
 		$result = IdcardAuthenticate::getUserData( $token );
 		if ( $result == null ) {
-			//login has completed already
-			return;
+			return; // login already completed
 		}
 		$firstName    = $result['firstname'];
 		$lastName     = $result['lastname'];
 		$identityCode = $result['idcode'];
 		$email        = $result['email'];
+		$country      = array_key_exists( "country", $result ) ? $result["country"] : "ee";
 
-		LoginCommon::login( $identityCode, $firstName, $lastName, $email );
+		LoginCommon::login( $identityCode, $firstName, $lastName, $email, $country );
 	}
 
 	function getUserData( $token ) {
@@ -28,14 +28,11 @@ class IdcardAuthenticate {
 			"client_secret" => get_option( "smartid_secret" )
 		];
 
-
 		$accessTokenResult = IdCardLogin::curlCall( "oauth/access_token", [], $postParams );
 		$accessToken       = $accessTokenResult["access_token"];
 		if ( strlen( $accessToken ) != 40 ) {
-			//login has completed already
-			return;
+			return null; //login already completed
 		}
-
 
 		$params         = [
 			"access_token" => $accessToken

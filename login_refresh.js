@@ -1,11 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
+    if (window.opener && window.opener !== window) {
+        console.log("I am in a popup, I should close myself if there are no errors to show");
+        window.close();
+    }
     if (self == top) {
         console.log("Reloading page to finish login");
-        location.reload();
+        location = removeURLParameter(self.location.href, 'code');
     } else {
         console.log("Running in iFrame, need to break free to finish login.");
         top.location = removeURLParameter(self.location.href, 'code');
     }
+
 });
 
 

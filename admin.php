@@ -29,7 +29,7 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
 			}
 
 			//get domain data from the server
-			if ( isset( $_GET["data_key"] ) ) {
+			if ( isset( $_GET["data_key"] ) && get_option( "smartid_client_id" ) == false ) {
 				$params = [
 					"data_key" => $_GET["data_key"]
 				];
@@ -68,10 +68,15 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
 				<?php
 			} else {
 				if ( $_POST["smartid_change_settings"] == "yes" ) {
-					if ( $_POST["lt-mobile-id_enabled"] == "yes" ) {
-						update_option( "smartid_lt-mobile-id_enable", true );
+					if ( $_POST["pt-id-card_enabled"] == "yes" ) {
+						update_option( "smartid_pt-id-card_enabled", true );
 					} else {
-						update_option( "smartid_lt-mobile-id_enable", false );
+						update_option( "smartid_pt-id-card_enabled", false );
+					}
+					if ( $_POST["lt-mobile-id_enabled"] == "yes" ) {
+						update_option( "smartid_lt-mobile-id_enabled", true );
+					} else {
+						update_option( "smartid_lt-mobile-id_enabled", false );
 					}
 					if ( $_POST["lt-id-card_enabled"] == "yes" ) {
 						update_option( "smartid_lt-id-card_enabled", true );
@@ -126,14 +131,14 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
                 All questions and support at <a href="mailto:help@smartid.ee">help@smartid.ee</a>
 
                 <h3> Configure visible login method icons</h3>
-                Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.ee">https://id.smartid.ee</a>
+                Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.dev">https://id.smartid.dev</a>
                 <form method="post"
                       action="<?php echo ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
                     <input type="hidden" name="smartid_change_settings" value="yes">
                     <table>
                         <tr>
                             <td>
-                                <input type="checkbox" name="lt-id-card_enabled" class="column-cb"
+                                <input type="checkbox" name="lt-mobile-id_enabled" class="column-cb"
                                        value="yes" <?php echo get_option( "smartid_lt-mobile-id_enabled" ) ? "checked" : "" ?> >
                                 <label for="lt-mobile-id_enabled">Lithuanian mobile ID</label>
                             </td>
@@ -141,7 +146,7 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
                         <tr>
                             <td>
                                 <input type="checkbox" name="lt-id-card_enabled" class="column-cb"
-                                       value="yes" <?php echo get_option( "lt-id-card_enabled" ) ? "checked" : "" ?> >
+                                       value="yes" <?php echo get_option( "smartid_lt-id-card_enabled" ) ? "checked" : "" ?> >
                                 <label for="lt-id-card_enabled">Lithuanian ID-card</label>
                             </td>
                         </tr>
@@ -150,6 +155,13 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
                                 <input type="checkbox" name="lv-id-card_enabled" class="column-cb"
                                        value="yes" <?php echo get_option( "lveid_enabled" ) ? "checked" : "" ?> >
                                 <label for="lv-id-card_enabled">Latvian ID-card</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="pt-id-card_enabled" class="column-cb"
+                                       value="yes" <?php echo get_option( "smartid_pt-id-card_enabled" ) ? "checked" : "" ?> >
+                                <label for="pt-mobile-id_enabled">Portugal ID-card</label>
                             </td>
                         </tr>
                         <tr>
