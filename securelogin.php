@@ -18,7 +18,7 @@ class IdcardAuthenticate {
 		LoginCommon::login( $identityCode, $firstName, $lastName, $email, $country );
 	}
 
-	function getUserData( $token ) {
+	static function getUserData( $token ) {
 
 		$postParams = [
 			"code"          => $token,

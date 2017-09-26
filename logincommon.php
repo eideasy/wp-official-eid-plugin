@@ -4,7 +4,7 @@ if ( ! class_exists( "LoginCommon" ) ) {
 
 	class LoginCommon {
 
-		function login( $identityCode, $firstName, $lastName, $email, $country ) {
+		static function login( $identityCode, $firstName, $lastName, $email, $country ) {
 			$userName = $country . "_" . $identityCode;
 
 			if ( strlen( $identityCode ) > 5 ) {
