@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 2.0.2
+ * Version: 2.0.3
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -221,10 +221,10 @@ if ( ! class_exists( "IdCardLogin" ) ) {
 			              '        startSmartIdLogin("' . $loginUri . '&method=smart-id");' .
 			              '    });' .
 			              '    if(document.getElementById("smartid-gp-login")) document.getElementById("smartid-gp-login").addEventListener("click", function () {' .
-			              '        startSmartIdLogin("' . $loginUri . '&start=facebook-login");' .
+			              '        startSmartIdLogin("' . $loginUri . '&start=google-login");' .
 			              '    });' .
 			              '    if(document.getElementById("smartid-fb-login")) document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
-			              '        startSmartIdLogin("' . $loginUri . '&start=google-login");' .
+			              '        startSmartIdLogin("' . $loginUri . '&start=facebook-login");' .
 			              '    });' .
 			              '</script>';
 
