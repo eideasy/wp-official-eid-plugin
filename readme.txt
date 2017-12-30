@@ -1,10 +1,10 @@
 === Smart ID ===
 Contributors: Smart ID Estonia OÜ
 Author URI: https://smartid.ee
-Plugin URL: https://smartid.ee/plugins/wp/
+Plugin URL: https://smartid.ee/how
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
 Requires at least: 4.5
-Tested up to: 4.8.1
+Tested up to: 4.9.1
 Stable tag: trunk
 
 == Description==
@@ -30,9 +30,6 @@ After plugin installation you need to register your site to activate your site a
 * Extract zip file to your wp-content/plugins directory.
 * In the admin panel under plugins, activate "Smart ID".
 * Enjoy!
-
-= API Connection =
-Smart ID APIs are constantly changing and being updated. We monitor these changes and automatically update our APIs, so that you can be sure that Smart ID will always run smoothly and with the most up-to-date API calls.
 
 == Frequently Asked Questions ==
 Use shortcode 

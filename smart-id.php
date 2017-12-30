@@ -70,7 +70,6 @@ if ( ! class_exists( "IdCardLogin" ) ) {
 				wp_register_script( 'login_refresh', plugins_url( 'login_refresh.js', __FILE__ ) );
 				wp_enqueue_script( "login_refresh" );
 				IdcardAuthenticate::login( $_GET['code'] );
-
 			}
 		}
 

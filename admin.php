@@ -67,52 +67,52 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
 
 				<?php
 			} else {
-				if ( $_POST["smartid_change_settings"] == "yes" ) {
-					if ( $_POST["pt-id-card_enabled"] == "yes" ) {
+				if ( array_key_exists( "smartid_change_settings", $_POST ) && $_POST["smartid_change_settings"] == "yes" ) {
+					if ( array_key_exists( "pt-id-card_enabled", $_POST ) && $_POST["pt-id-card_enabled"] == "yes" ) {
 						update_option( "smartid_pt-id-card_enabled", true );
 					} else {
 						update_option( "smartid_pt-id-card_enabled", false );
 					}
-					if ( $_POST["lt-mobile-id_enabled"] == "yes" ) {
+					if ( array_key_exists( "lt-mobile-id_enabled", $_POST ) && $_POST["lt-mobile-id_enabled"] == "yes" ) {
 						update_option( "smartid_lt-mobile-id_enabled", true );
 					} else {
 						update_option( "smartid_lt-mobile-id_enabled", false );
 					}
-					if ( $_POST["lt-id-card_enabled"] == "yes" ) {
+					if ( array_key_exists( "lt-id-card_enabled", $_POST ) && $_POST["lt-id-card_enabled"] == "yes" ) {
 						update_option( "smartid_lt-id-card_enabled", true );
 					} else {
 						update_option( "smartid_lt-id-card_enabled", false );
 					}
-					if ( $_POST["lv-id-card_enabled"] == "yes" ) {
+					if ( array_key_exists( "lv-id-card_enabled", $_POST ) && $_POST["lv-id-card_enabled"] == "yes" ) {
 						update_option( "lveid_enabled", true );
 					} else {
 						update_option( "lveid_enabled", false );
 					}
-					if ( $_POST["ee-id-card_enabled"] == "yes" ) {
+					if ( array_key_exists( "ee-id-card_enabled", $_POST ) && $_POST["ee-id-card_enabled"] == "yes" ) {
 						update_option( "smartid_idcard_enabled", true );
 					} else {
 						update_option( "smartid_idcard_enabled", false );
 					}
 
-					if ( $_POST["ee-mobile-id_enabled"] == "yes" ) {
+					if ( array_key_exists( "ee-mobile-id_enabled", $_POST ) && $_POST["ee-mobile-id_enabled"] == "yes" ) {
 						update_option( "smartid_mobileid_enabled", true );
 					} else {
 						update_option( "smartid_mobileid_enabled", false );
 					}
 
-					if ( $_POST["smart-id_enabled"] == "yes" ) {
+					if ( array_key_exists( "smart-id_enabled", $_POST ) && $_POST["smart-id_enabled"] == "yes" ) {
 						update_option( "smartid_smartid_enabled", true );
 					} else {
 						update_option( "smartid_smartid_enabled", false );
 					}
 
-					if ( $_POST["facebook_enabled"] == "yes" ) {
+					if ( array_key_exists( "facebook_enabled", $_POST ) && $_POST["facebook_enabled"] == "yes" ) {
 						update_option( "smartid_facebook_enabled", true );
 					} else {
 						update_option( "smartid_facebook_enabled", false );
 					}
 
-					if ( $_POST["google_enabled"] == "yes" ) {
+					if ( array_key_exists( "google_enabled", $_POST ) && $_POST["google_enabled"] == "yes" ) {
 						update_option( "smartid_google_enabled", true );
 					} else {
 						update_option( "smartid_google_enabled", false );
