@@ -7,20 +7,32 @@ if ( ! class_exists( "LoginCommon" ) ) {
 		static function login( $identityCode, $firstName, $lastName, $email, $country ) {
 			$userName = $country . "_" . $identityCode;
 
+			$user_id = null;
 			if ( strlen( $identityCode ) > 5 ) {
 				$user = LoginCommon::getUser( $identityCode );
 				if ( $user == null ) {
 					$user_id = LoginCommon::createUser( $userName, $firstName, $lastName, $email, $identityCode );
 				} else {
+					if ( get_option( 'smartid_debug_mode' ) ) {
+						file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login user already exists $identityCode" ) );
+					}
 					$user_id = $user->userid;
 				}
 			} else {
+				if ( get_option( 'smartid_debug_mode' ) ) {
+					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email" ) );
+				}
 				wp_die( "ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email" );
 			}
 			if ( is_multisite() ) {
 				add_user_to_blog( get_current_blog_id(), $user_id, get_option( 'default_role' ) );
 			}
+			if ( get_option( 'smartid_debug_mode' ) ) {
+				file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login Authenticating WP user $identityCode" ) );
+			}
 			wp_set_auth_cookie( $user_id );
+
+			return $user_id;
 		}
 
 		private static function createUser( $userName, $firstName, $lastName, $email, $identityCode ) {
@@ -36,6 +48,9 @@ if ( ! class_exists( "LoginCommon" ) ) {
 			);
 
 			if ( username_exists( $userName ) ) {
+				if ( get_option( 'smartid_debug_mode' ) ) {
+					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login Cannot create user. Username $userName exists" ) );
+				}
 				wp_die( "Cannot create user. Username $userName exists" );
 			}
 
@@ -43,6 +58,10 @@ if ( ! class_exists( "LoginCommon" ) ) {
 
 			if ( is_wp_error( $user_id ) ) {
 				include 'iframe_break_free_errorhandler.php';
+				if ( get_option( 'smartid_debug_mode' ) ) {
+					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email ) );
+				}
+
 				wp_die( "Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email );
 			}
 
@@ -56,6 +75,10 @@ if ( ! class_exists( "LoginCommon" ) ) {
 					'created_at'   => current_time( 'mysql' )
 				)
 			);
+
+			if ( get_option( 'smartid_debug_mode' ) ) {
+				file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login new ID user created" ) );
+			}
 
 			return $user_id;
 		}

@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-    if (window.opener && window.opener !== window) {
-        console.log("I am in a popup, I should close myself if there are no errors to show");
-        window.close();
-    }
     if (self == top) {
         console.log("Reloading page to finish login");
-        location = removeURLParameter(self.location.href, 'code');
+        if (settings.debugMode == "true") {
+            jQuery.get("https://id.smartid.ee/confirm_progress", {"message": "WP login reloading page to finish login"});
+            setTimeout(function () {
+                location = removeURLParameter(self.location.href, 'code');
+            }, 1000);
+        } else {
+            location = removeURLParameter(self.location.href, 'code');
+        }
+
     } else {
         console.log("Running in iFrame, need to break free to finish login.");
         top.location = removeURLParameter(self.location.href, 'code');

@@ -7,6 +7,24 @@ class IdcardAuthenticate {
 	static function login( $token ) {
 		$result = IdcardAuthenticate::getUserData( $token );
 		if ( $result == null ) {
+			if ( get_option( 'smartid_debug_mode' ) ) {
+				$current_user = wp_get_current_user();
+				if ( ! ( $current_user instanceof WP_User ) ) {
+					$extraMessage = "Current user is not WP_User" . print_r( $current_user, true );
+				} else {
+					global $wpdb;
+					$prefix = is_multisite() ? $wpdb->get_blog_prefix( BLOG_ID_CURRENT_SITE ) : $wpdb->prefix;
+
+					$table_name = $prefix . "idcard_users";
+					$user       = $wpdb->get_row(
+						$wpdb->prepare( "select * from $prefix" . "idcard_users WHERE userid=%s", $current_user->ID )
+					);
+
+					$extraMessage = "Logged in user is $user->identitycode";
+				}
+				file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login already completed $token - $extraMessage" ) );
+			}
+
 			return; // login already completed
 		}
 		$firstName    = $result['firstname'];

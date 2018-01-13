@@ -117,6 +117,12 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
 					} else {
 						update_option( "smartid_google_enabled", false );
 					}
+
+					if ( array_key_exists( "smartid_debug_mode", $_POST ) && $_POST["smartid_debug_mode"] == "yes" ) {
+						update_option( "smartid_debug_mode", true );
+					} else {
+						update_option( "smartid_debug_mode", false );
+					}
 				}
 				?>
                 <h3> This site Smart ID is now active!</h3>
@@ -197,6 +203,17 @@ if ( ! class_exists( "IdcardAdmin" ) ) {
                                 <input type="checkbox" name="google_enabled" class="column-cb"
                                        value="yes" <?php echo get_option( "smartid_google_enabled" ) ? "checked" : "" ?>>
                                 <label for="google_enabled">Google</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="smartid_debug_mode" class="column-cb"
+                                       value="yes" <?php echo get_option( "smartid_debug_mode" ) ? "checked" : "" ?>>
+                                <label for="smartid_debug_mode">Enable debug mode. Sends login progress to server if
+                                    there are login issues.</label>
                             </td>
                         </tr>
                     </table>

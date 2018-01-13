@@ -45,6 +45,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+= 2.1 =
+Optional Debug mode for login issues detection on server side
+
 = 2.0 =
 * Login flow improved, users need to make one less click
 * Added more builtin login methods. Lithuanian and Portugese cards.

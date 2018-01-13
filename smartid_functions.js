@@ -11,12 +11,14 @@ function startSmartIdLogin(loginUri) {
                 window.clearInterval(pollTimer);
                 var url = win.document.URL;
                 code = gup(url, 'code');
+                if (code.length > 1) {
+                    win.close();
+                }
                 window.location = url;
             }
         } catch (e) {
-            console.log(e);
         }
-    }, 100);
+    }, 10);
 }
 
 function gup(url, name) {
