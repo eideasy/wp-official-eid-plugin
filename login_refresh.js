@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (self == top) {
         console.log("Reloading page to finish login");
         if (settings.debugMode == "true") {
-            jQuery.get("https://id.smartid.ee/confirm_progress", {"message": "WP login reloading page to finish login"});
+            jQuery.get("https://id.smartid.dev/confirm_progress", {"message": "WP login reloading page to finish login"});
             setTimeout(function () {
                 location = removeURLParameter(self.location.href, 'code');
             }, 1000);

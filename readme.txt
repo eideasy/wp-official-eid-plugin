@@ -45,6 +45,11 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 3.0 =
+Intranet mode available. Site admins can add ID code to users manually and disable automatic user registration.
+This allows limiting secure login to specific groups of people only
+
 = 2.1 =
 Optional Debug mode for login issues detection on server side
 

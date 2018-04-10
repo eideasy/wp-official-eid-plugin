@@ -1,101 +1,110 @@
 <?php
 
-if ( ! class_exists( "LoginCommon" ) ) {
+if ( ! class_exists("LoginCommon")) {
 
-	class LoginCommon {
+    class LoginCommon
+    {
 
-		static function login( $identityCode, $firstName, $lastName, $email, $country ) {
-			$userName = $country . "_" . $identityCode;
+        static function login($identityCode, $firstName, $lastName, $email, $country)
+        {
+            $userName = $country . "_" . $identityCode;
 
-			$user_id = null;
-			if ( strlen( $identityCode ) > 5 ) {
-				$user = LoginCommon::getUser( $identityCode );
-				if ( $user == null ) {
-					$user_id = LoginCommon::createUser( $userName, $firstName, $lastName, $email, $identityCode );
-				} else {
-					if ( get_option( 'smartid_debug_mode' ) ) {
-						file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login user already exists $identityCode" ) );
-					}
-					$user_id = $user->userid;
-				}
-			} else {
-				if ( get_option( 'smartid_debug_mode' ) ) {
-					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email" ) );
-				}
-				wp_die( "ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email" );
-			}
-			if ( is_multisite() ) {
-				add_user_to_blog( get_current_blog_id(), $user_id, get_option( 'default_role' ) );
-			}
-			if ( get_option( 'smartid_debug_mode' ) ) {
-				file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login Authenticating WP user $identityCode" ) );
-			}
-			wp_set_auth_cookie( $user_id );
+            $user_id = null;
+            if (strlen($identityCode) > 5) {
+                $user = LoginCommon::getUser($identityCode);
+                if ($user == null) {
+                    if (get_option('smartid_registration_disabled')) {
+                        wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
+                    } else {
+                        $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode);
+                    }
 
-			return $user_id;
-		}
+                } else {
+                    if (get_option('smartid_debug_mode')) {
+                        file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login user already exists $identityCode"));
+                    }
+                    $user_id = $user->userid;
+                }
+            } else {
+                if (get_option('smartid_debug_mode')) {
+                    file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email"));
+                }
+                wp_die("ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
+            }
+            if (is_multisite()) {
+                add_user_to_blog(get_current_blog_id(), $user_id, get_option('default_role'));
+            }
+            if (get_option('smartid_debug_mode')) {
+                file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
+            }
+            wp_set_auth_cookie($user_id);
 
-		private static function createUser( $userName, $firstName, $lastName, $email, $identityCode ) {
-			global $wpdb;
-			$user_data = array(
-				'user_pass'    => wp_generate_password( 64, true ),
-				'user_login'   => $userName,
-				'display_name' => "$firstName $lastName",
-				'first_name'   => $firstName,
-				'last_name'    => $lastName,
-				'user_email'   => $email,
-				'role'         => get_option( 'default_role' ) // Use default role or another role, e.g. 'editor'
-			);
+            return $user_id;
+        }
 
-			if ( username_exists( $userName ) ) {
-				if ( get_option( 'smartid_debug_mode' ) ) {
-					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login Cannot create user. Username $userName exists" ) );
-				}
-				wp_die( "Cannot create user. Username $userName exists" );
-			}
+        private static function createUser($userName, $firstName, $lastName, $email, $identityCode)
+        {
+            global $wpdb;
+            $user_data = array(
+                'user_pass'    => wp_generate_password(64, true),
+                'user_login'   => $userName,
+                'display_name' => "$firstName $lastName",
+                'first_name'   => $firstName,
+                'last_name'    => $lastName,
+                'user_email'   => $email,
+                'role'         => get_option('default_role') // Use default role or another role, e.g. 'editor'
+            );
 
-			$user_id = wp_insert_user( $user_data );
+            if (username_exists($userName)) {
+                if (get_option('smartid_debug_mode')) {
+                    file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
+                }
+                wp_die("Cannot create user. Username $userName exists");
+            }
 
-			if ( is_wp_error( $user_id ) ) {
-				include 'iframe_break_free_errorhandler.php';
-				if ( get_option( 'smartid_debug_mode' ) ) {
-					file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email ) );
-				}
+            $user_id = wp_insert_user($user_data);
 
-				wp_die( "Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email );
-			}
+            if (is_wp_error($user_id)) {
+                include 'iframe_break_free_errorhandler.php';
+                if (get_option('smartid_debug_mode')) {
+                    file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
+                }
 
-			$prefix     = is_multisite() ? $wpdb->get_blog_prefix( BLOG_ID_CURRENT_SITE ) : $wpdb->prefix;
-			$table_name = $prefix . "idcard_users";
-			$wpdb->insert( $table_name, array(
-					'firstname'    => $firstName,
-					'lastname'     => $lastName,
-					'identitycode' => $identityCode,
-					'userid'       => $user_id,
-					'created_at'   => current_time( 'mysql' )
-				)
-			);
+                wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
+            }
 
-			if ( get_option( 'smartid_debug_mode' ) ) {
-				file_get_contents( "https://id.smartid.ee/confirm_progress?message=" . urlencode( "WP login new ID user created" ) );
-			}
+            $prefix     = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+            $table_name = $prefix . "idcard_users";
+            $wpdb->insert($table_name, array(
+                    'firstname'    => $firstName,
+                    'lastname'     => $lastName,
+                    'identitycode' => $identityCode,
+                    'userid'       => $user_id,
+                    'created_at'   => current_time('mysql')
+                )
+            );
 
-			return $user_id;
-		}
+            if (get_option('smartid_debug_mode')) {
+                file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login new ID user created"));
+            }
 
-		private static function getUser( $identityCode ) {
-			global $wpdb;
+            return $user_id;
+        }
 
-			$prefix = is_multisite() ? $wpdb->get_blog_prefix( BLOG_ID_CURRENT_SITE ) : $wpdb->prefix;
+        private static function getUser($identityCode)
+        {
+            global $wpdb;
 
-			$user = $wpdb->get_row(
-				$wpdb->prepare( "select * from $prefix" . "idcard_users WHERE identitycode=%s", $identityCode )
-			);
+            $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
 
-			return $user;
-		}
+            $user = $wpdb->get_row(
+                $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s", $identityCode)
+            );
 
-	}
+            return $user;
+        }
+
+    }
 
 }
 

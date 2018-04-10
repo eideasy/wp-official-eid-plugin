@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 <div class="container">
     <div id="loginBlock" class="col-md-offset-3 col-md-6">
         <h2>Add or edit Smart ID Oauth2.0 credentials manually</h2>
-        <small>Credentials can be reviewed and generated manually at <a href="https://id.smartid.ee" target="_blank">https://id.smartid.ee</a>.
+        <small>Credentials can be reviewed and generated manually at <a href="https://id.smartid.dev" target="_blank">https://id.smartid.dev</a>.
             Look for credentials to website <?php echo home_url(); ?></small>
         <br>
 		<?php
