@@ -160,7 +160,7 @@ if ( ! class_exists("IdcardAdmin")) {
                         to each user manually to allow ID card login.</label>
 
                     <h3> Configure visible login method icons</h3>
-                    Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.dev">https://id.smartid.dev</a>
+                    Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.ee">https://id.smartid.ee</a>
 
                     <table>
                         <tr>

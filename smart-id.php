@@ -28,7 +28,83 @@ if ( ! class_exists("IdCardLogin")) {
 
     class IdCardLogin
     {
-        static function getSupportedMethods()
+
+        public static function save_custom_user_profile_fields($user_id)
+        {
+            if ( ! current_user_can('administrator')) {
+                return;
+            }
+
+            global $wpdb;
+            $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+
+            $table_name = $prefix . "idcard_users";
+
+            $idcode = esc_attr($_POST['smartid_user_idcode']);
+
+            $existingUser = $wpdb->get_row(
+                $wpdb->prepare("select * from $table_name WHERE identitycode=%s", $idcode)
+            );
+
+            if ($existingUser != null) {
+                $wpdb->delete($table_name, ['identitycode' => $idcode]);
+                $wpdb->update($table_name, ['identitycode' => $idcode], ['userid' => $user_id]);
+            } else {
+                $wpdb->delete($table_name, ['userid' => $user_id]);
+                $wpdb->insert($table_name, array(
+                        'firstname'    => "",
+                        'lastname'     => "",
+                        'identitycode' => $idcode,
+                        'userid'       => $user_id,
+                        'created_at'   => current_time('mysql')
+                    )
+                );
+            }
+        }
+
+
+        public static function custom_user_profile_fields($user)
+        {
+            if ( ! current_user_can('administrator')) {
+                return;
+            }
+            ?>
+
+            <table class="form-table">
+                <tbody>
+                <tr class="user-email-wrap">
+                    <th><label for="smartid_user_idcode">ID code</label></th>
+                    <td>
+                        <input name="smartid_user_idcode"
+                               value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
+                               class='regular-text'/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <?php
+        }
+
+        public static function getIdcodeByUserId($userId)
+        {
+            global $wpdb;
+            $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+
+            $table_name = $prefix . "idcard_users";
+            $user       = $wpdb->get_row(
+                $wpdb->prepare("select * from $table_name WHERE userid=%s", $userId)
+            );
+
+            if ($user == null) {
+                return "";
+            } else {
+                return $user->identitycode;
+            }
+
+        }
+
+        public static function getSupportedMethods()
         {
             $smartid_supportedMethods = [
                 "smartid_lt-mobile-id_enabled",
@@ -73,9 +149,10 @@ if ( ! class_exists("IdCardLogin")) {
         {
             if (IdCardLogin::isLogin()) {
                 if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
+                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
                 }
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
+                IdcardAuthenticate::login($_GET['code']);
                 wp_register_script('login_refresh', plugins_url('login_refresh.js', __FILE__));
                 wp_enqueue_script("login_refresh", false, ["jquery"]);
                 wp_localize_script("login_refresh",
@@ -84,8 +161,6 @@ if ( ! class_exists("IdCardLogin")) {
                         'debugMode' => get_option('smartid_debug_mode') ? "true" : "false"
                     )
                 );
-
-                IdcardAuthenticate::login($_GET['code']);
             }
         }
 
@@ -147,7 +222,7 @@ if ( ! class_exists("IdCardLogin")) {
             if ( ! array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://id.smartid.dev/sign_contract?client_id='
+            $code = '<iframe src="https://id.smartid.ee/sign_contract?client_id='
                     . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
@@ -189,7 +264,7 @@ if ( ! class_exists("IdCardLogin")) {
             }
             $redirectUri = urlencode(get_option("smartid_redirect_uri"));
             $clientId    = get_option("smartid_client_id");
-            $loginUri    = 'https://id.smartid.dev/oauth/authorize'
+            $loginUri    = 'https://id.smartid.ee/oauth/authorize'
                            . '?client_id=' . $clientId
                            . '&redirect_uri=' . $redirectUri
                            . '&response_type=code';
@@ -282,7 +357,7 @@ if ( ! class_exists("IdCardLogin")) {
             }
 
             $ch  = curl_init();
-            $url = "https://id.smartid.dev/" . $apiPath . $paramString;
+            $url = "https://id.smartid.ee/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -316,7 +391,7 @@ if ( ! class_exists("IdCardLogin")) {
                 id mediumint(9) NOT NULL AUTO_INCREMENT,                
                 firstname tinytext NOT NULL,
                 lastname tinytext NOT NULL,
-                identitycode VARCHAR(11) NOT NULL,
+                identitycode VARCHAR(21) NOT NULL,
                 userid bigint(20) unsigned NOT NULL,
                 created_at datetime NOT NULL,
 		        access_token VARCHAR(32),
@@ -349,6 +424,10 @@ if ( ! class_exists("IdCardLogin")) {
     add_action('admin_notices', 'IdCardLogin::admin_notice');
 
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
+
+    add_action('show_user_profile', 'IdCardLogin::custom_user_profile_fields');
+    add_action('edit_user_profile', 'IdCardLogin::custom_user_profile_fields');
+    add_action('profile_update', 'IdCardLogin::save_custom_user_profile_fields');
 
     add_shortcode('smart_id', 'IdCardLogin::return_id_login');
     add_shortcode('contract', 'IdCardLogin::display_contract_to_sign');

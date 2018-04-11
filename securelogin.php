@@ -7,12 +7,17 @@ class IdcardAuthenticate
 
     static function login($token)
     {
+        if (is_user_logged_in()) {
+            return; // login already completed
+        }
+
         $result = IdcardAuthenticate::getUserData($token);
         if ($result == null) {
             if (get_option('smartid_debug_mode')) {
                 $current_user = wp_get_current_user();
                 if ( ! ($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
+                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
                 } else {
                     global $wpdb;
                     $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
@@ -23,11 +28,14 @@ class IdcardAuthenticate
                     );
 
                     $extraMessage = "Logged in user is $user->identitycode";
+                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
                 }
-                file_get_contents("https://id.smartid.dev/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
             }
-
-            return; // login already completed
+            if (get_option('smartid_registration_disabled')) {
+                wp_die("User not found and registration disabled. Go back and contact site admin. ");
+            } else {
+                wp_die("Login failed, please contact site admin.");
+            }
         }
         $firstName    = $result['firstname'];
         $lastName     = $result['lastname'];
@@ -40,7 +48,6 @@ class IdcardAuthenticate
 
     static function getUserData($token)
     {
-
         $postParams = [
             "code"          => $token,
             "grant_type"    => "authorization_code",
