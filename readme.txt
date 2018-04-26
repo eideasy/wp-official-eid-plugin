@@ -46,7 +46,7 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
-= 3.0 =
+= 3.1 =
 Intranet mode available. Site admins can add ID code to users manually and disable automatic user registration.
 This allows limiting secure login to specific groups of people only
 

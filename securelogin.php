@@ -7,12 +7,15 @@ class IdcardAuthenticate
 
     static function login($token)
     {
-        if (is_user_logged_in()) {
+        if (IdcardAuthenticate::isAlreadyLogged()) {
             return; // login already completed
         }
 
         $result = IdcardAuthenticate::getUserData($token);
         if ($result == null) {
+            if (IdcardAuthenticate::isAlreadyLogged()) {
+                return; // Maybe logged in during API call
+            }
             if (get_option('smartid_debug_mode')) {
                 $current_user = wp_get_current_user();
                 if ( ! ($current_user instanceof WP_User)) {
@@ -68,6 +71,11 @@ class IdcardAuthenticate
         $userDataResult = IdCardLogin::curlCall("api/v2/user_data", $params);
 
         return $userDataResult;
+    }
+
+    static function isAlreadyLogged()
+    {
+        return wp_get_current_user() != null && wp_get_current_user()->ID != '';
     }
 
 }
