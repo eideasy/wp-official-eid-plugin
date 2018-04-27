@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/how
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
 Requires at least: 4.5
-Tested up to: 4.9.1
+Tested up to: 4.9.5
 Stable tag: trunk
 
 == Description==
@@ -45,6 +45,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 3.2 =
+Added filter "smartid_login" to decide where to redirect after login process is completed. Default is redirecting to home page.
 
 = 3.1 =
 Intranet mode available. Site admins can add ID code to users manually and disable automatic user registration.

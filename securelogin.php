@@ -46,7 +46,7 @@ class IdcardAuthenticate
         $email        = $result['email'];
         $country      = array_key_exists("country", $result) ? $result["country"] : "EE";
 
-        LoginCommon::login($identityCode, $firstName, $lastName, $email, $country);
+        return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country);
     }
 
     static function getUserData($token)

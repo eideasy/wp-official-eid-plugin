@@ -2,8 +2,8 @@
 /**
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
- * Description: Allow your visitors to login to wordpress and sign contracts with Estonian ID-card and mobile-ID
- * Version: 3.1
+ * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
+ * Version: 3.2
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -148,33 +148,22 @@ if ( ! class_exists("IdCardLogin")) {
         static function wpInitProcess()
         {
             if (IdCardLogin::isLogin()) {
+                if (IdcardAuthenticate::isAlreadyLogged()) {
+                    $loginUrl = apply_filters('smartid_login', home_url());
+                    wp_redirect($loginUrl);
+                    exit;
+                }
                 if (get_option('smartid_debug_mode')) {
                     file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
                 }
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
                 IdcardAuthenticate::login($_GET['code']);
+
                 wp_register_script('login_refresh', plugins_url('login_refresh.js', __FILE__));
                 wp_enqueue_script("login_refresh", false, ["jquery"]);
                 wp_localize_script("login_refresh",
-                    'settings',
-                    array(
-                        'debugMode' => get_option('smartid_debug_mode') ? "true" : "false"
-                    )
+                    'settings', ['debugMode' => get_option('smartid_debug_mode') ? "true" : "false"]
                 );
-            }
-        }
-
-        static function echoJsRedirectCode()
-        {
-            if (IdCardLogin::isLogin()) {
-                if (array_key_exists('redirect_to', $_GET)) {
-                    $redirectUrl = $_GET['redirect_to'];
-                } else {
-                    $redirectUrl = home_url("/");
-                }
-                if (strpos($redirectUrl, "wp-login") > 0) {
-                    $redirectUrl = home_url("/");
-                }
             }
         }
 
