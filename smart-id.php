@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 3.2
+ * Version: 3.2.1
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -45,6 +45,10 @@ if ( ! class_exists("IdCardLogin")) {
             $existingUser = $wpdb->get_row(
                 $wpdb->prepare("select * from $table_name WHERE identitycode=%s", $idcode)
             );
+
+            if ($existingUser != null && $existingUser->userid == $user_id) {
+                return; // same user updated, no need to do anything
+            }
 
             if ($existingUser != null) {
                 $wpdb->delete($table_name, ['identitycode' => $idcode]);

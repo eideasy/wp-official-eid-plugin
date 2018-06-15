@@ -46,6 +46,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 3.2.1 =
+Fixed bug where ID code was lost for the user when updating in some cases
+
 = 3.2 =
 Added filter "smartid_login" to decide where to redirect after login process is completed. Default is redirecting to home page.
 
