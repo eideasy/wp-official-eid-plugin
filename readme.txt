@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/how
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
 Requires at least: 4.5
-Tested up to: 4.9.5
+Tested up to: 5.0.2
 Stable tag: trunk
 
 == Description==
@@ -34,6 +34,7 @@ After plugin installation you need to register your site to activate your site a
 == Frequently Asked Questions ==
 Use shortcode 
 [smart_id] to get login button, 
+[contract id="123ABC"] to create document sign page. Get the actual ID calue from id.smartid.ee
 
 Identification with ID-card & mobile-ID works everywhere.
 
@@ -45,6 +46,11 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 3.4 =
+Wordpress 5 testing
+Signing pages reintroduce due high customer demand
+Better multi country support
 
 = 3.2.1 =
 Fixed bug where ID code was lost for the user when updating in some cases

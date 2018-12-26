@@ -4,19 +4,19 @@ if ( ! class_exists("LoginCommon")) {
 
     class LoginCommon
     {
-
         static function login($identityCode, $firstName, $lastName, $email, $country)
         {
             $userName = $country . "_" . $identityCode;
 
             $user_id = null;
             if (strlen($identityCode) > 5) {
-                $user = LoginCommon::getUser($identityCode);
+                $user = LoginCommon::getUser($identityCode, $country);
                 if ($user == null) {
                     if (get_option('smartid_registration_disabled')) {
                         wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
                     } else {
-                        $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode);
+                        $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode,
+                            $country);
                     }
                 } else {
                     if (get_option('smartid_debug_mode')) {
@@ -41,10 +41,10 @@ if ( ! class_exists("LoginCommon")) {
             return $user_id;
         }
 
-        private static function createUser($userName, $firstName, $lastName, $email, $identityCode)
+        private static function createUser($userName, $firstName, $lastName, $email, $identityCode, $country = "EE")
         {
             global $wpdb;
-            $user_data = array(
+            $user_data = [
                 'user_pass'    => wp_generate_password(64, true),
                 'user_login'   => $userName,
                 'display_name' => "$firstName $lastName",
@@ -52,7 +52,7 @@ if ( ! class_exists("LoginCommon")) {
                 'last_name'    => $lastName,
                 'user_email'   => $email,
                 'role'         => get_option('default_role') // Use default role or another role, e.g. 'editor'
-            );
+            ];
 
             if (username_exists($userName)) {
                 if (get_option('smartid_debug_mode')) {
@@ -74,13 +74,13 @@ if ( ! class_exists("LoginCommon")) {
 
             $prefix     = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
             $table_name = $prefix . "idcard_users";
-            $wpdb->insert($table_name, array(
+            $wpdb->insert($table_name, [
                     'firstname'    => $firstName,
                     'lastname'     => $lastName,
-                    'identitycode' => $identityCode,
+                    'identitycode' => $country . "_" . $identityCode,
                     'userid'       => $user_id,
                     'created_at'   => current_time('mysql')
-                )
+                ]
             );
 
             if (get_option('smartid_debug_mode')) {
@@ -90,18 +90,28 @@ if ( ! class_exists("LoginCommon")) {
             return $user_id;
         }
 
-        private static function getUser($identityCode)
+        private static function getUser($identityCode, $country = "EE")
         {
             global $wpdb;
 
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
 
             $user = $wpdb->get_row(
-                $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s", $identityCode)
+                $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s",
+                    $country . "_" . $identityCode)
             );
+
+            //backward compatibility
+            if ( ! $user) {
+                $user = $wpdb->get_row(
+                    $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s",
+                        $identityCode)
+                );
+            }
 
             return $user;
         }
+
 
     }
 
