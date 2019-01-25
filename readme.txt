@@ -34,7 +34,7 @@ After plugin installation you need to register your site to activate your site a
 == Frequently Asked Questions ==
 Use shortcode 
 [smart_id] to get login button, 
-[contract id="123ABC"] to create document sign page. Get the actual ID calue from id.smartid.ee
+[contract id="123ABC"] to create document sign page. Get the actual ID value from id.smartid.ee
 
 Identification with ID-card & mobile-ID works everywhere.
 
