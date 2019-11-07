@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/how
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
 Requires at least: 4.5
-Tested up to: 5.0.2
+Tested up to: 5.3
 Stable tag: trunk
 
 == Description==
@@ -46,6 +46,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 3.4.1 =
+Make sure sending empty ID code on custom profile page does not remove ID code from user
 
 = 3.4 =
 Wordpress 5 testing
