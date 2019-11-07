@@ -41,6 +41,9 @@ if ( ! class_exists("IdCardLogin")) {
             $table_name = $prefix . "idcard_users";
 
             $idcode = esc_attr($_POST['smartid_user_idcode']);
+            if ( ! $idcode || strlen($idcode) === 0) {
+                return; // not allowing to completely remove idcode
+            }
 
             $existingUser = $wpdb->get_row(
                 $wpdb->prepare("select * from $table_name WHERE identitycode=%s", $idcode)
@@ -51,7 +54,9 @@ if ( ! class_exists("IdCardLogin")) {
             }
 
             if ($existingUser != null) {
-                $wpdb->delete($table_name, ['identitycode' => $idcode]);
+                if ($idcode != "-") {
+                    $wpdb->delete($table_name, ['identitycode' => $idcode]);
+                }
                 $wpdb->update($table_name, ['identitycode' => $idcode], ['userid' => $user_id]);
             } else {
                 $wpdb->delete($table_name, ['userid' => $user_id]);
@@ -65,7 +70,6 @@ if ( ! class_exists("IdCardLogin")) {
                 );
             }
         }
-
 
         public static function custom_user_profile_fields($user)
         {
@@ -82,6 +86,8 @@ if ( ! class_exists("IdCardLogin")) {
                         <input name="smartid_user_idcode"
                                value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
+                        <br>
+                        <small>To remove ID code value write here dash without quotes "-". Empty field will be ignored</small>
                     </td>
                 </tr>
                 </tbody>

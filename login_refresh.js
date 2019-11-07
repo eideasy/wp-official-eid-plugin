@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    if (self == top) {
+    if (self === top) {
         console.log("Reloading page to finish login");
-        if (settings.debugMode == "true") {
+        if (settings.debugMode === "true") {
             jQuery.get("https://id.smartid.ee/confirm_progress", {"message": "WP login reloading page to finish login"});
             setTimeout(function () {
                 location = removeURLParameter(self.location.href, 'code');
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             location = removeURLParameter(self.location.href, 'code');
         }
-
     } else {
         console.log("Running in iFrame, need to break free to finish login.");
         top.location = removeURLParameter(self.location.href, 'code');

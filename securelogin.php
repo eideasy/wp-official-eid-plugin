@@ -4,7 +4,6 @@ require_once('logincommon.php');
 
 class IdcardAuthenticate
 {
-
     static function login($token)
     {
         if (IdcardAuthenticate::isAlreadyLogged()) {
@@ -77,5 +76,4 @@ class IdcardAuthenticate
     {
         return wp_get_current_user() != null && wp_get_current_user()->ID != '';
     }
-
 }
