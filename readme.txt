@@ -47,7 +47,7 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
-= 3.5.0 =
+= 3.5.1 =
 Better detection of login in popup window
 
 = 3.4.1 =
