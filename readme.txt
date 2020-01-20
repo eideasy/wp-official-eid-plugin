@@ -4,7 +4,7 @@ Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/how
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
 Requires at least: 4.5
-Tested up to: 5.3
+Tested up to: 5.3.2
 Stable tag: trunk
 
 == Description==
@@ -47,6 +47,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 3.5.0 =
+Better detection of login in popup window
+
 = 3.4.1 =
 Make sure sending empty ID code on custom profile page does not remove ID code from user
 
@@ -67,18 +70,3 @@ This allows limiting secure login to specific groups of people only
 
 = 2.1 =
 Optional Debug mode for login issues detection on server side
-
-= 2.0 =
-* Login flow improved, users need to make one less click
-* Added more builtin login methods. Lithuanian and Portugese cards.
-* Multisite support
-* Better error handling during signup, eg if e-mail already exists
-= 1.3.2 =
-* Improved flow if not all methods are enabled
-= 1.3.1 =
-* Latvian ID-card Personas apliecība support
-* Login type buttons configurable
-* API keys manually configurable, helpful while going live
-* Contract signing deprecated
-= 1.2.9 =
-* Better cleanup after deleting user

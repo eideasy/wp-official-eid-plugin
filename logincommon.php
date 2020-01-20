@@ -38,6 +38,7 @@ if ( ! class_exists("LoginCommon")) {
             }
             wp_set_auth_cookie($user_id);
 
+            usleep(20*1000); //give some time for Javascript to process the login;
             return $user_id;
         }
 

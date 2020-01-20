@@ -18,7 +18,7 @@ function startSmartIdLogin(loginUri) {
             }
         } catch (e) {
         }
-    }, 10);
+    }, 1);
 }
 
 function gup(url, name) {
