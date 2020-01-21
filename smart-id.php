@@ -87,7 +87,8 @@ if ( ! class_exists("IdCardLogin")) {
                                value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
                         <br>
-                        <small>To remove ID code value write here dash without quotes "-". Empty field will be ignored</small>
+                        <small>To remove ID code value write here dash without quotes "-". Empty field will be
+                            ignored</small>
                     </td>
                 </tr>
                 </tbody>
@@ -262,7 +263,9 @@ if ( ! class_exists("IdCardLogin")) {
                            . '&redirect_uri=' . $redirectUri
                            . '&response_type=code';
 
-            $loginCode = '<script src="' . IdCardLogin::getPluginBaseUrl() . '/smartid_functions.js"></script>';
+            wp_enqueue_script("smartid_functions_js");
+
+            $loginCode = '';
             if (get_option("smartid_idcard_enabled")) {
                 $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="46" width="130" style="display:inline; margin: 3px">';
             }
@@ -413,6 +416,10 @@ if ( ! class_exists("IdCardLogin")) {
     add_action('init', 'IdCardLogin::wpInitProcess');
 
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
+
+    $version = date("ymd-Gis", filemtime(plugin_dir_path(__FILE__)));
+    wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], $version);
+
     add_action('plugins_loaded', 'IdCardLogin::idcard_install');
     add_action('admin_notices', 'IdCardLogin::admin_notice');
 
@@ -426,4 +433,4 @@ if ( ! class_exists("IdCardLogin")) {
     add_shortcode('contract', 'IdCardLogin::display_contract_to_sign');
 
     add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');
-} 
+}
