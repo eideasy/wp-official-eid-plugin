@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 		if ( array_key_exists( "smartid_manual_api_credentials", $_POST ) && $_POST["smartid_manual_api_credentials"] === "yes" ) {
 			update_option( "smartid_client_id", sanitize_text_field( $_POST["client_id"] ) );
 			update_option( "smartid_secret", sanitize_text_field( $_POST["secret"] ) );
-			update_option( "smartid_redirect_uri", home_url() );
+			update_option( "smartid_redirect_uri", sanitize_text_field( $_POST["redirect_uri"] ) );
 			?>
             <div class="updated"><p><strong>Credentials manually changed, you can try the login now.</strong></p></div>
 			<?php
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="client_id">Client ID</label>
                         </td>
                         <td>
-                            <input type="text" name="client_id" class="column-cb">
+                            <input type="text" name="client_id" class="column-cb" value="<?php echo get_option('smartid_client_id', "test");?>">
                         </td>
                     </tr>
                     <tr>
@@ -35,6 +35,14 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                         </td>
                         <td>
                             <input type="text" name="secret" class="column-cb">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="redirect_uri">Redirect URI</label>
+                        </td>
+                        <td>
+                            <input type="text" name="redirect_uri" class="column-cb" value="<?php echo get_option('smartid_redirect_uri');?>">
                         </td>
                     </tr>
                 </table>

@@ -47,6 +47,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 3.6.0 =
+After login URL is manually changeable
+
 = 3.5.2 =
 Better detection of login in popup window
 
