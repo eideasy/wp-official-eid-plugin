@@ -267,21 +267,21 @@ if ( ! class_exists("IdCardLogin")) {
             wp_enqueue_script("smartid_functions_js");
 
             $loginCode = '<style>
-                .login-button {
+                #smartid-login-block .login-button {
                     display:inline;
                     margin: 3px;
                     height: 46px;
                 }
-                .login-square-w {
+                #smartid-login-block .login-square-w {
                     width: 46px;
                 }
-                .login-middle-w {
+                #smartid-login-block .login-middle-w {
                     width: 130px;
                 }
-                .login-wide-w {
+                #smartid-login-block .login-wide-w {
                     width: 200px;
                 }                
-            </style>';
+            </style><div id="smartid-login-block">';
             if (get_option("smartid_idcard_enabled")) {
                 $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" class="login-button login-middle-w">';
             }
@@ -313,7 +313,7 @@ if ( ! class_exists("IdCardLogin")) {
                 $loginCode .= '<img id="smartid-agrello-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" class="login-button login-square-w" title="Agrello .ID">';
             }
 
-            $loginCode .= '<script>' .
+            $loginCode .= '</div><script>' .
                           '    if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {' .
                           '        startSmartIdLogin("' . $loginUri . '&start=ee-id-card");' .
                           '    });' .
