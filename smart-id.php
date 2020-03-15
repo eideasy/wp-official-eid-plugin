@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 3.7.0
+ * Version: 3.7.2
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -266,36 +266,51 @@ if ( ! class_exists("IdCardLogin")) {
 
             wp_enqueue_script("smartid_functions_js");
 
-            $loginCode = '';
+            $loginCode = '<style>
+                .login-button {
+                    display:inline;
+                    margin: 3px;
+                    height: 46px;
+                }
+                .login-square-w {
+                    width: 46px;
+                }
+                .login-middle-w {
+                    width: 130px;
+                }
+                .login-wide-w {
+                    width: 200px;
+                }                
+            </style>';
             if (get_option("smartid_idcard_enabled")) {
-                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" height="46" width="130" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" class="login-button login-middle-w">';
             }
             if (get_option("smartid_mobileid_enabled")) {
-                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" height="46" width="130" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" class="login-button login-middle-w">';
             }
             if (get_option("lveid_enabled")) {
-                $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" height="46" width="130" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" class="login-button login-middle-w">';
             }
             if (get_option("smartid_lt-id-card_enabled")) {
-                $loginCode .= '<img id="smartid-lt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lithuania_eid.png" height="46" width="130" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-lt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lithuania_eid.png" class="login-button login-middle-w">';
             }
             if (get_option("smartid_lt-mobile-id_enabled")) {
-                $loginCode .= '<img id="smartid-lt-mobile-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lt-mobile-id.png" height="46" width="130" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-lt-mobile-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lt-mobile-id.png" class="login-button login-middle-w">';
             }
             if (get_option("smartid_pt-id-card_enabled")) {
-                $loginCode .= '<img id="smartid-pt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/portugal-id-card.png" height="46" width="200" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-pt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/portugal-id-card.png" class="login-button login-wide-w">';
             }
             if (get_option("smartid_smartid_enabled")) {
-                $loginCode .= '<img id="smartid-smartid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" height="46" width="46" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-smartid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" class="login-button login-square-w">';
             }
             if (get_option("smartid_google_enabled")) {
-                $loginCode .= '<img id="smartid-gp-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" height="46" width="46" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-gp-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" class="login-button login-square-w">';
             }
             if (get_option("smartid_facebook_enabled")) {
-                $loginCode .= '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" height="46" width="46" style="display:inline; margin: 3px">';
+                $loginCode .= '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" class="login-button login-square-w">';
             }
             if (get_option("smartid_agrello_enabled")) {
-                $loginCode .= '<img id="smartid-agrello-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" height="46" width="46" style="display:inline; margin: 3px" title="Agrello .ID">';
+                $loginCode .= '<img id="smartid-agrello-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" class="login-button login-square-w" title="Agrello .ID">';
             }
 
             $loginCode .= '<script>' .
