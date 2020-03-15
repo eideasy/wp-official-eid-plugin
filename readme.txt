@@ -47,6 +47,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 3.7.0 =
+Added Agrello .ID login method
+
 = 3.6.0 =
 After login URL is manually changeable
 

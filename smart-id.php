@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 3.6.0
+ * Version: 3.7.0
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -293,6 +293,9 @@ if ( ! class_exists("IdCardLogin")) {
             if (get_option("smartid_facebook_enabled")) {
                 $loginCode .= '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" height="46" width="46" style="display:inline; margin: 3px">';
             }
+            if (get_option("smartid_agrello_enabled")) {
+                $loginCode .= '<img id="smartid-agrello-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" height="46" width="46" style="display:inline; margin: 3px" title="Agrello .ID">';
+            }
 
             $loginCode .= '<script>' .
                           '    if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {' .
@@ -321,6 +324,9 @@ if ( ! class_exists("IdCardLogin")) {
                           '    });' .
                           '    if(document.getElementById("smartid-fb-login")) document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
                           '        startSmartIdLogin("' . $loginUri . '&start=facebook-login");' .
+                          '    });' .
+                          '    if(document.getElementById("smartid-agrello-login")) document.getElementById("smartid-agrello-login").addEventListener("click", function () {' .
+                          '        startSmartIdLogin("' . $loginUri . '&start=agrello");' .
                           '    });' .
                           '</script>';
 

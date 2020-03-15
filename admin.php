@@ -14,7 +14,6 @@ if ( ! class_exists("IdcardAdmin")) {
         static function create_id_settings_page()
         {
             echo "<h1> Smart ID </h1>";
-//            update_option("smartid_client_id", null);
             if ( ! function_exists('curl_version')) {
                 echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart ID secure logins";
 
@@ -134,6 +133,12 @@ if ( ! class_exists("IdcardAdmin")) {
                     } else {
                         update_option("smartid_registration_disabled", false);
                     }
+
+                    if (array_key_exists("agrello_enabled", $_POST) && $_POST["agrello_enabled"] == "yes") {
+                        update_option("smartid_agrello_enabled", true);
+                    } else {
+                        update_option("smartid_agrello_enabled", false);
+                    }
                 }
                 ?>
                 <h3> This site Smart ID is now active!</h3>
@@ -227,6 +232,13 @@ if ( ! class_exists("IdcardAdmin")) {
                             </td>
                         </tr>
                         <tr>
+                            <td>
+                                <input type="checkbox" name="agrello_enabled" class="column-cb"
+                                       value="yes" <?php echo get_option("smartid_agrello_enabled") ? "checked" : "" ?>>
+                                <label for="agrello_enabled">Agrello .ID</label>
+                            </td>
+                        </tr>
+                        <tr>
                             <td></td>
                         </tr>
                         <tr>
@@ -254,4 +266,3 @@ if ( ! class_exists("IdcardAdmin")) {
     }
 
 }
-    
