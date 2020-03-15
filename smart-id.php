@@ -127,6 +127,7 @@ if ( ! class_exists("IdCardLogin")) {
                 "smartid_smartid_enabled",
                 "smartid_facebook_enabled",
                 "smartid_google_enabled",
+                "smartid_agrello_enabled"
             ];
 
             return $smartid_supportedMethods;
