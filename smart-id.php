@@ -3,7 +3,7 @@
  * Plugin Name: SMART-ID
  * Plugin URI: https://smartid.ee/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 3.7.2
+ * Version: 3.8
  * Author: Smart ID Estonia
  * Author URI: https://smartid.ee/
  * License: GPLv2 or later
@@ -283,10 +283,10 @@ if ( ! class_exists("IdCardLogin")) {
                 }                
             </style><div id="smartid-login-block">';
             if (get_option("smartid_idcard_enabled")) {
-                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/id-card.svg" class="login-button login-middle-w">';
+                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_idkaart_mark.png" class="login-button">';
             }
             if (get_option("smartid_mobileid_enabled")) {
-                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/mobile-id.svg" class="login-button login-middle-w">';
+                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_mobiilid_mark.png" class="login-button">';
             }
             if (get_option("lveid_enabled")) {
                 $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" class="login-button login-middle-w">';

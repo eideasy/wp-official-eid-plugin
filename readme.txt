@@ -2,9 +2,9 @@
 Contributors: Smart ID Estonia OÜ
 Author URI: https://smartid.ee
 Plugin URL: https://smartid.ee/how
-Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão
+Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
 Requires at least: 4.5
-Tested up to: 5.3.2
+Tested up to: 5.4
 Stable tag: trunk
 
 == Description==
@@ -16,27 +16,11 @@ Plugin implements smartid.ee Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
 
-== Installation ==
+== Tips and tricks ==
+Use shortcode [smart_id] to get login button,
+Use shortcode [contract id="123ABC"] to create document sign page. Get the actual contract ID value from id.smartid.ee
 
-= Automatic =
-* In the admin panel under plugins page, click Add New
-* browse "Smart_ID" and click install now
-* Click Activate plugin
-* Go to Smart ID section on left side to activate you site
-* PS MULTISITE!! Each multisite instance needs to activate Smart-ID separately.
-* Enjoy!
-
-= Manual =
-* Extract zip file to your wp-content/plugins directory.
-* In the admin panel under plugins, activate "Smart ID".
-* Enjoy!
-
-== Frequently Asked Questions ==
-Use shortcode 
-[smart_id] to get login button, 
-[contract id="123ABC"] to create document sign page. Get the actual ID value from id.smartid.ee
-
-Identification with ID-card & mobile-ID works everywhere.
+Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and use filter smartid_new_user_email. By default people from estonia get e-mail to be idcode@eesti.ee and all others will get idcode@mail.smartid.ee
 
 Support email: help@smartid.ee
 Support phone +372 555 29 332
@@ -46,6 +30,11 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 3.8 =
+New Estonian e-ID symbolics
+Added filter smartid_new_user_email to allow editing new user username/email
+Fixed custom redirect config error
 
 = 3.7.2 =
 Added Agrello .ID login method

@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 		<?php
 		if ( array_key_exists( "smartid_manual_api_credentials", $_POST ) && $_POST["smartid_manual_api_credentials"] === "yes" ) {
 			update_option( "smartid_client_id", sanitize_text_field( $_POST["client_id"] ) );
-			update_option( "smartid_secret", sanitize_text_field( $_POST["secret"] ) );
+			update_option( "smartid_secret", sanitize_text_field( $_POST["client_secret"] ) );
 			update_option( "smartid_redirect_uri", sanitize_text_field( $_POST["redirect_uri"] ) );
 			?>
             <div class="updated"><p><strong>Credentials manually changed, you can try the login now.</strong></p></div>
@@ -31,10 +31,10 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                     </tr>
                     <tr>
                         <td>
-                            <label for="secret">Secret</label>
+                            <label for="client_secret">Secret</label>
                         </td>
                         <td>
-                            <input type="text" name="secret" class="column-cb">
+                            <input type="text" name="client_secret" class="column-cb">
                         </td>
                     </tr>
                     <tr>

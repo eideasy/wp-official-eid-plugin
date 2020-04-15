@@ -42,8 +42,15 @@ class IdcardAuthenticate
         $firstName    = $result['firstname'];
         $lastName     = $result['lastname'];
         $identityCode = $result['idcode'];
-        $email        = $result['email'];
         $country      = array_key_exists("country", $result) ? $result["country"] : "EE";
+        $domain       = "mail.smartid.ee";
+        if ($country === "EE") {
+            $domain = "eesti.ee";
+        }
+
+        $email = "$identityCode@$domain";
+
+        $email = apply_filters('smartid_new_user_email', $email);
 
         return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country);
     }
