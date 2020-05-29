@@ -1,12 +1,20 @@
 function startSmartIdLogin(loginUri) {
-    var w = 800;
-    var h = 800;
-    var left = (screen.width / 2) - (w / 2);
-    var top = (screen.height / 2) - (h / 2);
-    var win = window.open(loginUri, "Smart ID login", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-    var pollTimer = window.setInterval(function () {
+    let w = 800;
+    let h = 800;
+    // Fixes dual-screen position, Most browsers, Firefox
+    let dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+    let dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+
+    let width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    let height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    let left = ((width / 2) - (w / 2)) + dualScreenLeft;
+    let top = ((height / 2) - (h / 2)) + dualScreenTop;
+
+    let win = window.open(loginUri, "Smart ID login", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    let pollTimer = window.setInterval(function () {
         try {
-            var url = win.document.URL;
+            let url = win.document.URL;
             if (!url.startsWith("http")) {
                 return;
             }
@@ -18,7 +26,7 @@ function startSmartIdLogin(loginUri) {
             setTimeout(function () {
                 win.close();
                 window.location = url;
-            }, 50);
+            }, 150);
         } catch (e) {
         }
     }, 1);

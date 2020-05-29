@@ -1,8 +1,8 @@
-=== Smart ID ===
+=== eID Easy ===
 Contributors: Smart ID Estonia OÜ
-Author URI: https://smartid.ee
-Plugin URL: https://smartid.ee/how
-Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
+Author URI: https://eideasy.com
+Plugin URL: https://eideasy.com
+Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
 Requires at least: 4.5
 Tested up to: 5.4
 Stable tag: trunk
@@ -12,17 +12,17 @@ This plugin makes secure identification of people much easier than implementing 
 
 Most login actions are FREE. The ones that cost money (Mobile-ID, Smart-ID app, etc) are paid because their operator charges money.  Smart ID gets volume discounts and is able to offer similar price in same range as making direct contract. Plus you do not neet to pay minimal monthly fee.
 
-Plugin implements smartid.ee Oauth 2.0 protocol like Facebook and Google login.
+Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
 
 == Tips and tricks ==
-Use shortcode [smart_id] to get login button,
-Use shortcode [contract id="123ABC"] to create document sign page. Get the actual contract ID value from id.smartid.ee
+Use shortcode [eid_easy] to get login button,
+Use shortcode [contract id="123ABC"] to create document sign page. Get the actual contract ID value from id.eideasy.com
 
 Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and use filter smartid_new_user_email. By default people from estonia get e-mail to be idcode@eesti.ee and all others will get idcode@mail.smartid.ee
 
-Support email: help@smartid.ee
+Support email: help@eideasy.com
 Support phone +372 555 29 332
 
 == Screenshots ==
@@ -30,6 +30,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.0 =
+Upgrading base system to eideasy.com
 
 = 3.8 =
 New Estonian e-ID symbolics

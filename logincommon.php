@@ -15,18 +15,17 @@ if ( ! class_exists("LoginCommon")) {
                     if (get_option('smartid_registration_disabled')) {
                         wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
                     } else {
-                        $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode,
-                            $country);
+                        $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $country);
                     }
                 } else {
                     if (get_option('smartid_debug_mode')) {
-                        file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login user already exists $identityCode"));
+                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login user already exists $identityCode"));
                     }
                     $user_id = $user->userid;
                 }
             } else {
                 if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email"));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email"));
                 }
                 wp_die("ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
             }
@@ -34,7 +33,7 @@ if ( ! class_exists("LoginCommon")) {
                 add_user_to_blog(get_current_blog_id(), $user_id, get_option('default_role'));
             }
             if (get_option('smartid_debug_mode')) {
-                file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
+                file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
             }
             wp_set_auth_cookie($user_id);
 
@@ -56,7 +55,7 @@ if ( ! class_exists("LoginCommon")) {
 
             if (username_exists($userName)) {
                 if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
                 }
                 wp_die("Cannot create user. Username $userName exists");
             }
@@ -66,7 +65,7 @@ if ( ! class_exists("LoginCommon")) {
             if (is_wp_error($user_id)) {
                 include 'iframe_break_free_errorhandler.php';
                 if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
                 }
 
                 wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
@@ -84,7 +83,7 @@ if ( ! class_exists("LoginCommon")) {
             );
 
             if (get_option('smartid_debug_mode')) {
-                file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login new ID user created"));
+                file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login new ID user created"));
             }
 
             return $user_id;

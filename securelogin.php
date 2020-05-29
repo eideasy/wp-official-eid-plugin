@@ -19,7 +19,7 @@ class IdcardAuthenticate
                 $current_user = wp_get_current_user();
                 if ( ! ($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
                 } else {
                     global $wpdb;
                     $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
@@ -30,7 +30,7 @@ class IdcardAuthenticate
                     );
 
                     $extraMessage = "Logged in user is $user->identitycode";
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
                 }
             }
             if (get_option('smartid_registration_disabled')) {
@@ -43,12 +43,8 @@ class IdcardAuthenticate
         $lastName     = $result['lastname'];
         $identityCode = $result['idcode'];
         $country      = array_key_exists("country", $result) ? $result["country"] : "EE";
-        $domain       = "mail.smartid.ee";
-        if ($country === "EE") {
-            $domain = "eesti.ee";
-        }
 
-        $email = "$identityCode@$domain";
+        $email = "$identityCode@local.localhost";
 
         $email = apply_filters('smartid_new_user_email', $email);
 
@@ -67,7 +63,8 @@ class IdcardAuthenticate
 
         $accessTokenResult = IdCardLogin::curlCall("oauth/access_token", [], $postParams);
         $accessToken       = $accessTokenResult["access_token"];
-        if (strlen($accessToken) != 40) {
+
+        if (strlen($accessToken) < 20) {
             return null; //login already completed
         }
 

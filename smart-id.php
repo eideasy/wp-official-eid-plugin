@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: SMART-ID
- * Plugin URI: https://smartid.ee/
+ * Plugin Name: eID Easy
+ * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 3.8
+ * Version: 4.0
  * Author: Smart ID Estonia
- * Author URI: https://smartid.ee/
+ * Author URI: https://eideasy.com/
  * License: GPLv2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 
 if ( ! class_exists("IdCardLogin")) {
     require_once(plugin_dir_path(__FILE__) . 'admin.php');
-
 
     class IdCardLogin
     {
@@ -87,8 +86,7 @@ if ( ! class_exists("IdCardLogin")) {
                                value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
                         <br>
-                        <small>To remove ID code value write here dash without quotes "-". Empty field will be
-                            ignored</small>
+                        <small>To remove ID code value write here dash without quotes "-". Empty field will be ignored</small>
                     </td>
                 </tr>
                 </tbody>
@@ -154,7 +152,7 @@ if ( ! class_exists("IdCardLogin")) {
 
         static function isLogin()
         {
-            return array_key_exists('code', $_GET) && strlen($_GET['code']) === 40;
+            return array_key_exists('code', $_GET) && strlen($_GET['code']) > 20;
         }
 
         static function wpInitProcess()
@@ -166,7 +164,7 @@ if ( ! class_exists("IdCardLogin")) {
                     exit;
                 }
                 if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.smartid.ee/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
+                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
                 }
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
                 IdcardAuthenticate::login($_GET['code']);
@@ -179,10 +177,8 @@ if ( ! class_exists("IdCardLogin")) {
                     $_GET) && $_GET['page'] !== "smart-id-settings") {
                 ?>
                 <div class="notice notice-success is-dismissible">
-                    <p>Your Smart-ID is almost ready! Please open
-                        <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=smart-id-settings')) ?>">Smart-ID
-                            Settings
-                        </a> to Activate.
+                    <p>Your eID Easy is almost ready! Please open
+                        <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=eid-easy-settings')) ?>"> eID Easy Settings </a> to activate.
                     </p>
                 </div>
                 <?php
@@ -191,8 +187,7 @@ if ( ! class_exists("IdCardLogin")) {
 
         static function get_settings_url($links)
         {
-            $links[] = '<a href="' . esc_url(get_admin_url(null,
-                    'admin.php?page=smart-id-settings')) . '">Smart-ID Settings</a>';
+            $links[] = '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=eid-easy-settings')) . '">eID Easy Settings</a>';
 
             return $links;
         }
@@ -212,12 +207,12 @@ if ( ! class_exists("IdCardLogin")) {
         static function display_contract_to_sign($atts)
         {
             if (get_option("smartid_client_id") == null) {
-                return "<b>Smart-ID service not activated, cannot sign the contract";
+                return "<b>eID Easy service not activated, cannot sign the contract";
             }
             if ( ! array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://id.smartid.ee/sign_contract?client_id='
+            $code = '<iframe src="https://id.eideasy.com/sign_contract?client_id='
                     . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
                     . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
@@ -255,11 +250,11 @@ if ( ! class_exists("IdCardLogin")) {
                 }
             }
             if ($allDisabled) {
-                return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from Smart ID config</b>";
+                return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from eID Easy config</b>";
             }
             $redirectUri = urlencode(get_option("smartid_redirect_uri"));
             $clientId    = get_option("smartid_client_id");
-            $loginUri    = 'https://id.smartid.ee/oauth/authorize'
+            $loginUri    = 'https://id.eideasy.com/oauth/authorize'
                            . '?client_id=' . $clientId
                            . '&redirect_uri=' . $redirectUri
                            . '&response_type=code';
@@ -363,7 +358,11 @@ if ( ! class_exists("IdCardLogin")) {
             $paramString = "?client_id=" . get_option("smartid_client_id");
             if ($params != null) {
                 foreach ($params as $key => $value) {
-                    $paramString .= "&$key=$value";
+                    if ($key === "access_token") {
+                        $token = "authorization: Bearer $value";
+                    } else {
+                        $paramString .= "&$key=$value";
+                    }
                 }
             }
 
@@ -375,8 +374,11 @@ if ( ! class_exists("IdCardLogin")) {
             }
 
             $ch  = curl_init();
-            $url = "https://id.smartid.ee/" . $apiPath . $paramString;
+            $url = "https://id.eideasy.com/" . $apiPath . $paramString;
             curl_setopt($ch, CURLOPT_URL, $url);
+            if (isset($token)) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [$token]);
+            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -420,7 +422,7 @@ if ( ! class_exists("IdCardLogin")) {
             require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
             dbDelta($sqlCreate);
 
-            return "Thank you for installing Smart-ID. Open Smart-ID settings to activate the service";
+            return "Thank you for installing eID Easy. Open eID Easy settings to activate the service";
         }
 
         static function enqueueJquery()
@@ -452,6 +454,7 @@ if ( ! class_exists("IdCardLogin")) {
     add_action('profile_update', 'IdCardLogin::save_custom_user_profile_fields');
 
     add_shortcode('smart_id', 'IdCardLogin::return_id_login');
+    add_shortcode('eid_easy', 'IdCardLogin::return_id_login');
     add_shortcode('contract', 'IdCardLogin::display_contract_to_sign');
 
     add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'IdCardLogin::get_settings_url');

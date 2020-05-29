@@ -7,15 +7,15 @@ if ( ! class_exists("IdcardAdmin")) {
 
         static function id_settings_page()
         {
-            add_menu_page('Smart ID', 'Smart ID', 'manage_options', 'smart-id-settings',
+            add_menu_page('eID Easy', 'eID Easy', 'manage_options', 'eid-easy-settings',
                 'IdcardAdmin::create_id_settings_page');
         }
 
         static function create_id_settings_page()
         {
-            echo "<h1> Smart ID </h1>";
+            echo "<h1> eID Easy </h1>";
             if ( ! function_exists('curl_version')) {
-                echo "cURL PHP module not installed or disabled, please enable it before starting to use Smart ID secure logins";
+                echo "cURL PHP module not installed or disabled, please enable it before starting to use eID Easy secure logins";
 
                 return;
             }
@@ -61,7 +61,7 @@ if ( ! class_exists("IdcardAdmin")) {
             ?>
 
             <?php
-            //Site has not activated Smart-ID yet
+            //Site has not activated eID Easy yet
             if (get_option("smartid_client_id") == null) {
                 ?>
                 <div class="wrap">
@@ -141,16 +141,16 @@ if ( ! class_exists("IdcardAdmin")) {
                     }
                 }
                 ?>
-                <h3> This site Smart ID is now active!</h3>
-                Smart ID shortcode:
+                <h3> This site eID Easy is now active!</h3>
+                eID Easy shortcode:
                 <ol>
                     <li>
-                        <b>[smart_id]</b> - Creates configured login buttons.
+                        <b>[eid_easy]</b> - Creates configured login buttons.
                     </li>
                 </ol>
 
                 <br>
-                All questions and support at <a href="mailto:help@smartid.ee">help@smartid.ee</a>
+                All questions and support at <a href="mailto:info@eideasy.com">info@eideasy.com</a>
 
 
                 <form method="post"
@@ -165,7 +165,7 @@ if ( ! class_exists("IdcardAdmin")) {
                         to each user manually to allow ID card login.</label>
 
                     <h3> Configure visible login method icons</h3>
-                    Make sure all of these are allowed in Smart ID admin site at <a href="https://id.smartid.ee">https://id.smartid.ee</a>
+                    Make sure all of these are allowed in Smart ID admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
 
                     <table>
                         <tr>
