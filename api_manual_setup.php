@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="client_id">Client ID</label>
                         </td>
                         <td>
-                            <input type="text" name="client_id" class="column-cb" value="<?php echo get_option('smartid_client_id', "test");?>">
+                            <input type="text" name="client_id" class="column-cb" value="<?php echo get_option('smartid_client_id');?>">
                         </td>
                     </tr>
                     <tr>
