@@ -11,7 +11,7 @@ function startSmartIdLogin(loginUri) {
     let left = ((width / 2) - (w / 2)) + dualScreenLeft;
     let top = ((height / 2) - (h / 2)) + dualScreenTop;
 
-    let win = window.open(loginUri, "Smart ID login", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    let win = window.open(loginUri, "eID Easy", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
     let pollTimer = window.setInterval(function () {
         try {
             let url = win.document.URL;

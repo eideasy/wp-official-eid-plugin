@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.0
+ * Version: 4.1.1
  * Author: Smart ID Estonia
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -27,7 +27,6 @@ if ( ! class_exists("IdCardLogin")) {
 
     class IdCardLogin
     {
-
         public static function save_custom_user_profile_fields($user_id)
         {
             if ( ! current_user_can('administrator')) {
@@ -264,48 +263,70 @@ if ( ! class_exists("IdCardLogin")) {
             $loginCode = '<style>
                 #smartid-login-block .login-button {
                     display:inline;
+                }
+                #smartid-login-block .login-button img {                    
                     margin: 3px;
                     height: 46px;
                 }
-                #smartid-login-block .login-square-w {
+                #smartid-login-block .login-square-w img {
                     width: 46px;
                 }
-                #smartid-login-block .login-middle-w {
+                #smartid-login-block .login-middle-w img {
                     width: 130px;
                 }
-                #smartid-login-block .login-wide-w {
+                #smartid-login-block .login-wide-w img {
                     width: 200px;
                 }                
             </style><div id="smartid-login-block">';
             if (get_option("smartid_idcard_enabled")) {
-                $loginCode .= '<img id="smartid-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_idkaart_mark.png" class="login-button">';
+                $loginCode .= '<div id="smartid-id-login"  class="login-button">'
+                              . apply_filters('ee-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_idkaart_mark.png">') .
+                              '</div>';
             }
             if (get_option("smartid_mobileid_enabled")) {
-                $loginCode .= '<img id="smartid-mid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_mobiilid_mark.png" class="login-button">';
+                $loginCode .= '<div id="smartid-mid-login"  class="login-button">'
+                              . apply_filters('ee-mobile-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_mobiilid_mark.png">') .
+                              '</div>';
             }
             if (get_option("lveid_enabled")) {
-                $loginCode .= '<img id="smartid-lveid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" class="login-button login-middle-w">';
+                $loginCode .= '<div id="smartid-lveid-login"  class="login-button">'
+                              . apply_filters('lv-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia_eid.png" class="login-middle-w">') .
+                              '</div>';
             }
             if (get_option("smartid_lt-id-card_enabled")) {
-                $loginCode .= '<img id="smartid-lt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lithuania_eid.png" class="login-button login-middle-w">';
+                $loginCode .= '<div id="smartid-lt-id-card-login"  class="login-button">'
+                              . apply_filters('lt-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/lithuania_eid.png" class="login-middle-w">') .
+                              '</div>';
             }
             if (get_option("smartid_lt-mobile-id_enabled")) {
-                $loginCode .= '<img id="smartid-lt-mobile-id-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/lt-mobile-id.png" class="login-button login-middle-w">';
+                $loginCode .= '<div id="smartid-lt-mobile-id-login"  class="login-button">'
+                              . apply_filters('lt-mobile-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/lt-mobile-id.png" class="login-middle-w">') .
+                              '</div>';
             }
             if (get_option("smartid_pt-id-card_enabled")) {
-                $loginCode .= '<img id="smartid-pt-id-card-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/portugal-id-card.png" class="login-button login-wide-w">';
+                $loginCode .= '<div id="smartid-pt-id-card-login"  class="login-button">'
+                              . apply_filters('pt-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/portugal-id-card.png" class="login-wide-w">') .
+                              '</div>';
             }
             if (get_option("smartid_smartid_enabled")) {
-                $loginCode .= '<img id="smartid-smartid-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" class="login-button login-square-w">';
+                $loginCode .= '<div id="smartid-smartid-login"  class="login-button">'
+                              . apply_filters('smart-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" class="login-square-w">') .
+                              '</div>';
             }
             if (get_option("smartid_google_enabled")) {
-                $loginCode .= '<img id="smartid-gp-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" class="login-button login-square-w">';
+                $loginCode .= '<div id="smartid-gp-login"  class="login-button">'
+                              . apply_filters('google-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" class="login-square-w">') .
+                              '</div>';
             }
             if (get_option("smartid_facebook_enabled")) {
-                $loginCode .= '<img id="smartid-fb-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" class="login-button login-square-w">';
+                $loginCode .= '<div id="smartid-fb-login"  class="login-button">'
+                              . apply_filters('facebook-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" class="login-square-w">') .
+                              '</div>';
             }
             if (get_option("smartid_agrello_enabled")) {
-                $loginCode .= '<img id="smartid-agrello-login" src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" class="login-button login-square-w" title="Agrello .ID">';
+                $loginCode .= '<div id="smartid-agrello-login"  class="login-button">'
+                              . apply_filters('agrello-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" class="login-square-w">') .
+                              '</div>';
             }
 
             $loginCode .= '</div><script>' .
@@ -425,9 +446,10 @@ if ( ! class_exists("IdCardLogin")) {
 
         static function enqueueJquery()
         {
+            $version = date("ymd-Gis", filemtime(plugin_dir_path(__FILE__)));
+            wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], $version);
             wp_enqueue_script('jquery');
         }
-
     }
 
     add_action('delete_user', 'IdCardLogin::deleteUserCleanUp');
@@ -438,9 +460,6 @@ if ( ! class_exists("IdCardLogin")) {
     add_action('init', 'IdCardLogin::wpInitProcess');
 
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
-
-    $version = date("ymd-Gis", filemtime(plugin_dir_path(__FILE__)));
-    wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], $version);
 
     add_action('plugins_loaded', 'IdCardLogin::idcard_install');
     add_action('admin_notices', 'IdCardLogin::admin_notice');

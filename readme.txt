@@ -4,7 +4,7 @@ Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
 Requires at least: 4.5
-Tested up to: 5.4
+Tested up to: 5.4.2
 Stable tag: trunk
 
 == Description==
@@ -15,6 +15,12 @@ Most login actions are FREE. The ones that cost money (Mobile-ID, Smart-ID app, 
 Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
+
+== Filters ==
+There are several filters for customizing the plugin behaviour using add_filter() Wordpress function.
+1. Filter "smartid_login" enables customizing the page where user will be redirected after login completed.
+2. Filter "smartid_new_user_email" enabled setting user e-mail to something else that default idcode@local.localhost
+3. Filters to customize login buttons look and feel are: "ee-id-card-login, ee-mobile-id-login, lv-id-card-login, lt-id-card-login, lt-mobile-id-login, pt-id-card-login, smart-id-login, google-login, facebook-login, agrello-id-login"
 
 == Tips and tricks ==
 Use shortcode [eid_easy] to get login button,
@@ -30,6 +36,12 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.1.1 =
+Improved way of registering JS files.
+
+= 4.1 =
+Added filters so login buttons code can be customized easily to match your site identity.
 
 = 4.0 =
 Upgrading base system to eideasy.com
