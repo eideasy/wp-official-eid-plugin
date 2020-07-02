@@ -1,6 +1,6 @@
 <?php
 
-if ( ! class_exists("LoginCommon")) {
+if (!class_exists("LoginCommon")) {
 
     class LoginCommon
     {
@@ -50,7 +50,7 @@ if ( ! class_exists("LoginCommon")) {
                 'first_name'   => $firstName,
                 'last_name'    => $lastName,
                 'user_email'   => $email,
-                'role'         => get_option('default_role') // Use default role or another role, e.g. 'editor'
+                'role'         => get_option('default_role') // Use default role
             ];
 
             if (username_exists($userName)) {
@@ -86,6 +86,15 @@ if ( ! class_exists("LoginCommon")) {
                 file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login new ID user created"));
             }
 
+            do_action('eideasy_user_created', $user_id, [
+                'userName'     => $userName,
+                'firstName'    => $firstName,
+                'lastName'     => $lastName,
+                'email'        => $email,
+                'identityCode' => $identityCode,
+                'countryCode'  => $country,
+            ]);
+
             return $user_id;
         }
 
@@ -101,7 +110,7 @@ if ( ! class_exists("LoginCommon")) {
             );
 
             //backward compatibility
-            if ( ! $user) {
+            if (!$user) {
                 $user = $wpdb->get_row(
                     $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s",
                         $identityCode)

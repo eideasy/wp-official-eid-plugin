@@ -16,11 +16,12 @@ Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
 
-== Filters ==
+== Filters and actions ==
 There are several filters for customizing the plugin behaviour using add_filter() Wordpress function.
-1. Filter "smartid_login" enables customizing the page where user will be redirected after login completed.
-2. Filter "smartid_new_user_email" enabled setting user e-mail to something else that default idcode@local.localhost
+1. Filter "eideasy_login" enables customizing the page where user will be redirected after login completed.
+2. Filter "eideasy_new_user_email" enabled setting user e-mail to something else that default idcode@local.localhost
 3. Filters to customize login buttons look and feel are: "ee-id-card-login, ee-mobile-id-login, lv-id-card-login, lt-id-card-login, lt-mobile-id-login, pt-id-card-login, smart-id-login, google-login, facebook-login, agrello-id-login"
+4. Action eideasy_user_created. Will be executed when new user has been created. Will get new user ID and user data as arguments.
 
 == Tips and tricks ==
 Use shortcode [eid_easy] to get login button,
@@ -36,6 +37,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.1.1 =
+Added action eideasy_user_created after registering new user from ID login.
 
 = 4.1.1 =
 Improved way of registering JS files.
