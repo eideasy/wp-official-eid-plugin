@@ -38,6 +38,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.2.2 =
+Do not activate new methods when upgrading plugin
+
 = 4.2.1 =
 Shortcode login improvements
 
