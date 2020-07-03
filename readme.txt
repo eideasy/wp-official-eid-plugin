@@ -27,7 +27,7 @@ There are several filters for customizing the plugin behaviour using add_filter(
 Use shortcode [eid_easy] to get login button,
 Use shortcode [contract id="123ABC"] to create document sign page. Get the actual contract ID value from id.eideasy.com
 
-Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and use filter smartid_new_user_email. By default people from estonia get e-mail to be idcode@eesti.ee and all others will get idcode@mail.smartid.ee
+Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and filter eideasy_new_user_email. By default email will be idcode@local.localhost
 
 Support email: help@eideasy.com
 Support phone +372 555 29 332
@@ -38,7 +38,10 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
-= 4.1.1 =
+= 4.2.1 =
+Shortcode login improvements
+
+= 4.2 =
 Added action eideasy_user_created after registering new user from ID login.
 
 = 4.1.1 =
