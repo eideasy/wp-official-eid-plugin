@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.2.1
+ * Version: 4.2.2
  * Author: Smart ID Estonia
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -85,7 +85,8 @@ if (!class_exists("IdCardLogin")) {
                                value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
                         <br>
-                        <small>To remove ID code value write here dash without quotes "-". Empty field will be ignored</small>
+                        <small>To remove ID code value write here dash without quotes "-". Empty field will be
+                            ignored</small>
                     </td>
                 </tr>
                 </tbody>
@@ -181,7 +182,8 @@ if (!class_exists("IdCardLogin")) {
                 ?>
                 <div class="notice notice-success is-dismissible">
                     <p>Your eID Easy is almost ready! Please open
-                        <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=eid-easy-settings')) ?>"> eID Easy Settings </a> to activate.
+                        <a href="<?php echo esc_url(get_admin_url(null, 'admin.php?page=eid-easy-settings')) ?>"> eID
+                            Easy Settings </a> to activate.
                     </p>
                 </div>
                 <?php
@@ -420,8 +422,18 @@ if (!class_exists("IdCardLogin")) {
 
         static function idcard_install()
         {
+            $alreadyUsed = false;
             foreach (IdCardLogin::getSupportedMethods() as $value) {
-                add_option($value, true);
+                if (get_option($value)) {
+                    $alreadyUsed = true;
+                    break;
+                }
+            }
+
+            if (!$alreadyUsed) {
+                foreach (IdCardLogin::getSupportedMethods() as $value) {
+                    add_option($value, true);
+                }
             }
 
             global $wpdb;
