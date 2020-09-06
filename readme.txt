@@ -4,7 +4,7 @@ Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
 Requires at least: 4.5
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Stable tag: trunk
 
 == Description==
