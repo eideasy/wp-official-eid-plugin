@@ -8,7 +8,7 @@ Tested up to: 5.5.1
 Stable tag: trunk
 
 == Description==
-This plugin makes secure identification of people much easier than implementing these identification methods yourself. Supported methods among others are: Latvian Personas apliecība, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.
+This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.
 
 Most login actions are FREE. The ones that cost money (Mobile-ID, Smart-ID app, etc) are paid because their operator charges money.  Smart ID gets volume discounts and is able to offer similar price in same range as making direct contract. Plus you do not neet to pay minimal monthly fee.
 
@@ -25,7 +25,7 @@ There are several filters for customizing the plugin behaviour using add_filter(
 
 == Tips and tricks ==
 Use shortcode [eid_easy] to get login button,
-Use shortcode [contract id="123ABC"] to create document sign page. Get the actual contract ID value from id.eideasy.com
+Use shortcode [contract id="123ABC"] to create document signing page. Get the actual contract ID value from https://id.eideasy.com
 
 Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and filter eideasy_new_user_email. By default email will be idcode@local.localhost
 
