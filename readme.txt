@@ -1,5 +1,5 @@
 === eID Easy ===
-Contributors: Smart ID Estonia OÜ
+Contributors: EID Easy OÜ
 Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
@@ -37,6 +37,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.3.5 =
+Microsoft and IIS better image urls detection
 
 = 4.2.2 =
 Do not activate new methods when upgrading plugin
