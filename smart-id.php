@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.2.5
+ * Version: 4.2.6
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -33,15 +33,19 @@ if (!class_exists("IdCardLogin")) {
                 return;
             }
 
+            if (!array_key_exists('smartid_user_idcode', $_POST)) {
+                return; // New idcode not included in post, not changing the idcode field.
+            }
+
+            $idcode = esc_attr($_POST['smartid_user_idcode']);
+            if (!$idcode || strlen($idcode) === 0) {
+                return; // Not allowing to completely remove idcode.
+            }
+
             global $wpdb;
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
 
             $table_name = $prefix . "idcard_users";
-
-            $idcode = esc_attr($_POST['smartid_user_idcode']);
-            if (!$idcode || strlen($idcode) === 0) {
-                return; // not allowing to completely remove idcode
-            }
 
             $existingUser = $wpdb->get_row(
                 $wpdb->prepare("select * from $table_name WHERE identitycode=%s", $idcode)
@@ -373,10 +377,10 @@ if (!class_exists("IdCardLogin")) {
 
         static function getPluginBaseUrl()
         {
-            $pUrl         = plugins_url();
-            $baseName     = plugin_basename(__FILE__);
+            $pUrl     = plugins_url();
+            $baseName = plugin_basename(__FILE__);
             // Remove script name and keep only path. DIRECTORY_SEPARATOR is having trouble in IIS
-            $pluginFolder = substr($baseName, 0,-12);
+            $pluginFolder = substr($baseName, 0, -12);
 
             return $pUrl . '/' . $pluginFolder;
         }

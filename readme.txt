@@ -38,7 +38,10 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
-= 4.3.5 =
+= 4.2.6 =
+Fix updating user without POST from the user page
+
+= 4.2.5 =
 Microsoft and IIS better image urls detection
 
 = 4.2.2 =
