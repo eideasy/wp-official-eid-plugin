@@ -4,7 +4,7 @@ if (!class_exists("LoginCommon")) {
 
     class LoginCommon
     {
-        static function login($identityCode, $firstName, $lastName, $email, $country)
+        static function login($identityCode, $firstName, $lastName, $email, $country, $user_data = [])
         {
             $userName = $country . "_" . $identityCode;
 
@@ -35,6 +35,14 @@ if (!class_exists("LoginCommon")) {
             if (get_option('smartid_debug_mode')) {
                 file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
             }
+
+            /**
+             * Fires before the user is logged-in.
+             *
+             * @since 4.3.1
+             */
+            do_action('eideasy_after_logged_in', $user_data, $user_id);
+
             wp_set_auth_cookie($user_id);
 
             return $user_id;

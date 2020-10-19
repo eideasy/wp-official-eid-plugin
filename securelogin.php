@@ -49,7 +49,7 @@ class IdcardAuthenticate
         $email = apply_filters('smartid_new_user_email', $email);
         $email = apply_filters('eideasy_new_user_email', $email);
 
-        return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country);
+        return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country, $result);
     }
 
     static function getUserData($token)

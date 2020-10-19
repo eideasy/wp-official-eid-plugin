@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.2.6
+ * Version: 4.3.1
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -273,6 +273,8 @@ if (!class_exists("IdCardLogin")) {
             $loginCode = '<style>
                 #smartid-login-block .login-button {
                     display:inline;
+                    margin-left: 5px;
+                    margin-right: 5px;
                 }
                 #smartid-login-block .login-button img {                    
                     margin: 3px;
@@ -320,7 +322,7 @@ if (!class_exists("IdCardLogin")) {
             }
             if (get_option("smartid_smartid_enabled")) {
                 $loginCode .= '<div id="smartid-smartid-login"  class="login-button">'
-                    . apply_filters('smart-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/smart-id-white.png" class="login-square-w">') .
+                    . apply_filters('smart-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/Smart-ID_login_btn.png" class="login-middle-w">') .
                     '</div>';
             }
             if (get_option("smartid_google_enabled")) {
