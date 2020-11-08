@@ -2,9 +2,9 @@
 Contributors: EID Easy OÜ
 Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
-Tags: ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, EmiratesID
+Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
 Requires at least: 4.5
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Stable tag: trunk
 
 == Description==
@@ -38,6 +38,11 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.4 =
+Belgium ID card added.
+Latvia eParaksts Mobile ID added.
+Fixed bug where sometimes popup was opened as well next to the redirect in mobile browsers
 
 = 4.3.1 =
 Added action eideasy_after_logged_in

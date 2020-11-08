@@ -76,6 +76,12 @@ if ( ! class_exists("IdcardAdmin")) {
                     } else {
                         update_option("smartid_pt-id-card_enabled", false);
                     }
+                    if (array_key_exists("be-id-card_enabled", $_POST) && $_POST["be-id-card_enabled"] == "yes") {
+                        update_option("smartid_be-id-card_enabled", true);
+                    } else {
+                        update_option("smartid_be-id-card_enabled", false);
+                    }
+
                     if (array_key_exists("lt-mobile-id_enabled", $_POST) && $_POST["lt-mobile-id_enabled"] == "yes") {
                         update_option("smartid_lt-mobile-id_enabled", true);
                     } else {
@@ -90,6 +96,11 @@ if ( ! class_exists("IdcardAdmin")) {
                         update_option("lveid_enabled", true);
                     } else {
                         update_option("lveid_enabled", false);
+                    }
+                    if (array_key_exists("eparaksts-mobile_enabled", $_POST) && $_POST["eparaksts-mobile_enabled"] == "yes") {
+                        update_option("eideasy-eparaksts-mobile_enabled", true);
+                    } else {
+                        update_option("eideasy-eparaksts-mobile_enabled", false);
                     }
                     if (array_key_exists("ee-id-card_enabled", $_POST) && $_POST["ee-id-card_enabled"] == "yes") {
                         update_option("smartid_idcard_enabled", true);
@@ -191,9 +202,23 @@ if ( ! class_exists("IdcardAdmin")) {
                         </tr>
                         <tr>
                             <td>
+                                <input type="checkbox" name="eparaksts-mobile_enabled" class="column-cb"
+                                       value="yes" <?php echo get_option("eideasy-eparaksts-mobile_enabled") ? "checked" : "" ?> >
+                                <label for="eparaksts-mobile_enabled">Latvian eParaksts Mobile</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <input type="checkbox" name="pt-id-card_enabled" class="column-cb"
                                        value="yes" <?php echo get_option("smartid_pt-id-card_enabled") ? "checked" : "" ?> >
-                                <label for="pt-mobile-id_enabled">Portugal ID-card</label>
+                                <label for="pt-id_card_enabled">Portugal ID-card</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="be-id-card_enabled" class="column-cb"
+                                       value="yes" <?php echo get_option("smartid_be-id-card_enabled") ? "checked" : "" ?> >
+                                <label for="be-id-card_enabled">Belgium ID-card</label>
                             </td>
                         </tr>
                         <tr>

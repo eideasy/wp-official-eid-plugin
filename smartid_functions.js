@@ -1,7 +1,12 @@
 function startSmartIdLogin(loginUri) {
+    startEidEasyLogin(loginUri);
+}
+
+function startEidEasyLogin(loginUri) {
     if (window.mobileAndTabletCheck()) {
         console.log("Doing redirect in mobile browsers");
         window.location = loginUri;
+        return;
     }
 
     let w = 800;
