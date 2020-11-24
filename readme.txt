@@ -4,7 +4,7 @@ Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
 Requires at least: 4.5
-Tested up to: 5.5.3
+Tested up to: 5.6
 Stable tag: trunk
 
 == Description==
@@ -38,6 +38,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.4.1 =
+If login has finished then stop processing. Do not let other plugins log the user out.
 
 = 4.4 =
 Belgium ID card added.

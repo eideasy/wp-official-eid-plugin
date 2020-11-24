@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.4
+ * Version: 4.4.1
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -167,9 +167,9 @@ if (!class_exists("IdCardLogin")) {
             wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], $version);
 
             if (IdCardLogin::isLogin()) {
+                $loginUrl = apply_filters('smartid_login', get_option('smartid_redirect_uri'));
+                $loginUrl = apply_filters('eideasy_login', $loginUrl);
                 if (IdcardAuthenticate::isAlreadyLogged()) {
-                    $loginUrl = apply_filters('smartid_login', get_option('smartid_redirect_uri'));
-                    $loginUrl = apply_filters('eideasy_login', $loginUrl);
                     wp_redirect($loginUrl);
                     exit;
                 }
@@ -177,7 +177,11 @@ if (!class_exists("IdCardLogin")) {
                     file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
                 }
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
-                IdcardAuthenticate::login($_GET['code']);
+                $userId = IdcardAuthenticate::login($_GET['code']);
+                if ($userId) {
+                    wp_redirect($loginUrl);
+                    exit;
+                }
             }
         }
 
@@ -368,7 +372,7 @@ if (!class_exists("IdCardLogin")) {
                 '        startEidEasyLogin("' . $loginUri . '&start=lt-id-card");' .
                 '    });' .
                 '    if(document.getElementById("eideasy-eparaksts-mobile-login")) document.getElementById("eideasy-eparaksts-mobile-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $baseUri . "/oauth/start/lv-eparaksts-mobile-login$urlParams" . '&start=lt-id-card");' .
+                '        startEidEasyLogin("' . $baseUri . "/oauth/start/lv-eparaksts-mobile-login$urlParams" . '");' .
                 '    });' .
                 '    if(document.getElementById("smartid-be-id-card-login")) document.getElementById("smartid-be-id-card-login").addEventListener("click", function () {' .
                 '        startEidEasyLogin("' . $loginUri . '&start=be-id-card");' .
