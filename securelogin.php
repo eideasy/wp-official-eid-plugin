@@ -86,6 +86,9 @@ class IdcardAuthenticate
     {
         global $wpdb;
 
+        $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+        $table_name = $prefix . "idcard_users";
+
         $user = $wpdb->get_row(
             $wpdb->prepare("select * from $table_name WHERE userid=%s", wp_get_current_user()->ID)
         );
