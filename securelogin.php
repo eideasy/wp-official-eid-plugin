@@ -17,6 +17,7 @@ class IdcardAuthenticate
             }
             if (get_option('smartid_debug_mode')) {
                 $current_user = wp_get_current_user();
+
                 if ( ! ($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
                     file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
@@ -44,7 +45,11 @@ class IdcardAuthenticate
         $identityCode = $result['idcode'];
         $country      = array_key_exists("country", $result) ? $result["country"] : "EE";
 
-        $email = "$identityCode@local.localhost";
+        if ($country === "EE") {
+            $email = "$identityCode@eesti.ee";
+        } else {
+            $email = "$identityCode@local.localhost";
+        }
 
         $email = apply_filters('smartid_new_user_email', $email);
         $email = apply_filters('eideasy_new_user_email', $email);
@@ -79,6 +84,12 @@ class IdcardAuthenticate
 
     static function isAlreadyLogged()
     {
-        return wp_get_current_user() != null && wp_get_current_user()->ID != '';
+        global $wpdb;
+
+        $user = $wpdb->get_row(
+            $wpdb->prepare("select * from $table_name WHERE userid=%s", wp_get_current_user()->ID)
+        );
+
+        return wp_get_current_user() != null && wp_get_current_user()->ID != '' && $user !== null;
     }
 }

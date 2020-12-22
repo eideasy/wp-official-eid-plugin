@@ -51,32 +51,37 @@ if (!class_exists("LoginCommon")) {
         private static function createUser($userName, $firstName, $lastName, $email, $identityCode, $country = "EE")
         {
             global $wpdb;
-            $user_data = [
-                'user_pass'    => wp_generate_password(64, true),
-                'user_login'   => $userName,
-                'display_name' => "$firstName $lastName",
-                'first_name'   => $firstName,
-                'last_name'    => $lastName,
-                'user_email'   => $email,
-                'role'         => get_option('default_role') // Use default role
-            ];
 
-            if (username_exists($userName)) {
-                if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
-                }
-                wp_die("Cannot create user. Username $userName exists");
-            }
+            $user_id = get_current_user_id();
 
-            $user_id = wp_insert_user($user_data);
+            if ($user_id === 0) {
+                $user_data = [
+                    'user_pass'    => wp_generate_password(64, true),
+                    'user_login'   => $userName,
+                    'display_name' => "$firstName $lastName",
+                    'first_name'   => $firstName,
+                    'last_name'    => $lastName,
+                    'user_email'   => $email,
+                    'role'         => get_option('default_role') // Use default role
+                ];
 
-            if (is_wp_error($user_id)) {
-                include 'iframe_break_free_errorhandler.php';
-                if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
+                if (username_exists($userName)) {
+                    if (get_option('smartid_debug_mode')) {
+                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
+                    }
+                    wp_die("Cannot create user. Username $userName exists");
                 }
 
-                wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
+                $user_id = wp_insert_user($user_data);
+
+                if (is_wp_error($user_id)) {
+                    include 'iframe_break_free_errorhandler.php';
+                    if (get_option('smartid_debug_mode')) {
+                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
+                    }
+
+                    wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
+                }
             }
 
             $prefix     = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
