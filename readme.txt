@@ -10,8 +10,6 @@ Stable tag: trunk
 == Description==
 This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.
 
-Most login actions are FREE. The ones that cost money (Mobile-ID, Smart-ID app, etc) are paid because their operator charges money.  Smart ID gets volume discounts and is able to offer similar price in same range as making direct contract. Plus you do not neet to pay minimal monthly fee.
-
 Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
@@ -38,6 +36,11 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.5 =
+Default Estonian users e-mail is @eesti.ee
+Allow connecting users with eID method after logged in with password
+Thank you https://www.linkedin.com/in/rrosimannus/
 
 = 4.4.1 =
 If login has finished then stop processing. Do not let other plugins log the user out.
@@ -111,6 +114,3 @@ Added filter "smartid_login" to decide where to redirect after login process is 
 = 3.1 =
 Intranet mode available. Site admins can add ID code to users manually and disable automatic user registration.
 This allows limiting secure login to specific groups of people only
-
-= 2.1 =
-Optional Debug mode for login issues detection on server side

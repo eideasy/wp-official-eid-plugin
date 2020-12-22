@@ -176,7 +176,7 @@ if ( ! class_exists("IdcardAdmin")) {
                         to each user manually to allow ID card login.</label>
 
                     <h3> Configure visible login method icons</h3>
-                    Make sure all of these are allowed in Smart ID admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
+                    Make sure all of these are allowed in eID Easy admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
 
                     <table>
                         <tr>

@@ -18,7 +18,7 @@ class IdcardAuthenticate
             if (get_option('smartid_debug_mode')) {
                 $current_user = wp_get_current_user();
 
-                if ( ! ($current_user instanceof WP_User)) {
+                if (!($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
                     file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
                 } else {
@@ -86,13 +86,17 @@ class IdcardAuthenticate
     {
         global $wpdb;
 
-        $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+        if (wp_get_current_user() === null) {
+            return false;
+        }
+
+        $prefix     = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
         $table_name = $prefix . "idcard_users";
 
         $user = $wpdb->get_row(
             $wpdb->prepare("select * from $table_name WHERE userid=%s", wp_get_current_user()->ID)
         );
 
-        return wp_get_current_user() != null && wp_get_current_user()->ID != '' && $user !== null;
+        return wp_get_current_user()->ID != '' && $user !== null;
     }
 }
