@@ -6,14 +6,18 @@ class IdcardAuthenticate
 {
     static function login($token)
     {
-        if (IdcardAuthenticate::isAlreadyLogged()) {
-            return; // login already completed
+        if (IdcardAuthenticate::isAlreadyLogged() && !get_option('eideasy_only_identify')) {
+            return null; // Login already completed.
         }
 
         $result = IdcardAuthenticate::getUserData($token);
+        do_action('eideasy_user_identified', $result);
+        if (get_option('eideasy_only_identify')) {
+            return "eideasy_only_identify";
+        }
         if ($result == null) {
             if (IdcardAuthenticate::isAlreadyLogged()) {
-                return; // Maybe logged in during API call
+                return null; // Maybe logged in during API call
             }
             if (get_option('smartid_debug_mode')) {
                 $current_user = wp_get_current_user();

@@ -22,6 +22,7 @@ function startEidEasyLogin(loginUri) {
     let top = ((height / 2) - (h / 2)) + dualScreenTop;
 
     let win = window.open(loginUri, "eID Easy", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    let counter = 0;
     let pollTimer = window.setInterval(function () {
         try {
             let url = win.document.URL;
@@ -29,14 +30,22 @@ function startEidEasyLogin(loginUri) {
                 return;
             }
 
-            //now the login has completed processing and we are back on the main page
+            // Popup is still processing login. Wait up to 1000 cycles/ms.
+            if( (win.location.href.indexOf('?code=') !== -1 || win.location.href.indexOf('&code=') !== -1 ) && counter < 1000 ) {
+                counter++;
+                return;
+            }
+
+            // Now the login has completed processing and we are back on the main page.
             console.log("Login finished");
             window.clearInterval(pollTimer);
 
             setTimeout(function () {
+                // Get latest URL. Perhaps redirect has happened in the window.
+                url = win.document.URL;
                 win.close();
                 window.location = url;
-            }, 150);
+            }, 10);
         } catch (e) {
         }
     }, 1);

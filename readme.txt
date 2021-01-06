@@ -21,6 +21,7 @@ There are several filters for customizing the plugin behaviour using add_filter(
 3. Filters to customize login buttons look and feel are: "ee-id-card-login, ee-mobile-id-login, lv-id-card-login, lt-id-card-login, lt-mobile-id-login, pt-id-card-login, smart-id-login, google-login, facebook-login, agrello-id-login"
 4. Action eideasy_user_created. Will be executed when new user has been created. Will get new user ID and user data as arguments.
 5. Action eideasy_after_logged_in. Will be executed every time when user info has been received and just before setting login cookie. Gets user data and user ID as arguments.
+6. Action eideasy_user_identified. Runs immediately after user data has been received and includes array of data returned by eID Easy.
 
 == Tips and tricks ==
 Use shortcode [eid_easy] to get login button,
@@ -36,6 +37,10 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.6 =
+Added action eideasy_user_identified. Runs immediately after user data has been received.
+Added option to only identify people. If this option is checked then no users are logged in nor are any accounts created.
 
 = 4.5 =
 Default Estonian users e-mail is @eesti.ee

@@ -150,6 +150,13 @@ if ( ! class_exists("IdcardAdmin")) {
                     } else {
                         update_option("smartid_agrello_enabled", false);
                     }
+
+                    if (array_key_exists("eideasy_only_identify",
+                            $_POST) && $_POST["eideasy_only_identify"] == "yes") {
+                        update_option("eideasy_only_identify", true);
+                    } else {
+                        update_option("eideasy_only_identify", false);
+                    }
                 }
                 ?>
                 <h3> This site eID Easy is now active!</h3>
@@ -174,6 +181,13 @@ if ( ! class_exists("IdcardAdmin")) {
                            value="yes" <?php echo get_option("smartid_registration_disabled") ? "checked" : "" ?> >
                     <label for="lt-mobile-id_enabled">Disable automatic registration. In this case admin must add idcode
                         to each user manually to allow ID card login.</label>
+
+                    <h3>Only identify users (no user login)</h3>
+
+                    <input type="checkbox" name="eideasy_only_identify" class="column-cb"
+                           value="yes" <?php echo get_option("eideasy_only_identify") ? "checked" : "" ?> >
+                    <label for="lt-mobile-id_enabled">No accounts are created nor any users are logged in.</label>
+                    <small>You can get users details using action "eideasy_only_identify"</small>
 
                     <h3> Configure visible login method icons</h3>
                     Make sure all of these are allowed in eID Easy admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
