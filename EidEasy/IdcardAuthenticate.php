@@ -1,6 +1,7 @@
 <?php
+namespace EidEasy;
 
-require_once('logincommon.php');
+require_once('LoginCommon.php');
 
 class IdcardAuthenticate
 {
@@ -19,7 +20,7 @@ class IdcardAuthenticate
             if (IdcardAuthenticate::isAlreadyLogged()) {
                 return null; // Maybe logged in during API call
             }
-            if (get_option('smartid_debug_mode')) {
+            if (get_option('eideasy_debug_mode')) {
                 $current_user = wp_get_current_user();
 
                 if (!($current_user instanceof WP_User)) {
@@ -38,7 +39,7 @@ class IdcardAuthenticate
                     file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
                 }
             }
-            if (get_option('smartid_registration_disabled')) {
+            if (get_option('eideasy_registration_disabled')) {
                 wp_die("User not found and registration disabled. Go back and contact site admin. ");
             } else {
                 wp_die("Login failed, please contact site admin.");
@@ -55,7 +56,6 @@ class IdcardAuthenticate
             $email = "$identityCode@local.localhost";
         }
 
-        $email = apply_filters('smartid_new_user_email', $email);
         $email = apply_filters('eideasy_new_user_email', $email);
 
         return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country, $result);
@@ -66,9 +66,9 @@ class IdcardAuthenticate
         $postParams = [
             "code"          => $token,
             "grant_type"    => "authorization_code",
-            "client_id"     => get_option("smartid_client_id"),
-            'redirect_uri'  => urlencode(get_option("smartid_redirect_uri")),
-            "client_secret" => get_option("smartid_secret")
+            "client_id"     => get_option("eideasy_client_id"),
+            'redirect_uri'  => urlencode(get_option("eideasy_redirect_uri")),
+            "client_secret" => get_option("eideasy_secret")
         ];
 
         $accessTokenResult = IdCardLogin::curlCall("oauth/access_token", [], $postParams);
