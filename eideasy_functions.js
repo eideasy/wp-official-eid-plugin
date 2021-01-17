@@ -1,7 +1,3 @@
-function startSmartIdLogin(loginUri) {
-    startEidEasyLogin(loginUri);
-}
-
 function startEidEasyLogin(loginUri) {
     if (window.mobileAndTabletCheck()) {
         console.log("Doing redirect in mobile browsers");
@@ -31,7 +27,7 @@ function startEidEasyLogin(loginUri) {
             }
 
             // Popup is still processing login. Wait up to 1000 cycles/ms.
-            if( (win.location.href.indexOf('?code=') !== -1 || win.location.href.indexOf('&code=') !== -1 ) && counter < 1000 ) {
+            if( (win.location.href.indexOf('?code=') !== -1 || win.location.href.indexOf('&code=') !== -1 ) && counter < 3000 ) {
                 counter++;
                 return;
             }

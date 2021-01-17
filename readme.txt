@@ -38,6 +38,10 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 5.0 =
+WooCommerce integration added. Age verification possible during the checkout.
+Major refactoring
+
 = 4.6 =
 Added action eideasy_user_identified. Runs immediately after user data has been received.
 Added option to only identify people. If this option is checked then no users are logged in nor are any accounts created.
@@ -90,7 +94,7 @@ Upgrading base system to eideasy.com
 
 = 3.8 =
 New Estonian e-ID symbolics
-Added filter smartid_new_user_email to allow editing new user username/email
+Added filter eideasy_new_user_email to allow editing new user username/email
 Fixed custom redirect config error
 
 = 3.7.2 =
@@ -114,7 +118,7 @@ Better multi country support
 Fixed bug where ID code was lost for the user when updating in some cases
 
 = 3.2 =
-Added filter "smartid_login" to decide where to redirect after login process is completed. Default is redirecting to home page.
+Added filter "eideasy_login" to decide where to redirect after login process is completed. Default is redirecting to home page.
 
 = 3.1 =
 Intranet mode available. Site admins can add ID code to users manually and disable automatic user registration.
