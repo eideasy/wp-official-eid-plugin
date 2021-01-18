@@ -111,10 +111,45 @@ class IdcardAdmin
                 </tr>
                 <tr>
                     <td>
+                        <input type="checkbox" name="eideasy_woo_default_buttons_disabled" class="column-cb"
+                               value="1" <?php checked('1', get_option('eideasy_woo_default_buttons_disabled')); ?> />
+                        <label for="eideasy_woo_default_buttons_disabled">Default buttons disabled</label><br>
+                        <small>Very rarely needed. Use shortcode [eid_easy] to show login buttons. </small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <label for="eideasy_woo_min_age">Minimum age for restricted categories</label>
                     </td>
                     <td>
-                        <input type="text" name="eideasy_woo_min_age" class="column-cb" value="<?php echo get_option('eideasy_woo_min_age'); ?>">
+                        <input type="text" size="5" name="eideasy_woo_min_age" class="column-cb" value="<?php echo get_option('eideasy_woo_min_age'); ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="eideasy_woo_verification_requirement_message">Verification required message</label>
+                    </td>
+                    <td>
+                        <input type="text" size="100" name="eideasy_woo_verification_requirement_message" class="column-cb" value="<?php echo get_option('eideasy_woo_verification_requirement_message'); ?>"/><br>
+                        <small>Instructional message for the user that he/she needs to verify the age. If empty then default is - "User identification needed, restricted items in cart"</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="eideasy_woo_more_info_link">Verification info more info link</label>
+                    </td>
+                    <td>
+                        <input type="text" size="100"  name="eideasy_woo_more_info_link" class="column-cb" value="<?php echo get_option('eideasy_woo_more_info_link'); ?>"/><br>
+                        <small>If filled then this page will open on new tab when user clicks on instructional message</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="eideasy_woo_age_verified_message">Confirmation message</label>
+                    </td>
+                    <td>
+                        <input type="text" size="100"  name="eideasy_woo_age_verified_message" class="column-cb" value="<?php echo get_option('eideasy_woo_age_verified_message'); ?>"/><br>
+                        <small>Message that will be displayed to the user if age verification has been completed. If empty then default is "Age verified, your are ready to proceed"</small>
                     </td>
                 </tr>
                 <tr>
@@ -149,14 +184,6 @@ class IdcardAdmin
 
             ?>
         </form>
-
-        <br>
-        <h3>eID Easy shortcode</h3>
-        <ol>
-            <li>
-                <b>[eid_easy]</b> - Creates configured login buttons to the location .
-            </li>
-        </ol>
 
         <br>
         All questions and support at <a href="mailto:info@eideasy.com">info@eideasy.com</a>
@@ -257,6 +284,10 @@ class IdcardAdmin
         register_setting('eideasy_woo', 'eideasy_woo_age_check_enabled');
         register_setting('eideasy_woo', 'eideasy_woo_min_age');
         register_setting('eideasy_woo', 'eideasy_woo_age_restricted_categories');
+        register_setting('eideasy_woo', 'eideasy_woo_default_buttons_disabled');
+        register_setting('eideasy_woo', 'eideasy_woo_verification_requirement_message');
+        register_setting('eideasy_woo', 'eideasy_woo_more_info_link');
+        register_setting('eideasy_woo', 'eideasy_woo_age_verified_message');
 
         register_setting('eideasy', 'eideasy_registration_disabled');
         register_setting('eideasy', 'eideasy_client_id');

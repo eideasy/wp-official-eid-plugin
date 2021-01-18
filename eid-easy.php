@@ -54,7 +54,7 @@ include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 function eideasy_main_plugin_init()
 {
     if (is_plugin_active('woocommerce/woocommerce.php') && get_option('eideasy_woo_age_check_enabled')) {
-        add_action('woocommerce_checkout_before_customer_details', [\EidEasy\WooIntegration::class, 'identifyUserIfNeeded'], 20);
+        add_action('woocommerce_before_checkout_form', [\EidEasy\WooIntegration::class, 'identifyUserIfNeeded']);
         add_action('woocommerce_before_checkout_process', [\EidEasy\WooIntegration::class, 'validateAge']);
         add_action('woocommerce_checkout_order_processed', [\EidEasy\WooIntegration::class, 'addOrderNote']);
         add_action('eideasy_user_identified', [\EidEasy\WooIntegration::class, 'saveUserAge']);

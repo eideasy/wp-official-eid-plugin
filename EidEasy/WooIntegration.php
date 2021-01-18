@@ -45,6 +45,7 @@ class WooIntegration
         if ($sessionBirthday) {
             $order = wc_get_order($orderId);
             $order->add_order_note("Age verified using eID Easy. IdCode " . $sessionBirthday['idcode']);
+            update_post_meta($orderId, '_eid_easy_verified_idcode', $sessionBirthday['idcode']);
         }
     }
 
@@ -68,17 +69,40 @@ class WooIntegration
     public static function identifyUserIfNeeded()
     {
         $identificationNeeded = self::isCartContainsRestrictedItems();
-        $birthDayInfo         = self::getBirthDay();
+        if (!$identificationNeeded) {
+            return;
+        }
+
+        $birthDayInfo = self::getBirthDay();
         if (self::isOldEnough($birthDayInfo)) {
             WC()->session->set('eideasy_birthday_data', $birthDayInfo);
             error_log("User age known and is old enough");
-            return null; // User is already old enough;
+            $message = get_option('eideasy_woo_age_verified_message');
+            if (!$message) {
+                $message = 'Age verified, your are ready to proceed';
+            }
+            $message = __($message, 'eid-easy');
+            wc_add_notice($message, 'success');
+        } else {
+            $message = get_option('eideasy_woo_verification_requirement_message');
+            if (!$message) {
+                $message = 'Restricted items in cart, age verification required';
+            }
+            $message = __($message, 'eid-easy');
+            if (get_option("eideasy_woo_more_info_link")) {
+                wc_add_notice("<a href=\"" . get_option("eideasy_woo_more_info_link") . "\" target=\"_blank\"><strong>$message</strong></a>", 'notice');
+            } else {
+                wc_add_notice("<strong>$message</strong>", 'notice');
+            }
         }
 
         if ($identificationNeeded) {
             error_log("User identification needed, restricted items in cart");
-            echo __('Restricted items in cart, age verification required') . "<br>";
-            echo IdCardLogin::return_id_login();
+            if (!get_option('eideasy_woo_default_buttons_disabled')) {
+                echo IdCardLogin::return_id_login();
+            } else {
+                error_log('eID Easy - custom login buttons config');
+            }
         }
     }
 
