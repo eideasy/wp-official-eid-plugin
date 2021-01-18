@@ -82,7 +82,7 @@ class WooIntegration
                 $message = 'Age verified, your are ready to proceed';
             }
             $message = __($message, 'eid-easy');
-            wc_add_notice($message, 'success');
+            echo "<div class='woocommerce-info'>$message</div>";
         } else {
             $message = get_option('eideasy_woo_verification_requirement_message');
             if (!$message) {
@@ -90,16 +90,16 @@ class WooIntegration
             }
             $message = __($message, 'eid-easy');
             if (get_option("eideasy_woo_more_info_link")) {
-                wc_add_notice("<a href=\"" . get_option("eideasy_woo_more_info_link") . "\" target=\"_blank\"><strong>$message</strong></a>", 'notice');
+                echo "<div class='woocommerce-info'><a href=\"" . get_option("eideasy_woo_more_info_link") . "\" target=\"_blank\"><strong>$message</strong></a></div>";
             } else {
-                wc_add_notice("<strong>$message</strong>", 'notice');
+                echo "<div class='woocommerce-info'>$message</div>";
             }
         }
 
         if ($identificationNeeded) {
             error_log("User identification needed, restricted items in cart");
             if (!get_option('eideasy_woo_default_buttons_disabled')) {
-                echo IdCardLogin::return_id_login();
+                echo IdCardLogin::return_id_login() . "<br>";
             } else {
                 error_log('eID Easy - custom login buttons config');
             }
