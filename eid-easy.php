@@ -5,7 +5,6 @@
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app, eParaksts, ZealID and other methods.
  * Version: 5.0
  * Author: EID Easy OÜ
- * Author URI: https://eideasy.com/
  * Text Domain: eid-easy
  * Domain path /languages
  * License: GPLv2 or later

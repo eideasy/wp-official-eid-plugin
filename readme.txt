@@ -7,6 +7,7 @@ Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-I
 Requires at least: 4.5
 Tested up to: 5.6.1
 Stable tag: trunk
+License: GPLv2 or later
 
 == Description==
 This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.

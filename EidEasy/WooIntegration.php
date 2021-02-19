@@ -23,6 +23,10 @@ class WooIntegration
 
     public static function validateAge()
     {
+        if (!self::isCartContainsRestrictedItems()) {
+            return;
+        }
+
         $birthDayInfo = self::getBirthDay();
         if (!$birthDayInfo) {
             wc_add_notice(__('Age cannot be determined, please contact shop admins', 'eid-easy'), 'error');
@@ -173,10 +177,8 @@ class WooIntegration
         $ignoredMethods       = get_option('eideasy_woo_ignored_shipping', []);
 
         // for those shipping methods age verification is not required
-        if (count($ignoredMethods) > 0) {
-            if (array_intersect(wc_get_chosen_shipping_method_ids(), $ignoredMethods)) {
-                return false;
-            }
+        if (count($ignoredMethods) > 0 && array_intersect(wc_get_chosen_shipping_method_ids(), $ignoredMethods)) {
+            return false;
         }
 
         if (!$restrictedCategories) {
