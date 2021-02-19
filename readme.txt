@@ -1,10 +1,11 @@
 === eID Easy ===
+Plugin Name: eID Easy
 Contributors: EID Easy OÜ
 Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
 Requires at least: 4.5
-Tested up to: 5.6
+Tested up to: 5.6.1
 Stable tag: trunk
 
 == Description==
@@ -13,6 +14,8 @@ This plugin makes secure identification and creating Qualified Electronic Signat
 Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
 After plugin installation you need to register your site to activate your site and get the Oauth credentials. Also your e-mail needs to be verified.
+
+It is using service and API-s from https://eideasy.com. To activate the signing service is needed to create user account and copy credentials from there into the plugin configuration.
 
 == Filters and actions ==
 There are several filters for customizing the plugin behaviour using add_filter() Wordpress function.
@@ -31,6 +34,8 @@ Since Wordpress needs user e-mail and e-mail for users is not part of the data r
 
 Support email: help@eideasy.com
 Support phone +372 555 29 332
+
+eID Easy terms and conditions can be found here https://eideasy.com/terms-of-service/, privacy policy here https://eideasy.com/privacy-policy/
 
 == Screenshots ==
 1. Admin view
