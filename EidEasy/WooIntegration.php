@@ -66,6 +66,16 @@ class WooIntegration
         return false;
     }
 
+    public static function updateOrderReview()
+    {
+        $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
+        $posted_shipping_methods = isset($_POST['shipping_method']) ? wc_clean(wp_unslash($_POST['shipping_method'])) : array();
+        $ignoreMethodsActive     = count(get_option('eideasy_woo_ignored_shipping', []));
+        if ($ignoreMethodsActive && $chosen_shipping_methods != $posted_shipping_methods) {
+            WC()->session->set('reload_checkout', true);
+        }
+    }
+
     public static function identifyUserIfNeeded()
     {
         $identificationNeeded = self::isCartContainsRestrictedItems();
@@ -160,6 +170,15 @@ class WooIntegration
     public static function isCartContainsRestrictedItems()
     {
         $restrictedCategories = get_option('eideasy_woo_age_restricted_categories');
+        $ignoredMethods       = get_option('eideasy_woo_ignored_shipping', []);
+
+        // for those shipping methods age verification is not required
+        if (count($ignoredMethods) > 0) {
+            if (array_intersect(wc_get_chosen_shipping_method_ids(), $ignoredMethods)) {
+                return false;
+            }
+        }
+
         if (!$restrictedCategories) {
             return false;
         }

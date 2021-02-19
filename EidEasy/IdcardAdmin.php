@@ -77,7 +77,17 @@ class IdcardAdmin
         <?php
     }
 
-    public static function getCategories()
+    protected function getShippingMethods()
+    {
+        $methodList = [];
+        foreach (WC()->shipping->get_shipping_methods() as $method) {
+            $methodList[$method->id] = $method->method_title;
+        }
+
+        return $methodList;
+    }
+
+    protected static function getCategories()
     {
         $categoryList = [];
 
@@ -98,6 +108,7 @@ class IdcardAdmin
     static function wooIntegrationSettings()
     {
         $allCategories = self::getCategories();
+        $allShipping   = self::getShippingMethods();
         ?>
         <h3>WooCommerce restricted age verification category settings</h3>
         <form action="options.php" method="post">
@@ -130,7 +141,8 @@ class IdcardAdmin
                         <label for="eideasy_woo_verification_requirement_message">Verification required message</label>
                     </td>
                     <td>
-                        <input type="text" size="100" name="eideasy_woo_verification_requirement_message" class="column-cb" value="<?php echo get_option('eideasy_woo_verification_requirement_message'); ?>"/><br>
+                        <input type="text" size="100" name="eideasy_woo_verification_requirement_message" class="column-cb"
+                               value="<?php echo get_option('eideasy_woo_verification_requirement_message'); ?>"/><br>
                         <small>Instructional message for the user that he/she needs to verify the age. If empty then default is - "User identification needed, restricted items in cart"</small>
                     </td>
                 </tr>
@@ -139,7 +151,7 @@ class IdcardAdmin
                         <label for="eideasy_woo_more_info_link">Verification info more info link</label>
                     </td>
                     <td>
-                        <input type="text" size="100"  name="eideasy_woo_more_info_link" class="column-cb" value="<?php echo get_option('eideasy_woo_more_info_link'); ?>"/><br>
+                        <input type="text" size="100" name="eideasy_woo_more_info_link" class="column-cb" value="<?php echo get_option('eideasy_woo_more_info_link'); ?>"/><br>
                         <small>If filled then this page will open on new tab when user clicks on instructional message</small>
                     </td>
                 </tr>
@@ -148,7 +160,7 @@ class IdcardAdmin
                         <label for="eideasy_woo_age_verified_message">Confirmation message</label>
                     </td>
                     <td>
-                        <input type="text" size="100"  name="eideasy_woo_age_verified_message" class="column-cb" value="<?php echo get_option('eideasy_woo_age_verified_message'); ?>"/><br>
+                        <input type="text" size="100" name="eideasy_woo_age_verified_message" class="column-cb" value="<?php echo get_option('eideasy_woo_age_verified_message'); ?>"/><br>
                         <small>Message that will be displayed to the user if age verification has been completed. If empty then default is "Age verified, your are ready to proceed"</small>
                     </td>
                 </tr>
@@ -165,6 +177,28 @@ class IdcardAdmin
                                     echo '<option value="' . $category['id'] . '" selected>' . $category['name'] . '</option>';
                                 } else {
                                     echo '<option value="' . $category['id'] . '">' . $category['name'] . '</option>';
+                                }
+                            }
+                            ?>
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="eideasy_woo_ignored_shipping">Ignored shipping methods</label>
+                        <br> <small>No age check with these shipping methods</small>
+                        <br> <small>ctrl+click to unselect</small>
+                    </td>
+                    <td>
+                        <select name="eideasy_woo_ignored_shipping[]" multiple size="<?php echo count($allShipping) ?>">
+                            <?php
+                            $selectedOptions = get_option('eideasy_woo_ignored_shipping', []);
+                            foreach ($allShipping as $id => $name) {
+                                if (in_array($id, $selectedOptions)) {
+                                    echo '<option value="' . $id . '" selected>' . $name . '</option>';
+                                } else {
+                                    echo '<option value="' . $id . '">' . $name . '</option>';
                                 }
                             }
                             ?>
@@ -284,6 +318,7 @@ class IdcardAdmin
         register_setting('eideasy_woo', 'eideasy_woo_age_check_enabled');
         register_setting('eideasy_woo', 'eideasy_woo_min_age');
         register_setting('eideasy_woo', 'eideasy_woo_age_restricted_categories');
+        register_setting('eideasy_woo', 'eideasy_woo_ignored_shipping');
         register_setting('eideasy_woo', 'eideasy_woo_default_buttons_disabled');
         register_setting('eideasy_woo', 'eideasy_woo_verification_requirement_message');
         register_setting('eideasy_woo', 'eideasy_woo_more_info_link');

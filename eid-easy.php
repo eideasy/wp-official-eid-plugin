@@ -57,6 +57,7 @@ function eideasy_main_plugin_init()
         add_action('woocommerce_before_checkout_form', [\EidEasy\WooIntegration::class, 'identifyUserIfNeeded']);
         add_action('woocommerce_before_checkout_process', [\EidEasy\WooIntegration::class, 'validateAge']);
         add_action('woocommerce_checkout_order_processed', [\EidEasy\WooIntegration::class, 'addOrderNote']);
+        add_action('woocommerce_checkout_update_order_review', [\EidEasy\WooIntegration::class, 'updateOrderReview']);
         add_action('eideasy_user_identified', [\EidEasy\WooIntegration::class, 'saveUserAge']);
     }
 
