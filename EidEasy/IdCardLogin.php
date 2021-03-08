@@ -209,7 +209,7 @@ class IdCardLogin
 
     public static function isLogin()
     {
-        return array_key_exists('code', $_GET) && strlen($_GET['code']) > 20;
+        return array_key_exists('code', $_GET) && strlen($_GET['code']) > 20 && array_key_exists('state', $_GET) && strpos($_GET['state'], 'eideasy_') === 0;
     }
 
     public static function wpInitProcess()
@@ -229,7 +229,7 @@ class IdCardLogin
                 exit;
             }
             if (get_option('eideasy_debug_mode')) {
-                file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
+                wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
             }
 
             $userId = IdcardAuthenticate::login($_GET['code']);
@@ -354,13 +354,15 @@ class IdCardLogin
                 }                
             </style><div id="eideasy-login-block">';
 
+        $state = "eideasy_" . md5(time());
+
         foreach (IdCardLogin::getSupportedMethods() as $method => $params) {
             if (get_option($method)) {
                 $loginCode .= '<div id="' . $method . '"  class="login-button">' .
                     apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon']) . '">' .
                     '</div>';
                 $loginCode .= '<script>if(document.getElementById("' . $method . '")) document.getElementById("' . $method . '").addEventListener("click", function () {' .
-                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . ($params['login_extra'] ?? "") . '&lang=' . get_locale() . '");' .
+                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . ($params['login_extra'] ?? "") . '&lang=' . get_locale() . '&state=' . $state . '");' .
                     '    });</script>';
             }
         }

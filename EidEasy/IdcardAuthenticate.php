@@ -1,4 +1,5 @@
 <?php
+
 namespace EidEasy;
 
 require_once('LoginCommon.php');
@@ -12,10 +13,6 @@ class IdcardAuthenticate
         }
 
         $result = IdcardAuthenticate::getUserData($token);
-        do_action('eideasy_user_identified', $result);
-        if (get_option('eideasy_only_identify')) {
-            return "eideasy_only_identify";
-        }
         if ($result == null) {
             if (IdcardAuthenticate::isAlreadyLogged()) {
                 return null; // Maybe logged in during API call
@@ -25,7 +22,7 @@ class IdcardAuthenticate
 
                 if (!($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
+                    wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
                 } else {
                     global $wpdb;
                     $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
@@ -36,7 +33,7 @@ class IdcardAuthenticate
                     );
 
                     $extraMessage = "Logged in user is $user->identitycode";
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
+                    wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
                 }
             }
             if (get_option('eideasy_registration_disabled')) {
@@ -58,7 +55,15 @@ class IdcardAuthenticate
 
         $email = apply_filters('eideasy_new_user_email', $email);
 
-        return LoginCommon::login($identityCode, $firstName, $lastName, $email, $country, $result);
+
+        if (get_option('eideasy_only_identify')) {
+            $loginResponse = "eideasy_only_identify";
+        } else {
+            $loginResponse = LoginCommon::login($identityCode, $firstName, $lastName, $email, $country, $result);
+        }
+        do_action('eideasy_user_identified', $result);
+
+        return $loginResponse;
     }
 
     static function getUserData($token)

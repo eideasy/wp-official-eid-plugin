@@ -97,6 +97,7 @@ class WooIntegration
             }
             $message = __($message, 'eid-easy');
             echo "<div class='woocommerce-info'>$message</div>";
+            $identificationNeeded = false;
         } else {
             $message = get_option('eideasy_woo_verification_requirement_message');
             if (!$message) {

@@ -26,7 +26,7 @@ function startEidEasyLogin(loginUri) {
                 return;
             }
 
-            // Popup is still processing login. Wait up to 1000 cycles/ms.
+            // Popup is still processing login. Wait up to 3000 cycles/ms.
             if( (win.location.href.indexOf('?code=') !== -1 || win.location.href.indexOf('&code=') !== -1 ) && counter < 3000 ) {
                 counter++;
                 return;
