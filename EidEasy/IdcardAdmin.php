@@ -184,28 +184,6 @@ class IdcardAdmin
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <label for="eideasy_woo_ignored_shipping">Ignored shipping methods</label>
-                        <br> <small>No age check with these shipping methods</small>
-                        <br> <small>ctrl+click to unselect</small>
-                    </td>
-                    <td>
-                        <select name="eideasy_woo_ignored_shipping[]" multiple size="<?php echo count($allShipping) ?>">
-                            <?php
-                            $selectedOptions = get_option('eideasy_woo_ignored_shipping', []);
-                            foreach ($allShipping as $id => $name) {
-                                if (in_array($id, $selectedOptions)) {
-                                    echo '<option value="' . $id . '" selected>' . $name . '</option>';
-                                } else {
-                                    echo '<option value="' . $id . '">' . $name . '</option>';
-                                }
-                            }
-                            ?>
-                            ?>
-                        </select>
-                    </td>
-                </tr>
             </table>
 
             <?php
@@ -318,7 +296,6 @@ class IdcardAdmin
         register_setting('eideasy_woo', 'eideasy_woo_age_check_enabled');
         register_setting('eideasy_woo', 'eideasy_woo_min_age');
         register_setting('eideasy_woo', 'eideasy_woo_age_restricted_categories');
-        register_setting('eideasy_woo', 'eideasy_woo_ignored_shipping');
         register_setting('eideasy_woo', 'eideasy_woo_default_buttons_disabled');
         register_setting('eideasy_woo', 'eideasy_woo_verification_requirement_message');
         register_setting('eideasy_woo', 'eideasy_woo_more_info_link');
