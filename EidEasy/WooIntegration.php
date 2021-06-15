@@ -76,9 +76,11 @@ class WooIntegration
         if (!$identificationNeeded) {
             return;
         }
+        error_log("User identification needed");
 
         $birthDayInfo = self::getBirthDay();
         if (self::isOldEnough($birthDayInfo)) {
+            error_log("Is already old enough");
             WC()->session->set('eideasy_birthday_data', $birthDayInfo);
             error_log("User age known and is old enough");
             $message = get_option('eideasy_woo_age_verified_message');
@@ -170,8 +172,13 @@ class WooIntegration
             return false;
         }
 
-        foreach (WC()->cart->get_cart_contents() as $cartItem) {
-            $categories = $cartItem['data']->get_category_ids();
+        /** @var \WC_Cart $cart */
+        $cart = WC()->cart;
+
+        foreach ($cart->get_cart_contents() as $cartItem) {
+            $the_product = wc_get_product($cartItem['product_id']);
+
+            $categories = $the_product->get_category_ids();
             if (array_intersect($categories, $restrictedCategories)) {
                 return true;
             }

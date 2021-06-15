@@ -26,6 +26,7 @@ There are several filters for customizing the plugin behaviour using add_filter(
 4. Action eideasy_user_created. Will be executed when new user has been created. Will get new user ID and user data as arguments.
 5. Action eideasy_after_logged_in. Will be executed every time when user info has been received and just before setting login cookie. Gets user data and user ID as arguments.
 6. Action eideasy_user_identified. Runs immediately after user data has been received and includes array of data returned by eID Easy.
+7. Filter "eideasy_select_country". Enables to set country for login, especially useful for Smart ID and Freja eID methods.
 
 == Tips and tricks ==
 Use shortcode [eid_easy] to get login button,
@@ -43,6 +44,12 @@ eID Easy terms and conditions can be found here https://eideasy.com/terms-of-ser
 2. Login view
 
 == Changelog ==
+
+= 5.2 =
+WooCommerce integration is supporting variable products.
+
+= 5.1 =
+Filter "eideasy_select_country" added. Useful for Smart ID and Freja eID methods.
 
 = 5.0 =
 WooCommerce integration added. Age verification possible during the checkout.

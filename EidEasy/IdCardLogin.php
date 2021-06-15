@@ -40,13 +40,13 @@ class IdCardLogin
             $wpdb->update($table_name, ['identitycode' => $idcode], ['userid' => $user_id]);
         } else {
             $wpdb->delete($table_name, ['userid' => $user_id]);
-            $wpdb->insert($table_name, array(
+            $wpdb->insert($table_name, [
                     'firstname'    => "",
                     'lastname'     => "",
                     'identitycode' => $idcode,
                     'userid'       => $user_id,
                     'created_at'   => current_time('mysql')
-                )
+                ]
             );
         }
     }
@@ -109,7 +109,7 @@ class IdCardLogin
                 'icon'         => 'img/eid_mobiilid_mark.png',
                 'filter'       => 'ee-mobile-id-login',
                 'start_action' => 'ee-mid-login',
-                'login_extra'  => '&country=EE',
+                'country'      => 'EE',
             ],
             'eideasy_ee_idcard_enabled'        => [
                 'name'         => 'Estonian ID card',
@@ -136,7 +136,7 @@ class IdCardLogin
                 'icon'         => 'img/lt-mobile-id.png',
                 'filter'       => 'lt-mobile-id-login',
                 'start_action' => 'lt-mid-login',
-                'login_extra'  => '&country=LT',
+                'country'      => 'LT',
             ],
             'eideasy_lt_idcard_enabled'        => [
                 'name'         => 'Lithuanian ID card',
@@ -330,6 +330,7 @@ class IdCardLogin
             . '&response_type=code';
         $baseUri     = 'https://id.eideasy.com';
         $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
+        $loginCountry     = apply_filters('eideasy_select_country', null);
 
         wp_enqueue_script("eideasy_functions_js");
 
@@ -358,11 +359,16 @@ class IdCardLogin
 
         foreach (IdCardLogin::getSupportedMethods() as $method => $params) {
             if (get_option($method)) {
-                $loginCode .= '<div id="' . $method . '"  class="login-button">' .
+                $loginCode   .= '<div id="' . $method . '"  class="login-button">' .
                     apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon']) . '">' .
                     '</div>';
+                $extraParams = "";
+                $country     = $params['country'] ?? $loginCountry ?? null;
+                if (isset($country)) {
+                    $extraParams = "&country=$country";
+                }
                 $loginCode .= '<script>if(document.getElementById("' . $method . '")) document.getElementById("' . $method . '").addEventListener("click", function () {' .
-                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . ($params['login_extra'] ?? "") . '&lang=' . get_locale() . '&state=' . $state . '");' .
+                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . $extraParams . '&lang=' . get_locale() . '&state=' . $state . '");' .
                     '    });</script>';
             }
         }

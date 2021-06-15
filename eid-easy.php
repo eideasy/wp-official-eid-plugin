@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app, eParaksts, ZealID and other methods.
- * Version: 5.0
+ * Version: 5.2
  * Author: EID Easy OÜ
  * Text Domain: eid-easy
  * Domain path /languages

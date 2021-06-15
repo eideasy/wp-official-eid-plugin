@@ -77,7 +77,7 @@ class IdcardAdmin
         <?php
     }
 
-    protected function getShippingMethods()
+    protected static function getShippingMethods()
     {
         $methodList = [];
         foreach (WC()->shipping->get_shipping_methods() as $method) {
