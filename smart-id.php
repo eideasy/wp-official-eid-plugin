@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.6
+ * Version: 4.7
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -129,9 +129,6 @@ if (!class_exists("IdCardLogin")) {
                 "smartid_idcard_enabled",
                 "smartid_mobileid_enabled",
                 "smartid_smartid_enabled",
-                "smartid_facebook_enabled",
-                "smartid_google_enabled",
-                "smartid_agrello_enabled"
             ];
 
             return $smartid_supportedMethods;
@@ -343,21 +340,6 @@ if (!class_exists("IdCardLogin")) {
                     . apply_filters('smart-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/Smart-ID_login_btn.png" class="login-middle-w">') .
                     '</div>';
             }
-            if (get_option("smartid_google_enabled")) {
-                $loginCode .= '<div id="smartid-gp-login"  class="login-button">'
-                    . apply_filters('google-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/gp.png" class="login-square-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_facebook_enabled")) {
-                $loginCode .= '<div id="smartid-fb-login"  class="login-button">'
-                    . apply_filters('facebook-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/fb.png" class="login-square-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_agrello_enabled")) {
-                $loginCode .= '<div id="smartid-agrello-login"  class="login-button">'
-                    . apply_filters('agrello-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/agrello.jpg" class="login-square-w">') .
-                    '</div>';
-            }
 
             $loginCode .= '</div><script>' .
                 '    if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {' .
@@ -386,15 +368,6 @@ if (!class_exists("IdCardLogin")) {
                 '    });' .
                 '    if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
                 '        startEidEasyLogin("' . $loginUri . '&method=smart-id");' .
-                '    });' .
-                '    if(document.getElementById("smartid-gp-login")) document.getElementById("smartid-gp-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=google-login");' .
-                '    });' .
-                '    if(document.getElementById("smartid-fb-login")) document.getElementById("smartid-fb-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=facebook-login");' .
-                '    });' .
-                '    if(document.getElementById("smartid-agrello-login")) document.getElementById("smartid-agrello-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=agrello");' .
                 '    });' .
                 '</script>';
 

@@ -3,8 +3,8 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 ?>
 <div class="container">
     <div id="loginBlock" class="col-md-offset-3 col-md-6">
-        <h2>Add or edit eID Easy Oauth2.0 credentials manually</h2>
-        <small>Credentials can be reviewed and generated manually at <a href="https://id.eideasy.com" target="_blank">https://id.eideasy.com</a>.
+        <h2>Add or edit eID Easy Oauth2.0 credentials</h2>
+        <small>Credentials can be reviewed and generated manually at <a href="https://id.eideasy.com/signup?source=wp_plugin" target="_blank">https://id.eideasy.com</a>.
             Look for credentials to website <?php echo home_url(); ?></small>
         <br>
 		<?php
@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="redirect_uri">Redirect URI</label>
                         </td>
                         <td>
-                            <input type="text" name="redirect_uri" class="column-cb" value="<?php echo get_option('smartid_redirect_uri');?>">
+                            <input type="text" name="redirect_uri" class="column-cb" value="<?php echo get_option('smartid_redirect_uri', home_url());?>">
                         </td>
                     </tr>
                 </table>

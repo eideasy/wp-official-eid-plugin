@@ -24,52 +24,11 @@ if ( ! class_exists("IdcardAdmin")) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
 
-            if (isset($_GET["error"])) {
-                ?>
-                <div class="notice notice-error"><p><strong>Failed to register API.
-                            Error=<?php echo $_GET["error"] ?></strong></p></div>
-                <?php
-            }
-
-            //get domain data from the server
-            if (isset($_GET["data_key"]) && get_option("smartid_client_id") == false) {
-                $params = [
-                    "data_key" => $_GET["data_key"]
-                ];
-
-                $registerResult = IdCardLogin::curlCall("admin/api_client_info", $params);
-                if ($registerResult["status"] == "error") {
-                    ?>
-                    <div class="notice notice-error"><p><strong>Failed to activate
-                                registration <?php echo $registerResult["message"] ?></strong></p></div>
-                    <?php
-                    return;
-                }
-                $clientId     = $registerResult["client_id"];
-                $secret       = $registerResult["secret"];
-                $redirect_uri = $registerResult["redirect_uri"];
-
-                // Save the posted value in the database
-                update_option("smartid_client_id", $clientId);
-                update_option("smartid_secret", $secret);
-                update_option("smartid_redirect_uri", $redirect_uri);
-
-                // Show confirmation
-                ?>
-                <div class="updated"><p><strong>Client registration done!</strong></p></div>
-            <?php }
             ?>
 
             <?php
-            //Site has not activated eID Easy yet
-            if (get_option("smartid_client_id") == null) {
-                ?>
-                <div class="wrap">
-                    <?php include("api_register.php"); ?>
-                </div>
 
-                <?php
-            } else {
+            if (get_option("smartid_client_id") === null) {
                 if (array_key_exists("smartid_change_settings", $_POST) && $_POST["smartid_change_settings"] == "yes") {
                     if (array_key_exists("pt-id-card_enabled", $_POST) && $_POST["pt-id-card_enabled"] == "yes") {
                         update_option("smartid_pt-id-card_enabled", true);
@@ -120,18 +79,6 @@ if ( ! class_exists("IdcardAdmin")) {
                         update_option("smartid_smartid_enabled", false);
                     }
 
-                    if (array_key_exists("facebook_enabled", $_POST) && $_POST["facebook_enabled"] == "yes") {
-                        update_option("smartid_facebook_enabled", true);
-                    } else {
-                        update_option("smartid_facebook_enabled", false);
-                    }
-
-                    if (array_key_exists("google_enabled", $_POST) && $_POST["google_enabled"] == "yes") {
-                        update_option("smartid_google_enabled", true);
-                    } else {
-                        update_option("smartid_google_enabled", false);
-                    }
-
                     if (array_key_exists("smartid_debug_mode", $_POST) && $_POST["smartid_debug_mode"] == "yes") {
                         update_option("smartid_debug_mode", true);
                     } else {
@@ -143,12 +90,6 @@ if ( ! class_exists("IdcardAdmin")) {
                         update_option("smartid_registration_disabled", true);
                     } else {
                         update_option("smartid_registration_disabled", false);
-                    }
-
-                    if (array_key_exists("agrello_enabled", $_POST) && $_POST["agrello_enabled"] == "yes") {
-                        update_option("smartid_agrello_enabled", true);
-                    } else {
-                        update_option("smartid_agrello_enabled", false);
                     }
 
                     if (array_key_exists("eideasy_only_identify",
@@ -257,27 +198,6 @@ if ( ! class_exists("IdcardAdmin")) {
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <input type="checkbox" name="facebook_enabled" class="column-cb"
-                                       value="yes" <?php echo get_option("smartid_facebook_enabled") ? "checked" : "" ?>>
-                                <label for="facebook_enabled">Facebook</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="google_enabled" class="column-cb"
-                                       value="yes" <?php echo get_option("smartid_google_enabled") ? "checked" : "" ?>>
-                                <label for="google_enabled">Google</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="agrello_enabled" class="column-cb"
-                                       value="yes" <?php echo get_option("smartid_agrello_enabled") ? "checked" : "" ?>>
-                                <label for="agrello_enabled">Agrello .ID</label>
-                            </td>
-                        </tr>
-                        <tr>
                             <td></td>
                         </tr>
                         <tr>
@@ -301,7 +221,5 @@ if ( ! class_exists("IdcardAdmin")) {
             </div>
             <?php
         }
-
     }
-
 }
