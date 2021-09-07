@@ -166,7 +166,7 @@ class IdcardAdmin
                 </tr>
                 <tr>
                     <td>
-                        <label for="eideasy_woo_age_restricted_categories">Restricted categories</label>
+                        <label for="eideasy_woo_age_restricted_categories">Restricted categories (PS translated categories not supported right now)</label>
                     </td>
                     <td>
                         <select name="eideasy_woo_age_restricted_categories[]" multiple size="<?php echo count($allCategories) ?>">
