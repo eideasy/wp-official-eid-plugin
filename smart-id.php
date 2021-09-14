@@ -39,7 +39,7 @@ if (!class_exists("IdCardLogin")) {
                 return; // New idcode not included in post, not changing the idcode field.
             }
 
-            $idcode = esc_attr($_POST['smartid_user_idcode']);
+            $idcode = sanitize_text_field($_POST['smartid_user_idcode']);
             if (!$idcode || strlen($idcode) === 0) {
                 return; // Not allowing to completely remove idcode.
             }
@@ -88,7 +88,7 @@ if (!class_exists("IdCardLogin")) {
                     <th><label for="smartid_user_idcode">Country + ID code (EE_47102281234)</label></th>
                     <td>
                         <input name="smartid_user_idcode"
-                               value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
+                               value="<?php echo sanitize_text_field(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
                         <br>
                         <small>To remove ID code value write here dash without quotes "-". Empty field will be
