@@ -29,7 +29,8 @@ require_once(plugin_dir_path(__FILE__) . 'eideasyTemplate.php');
 // Register all the templates here
 function eideasyTemplateFiles() {
     return [
-        'adminCheckbox' => plugin_dir_path(__FILE__) . 'templates/checkbox-template.php',
+        'checkbox-template' => plugin_dir_path(__FILE__) . 'templates/checkbox-template.php',
+        'login-button-template' => plugin_dir_path(__FILE__) . 'templates/login-button-template.php',
     ];
 }
 
@@ -304,50 +305,15 @@ if (!class_exists("IdCardLogin")) {
                     width: 200px;
                 }                
             </style><div id="smartid-login-block">';
-            if (get_option("smartid_idcard_enabled")) {
-                $loginCode .= '<div id="smartid-id-login"  class="login-button">'
-                    . apply_filters('ee-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_idkaart_mark.png">') .
-                    '</div>';
-            }
-            if (get_option("smartid_mobileid_enabled")) {
-                $loginCode .= '<div id="smartid-mid-login"  class="login-button">'
-                    . apply_filters('ee-mobile-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/eid_mobiilid_mark.png">') .
-                    '</div>';
-            }
-            if (get_option("lveid_enabled")) {
-                $loginCode .= '<div id="smartid-lveid-login"  class="login-button">'
-                    . apply_filters('lv-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/latvia-id-card.png">') .
-                    '</div>';
-            }
-            if (get_option("eideasy-eparaksts-mobile_enabled")) {
-                $loginCode .= '<div id="eideasy-eparaksts-mobile-login"  class="login-button">'
-                    . apply_filters('eideasy-eparaksts-mobile-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/eparaksts-mobile.png">') .
-                    '</div>';
-            }
-            if (get_option("smartid_lt-id-card_enabled")) {
-                $loginCode .= '<div id="smartid-lt-id-card-login"  class="login-button">'
-                    . apply_filters('lt-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/lithuania_eid.png" class="login-middle-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_lt-mobile-id_enabled")) {
-                $loginCode .= '<div id="smartid-lt-mobile-id-login"  class="login-button">'
-                    . apply_filters('lt-mobile-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/lt-mobile-id.png" class="login-middle-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_be-id-card_enabled")) {
-                $loginCode .= '<div id="smartid-be-id-card-login"  class="login-button">'
-                    . apply_filters('be-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/belgia-id-card.svg"  class="login-middle-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_pt-id-card_enabled")) {
-                $loginCode .= '<div id="smartid-pt-id-card-login"  class="login-button">'
-                    . apply_filters('pt-id-card-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/portugal-id-card.png" class="login-wide-w">') .
-                    '</div>';
-            }
-            if (get_option("smartid_smartid_enabled")) {
-                $loginCode .= '<div id="smartid-smartid-login"  class="login-button">'
-                    . apply_filters('smart-id-login', '<img src="' . IdCardLogin::getPluginBaseUrl() . '/img/Smart-ID_login_btn.png" class="login-middle-w">') .
-                    '</div>';
+
+            foreach (eideasyOptions()['methods'] as $method) {
+                if (get_option($method['optionName'])) {
+                    $loginCode .= eideasyTemplate(eideasyTemplateFiles()['login-button-template'], [
+                        'id' => $method['buttonId'],
+                        'filterName' => $method['filterName'],
+                        'imageSrc' => IdCardLogin::getPluginBaseUrl() . $method['image'],
+                    ]);;
+                }
             }
 
             $loginCode .= '</div><script>' .

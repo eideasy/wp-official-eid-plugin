@@ -74,7 +74,7 @@ if (!class_exists("IdcardAdmin")) {
 
                     <h3>Registration disabled</h3>
                     <?php
-                    echo eideasyTemplate(eideasyTemplateFiles()['adminCheckbox'], [
+                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                         'label' => 'Disable automatic registration. In this case admin must add idcode to each user manually to allow ID card login.',
                         'name' => 'smartid_registration_disabled',
                         'id' => 'smartid_registration_disabled',
@@ -84,7 +84,7 @@ if (!class_exists("IdcardAdmin")) {
 
                     <h3>Only identify users (no user login)</h3>
                     <?php
-                    echo eideasyTemplate(eideasyTemplateFiles()['adminCheckbox'], [
+                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                         'label' => 'No accounts are created nor any users are logged in.',
                         'name' => 'eideasy_only_identify',
                         'id' => 'eideasy_only_identify',
@@ -101,7 +101,7 @@ if (!class_exists("IdcardAdmin")) {
                             <tr>
                                 <td>
                                     <?php
-                                    echo eideasyTemplate(eideasyTemplateFiles()['adminCheckbox'], [
+                                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                                         'label' => $method['label'],
                                         'name' => $method['inputName'],
                                         'id' => $method['label'],
@@ -120,7 +120,7 @@ if (!class_exists("IdcardAdmin")) {
                         <tr>
                             <td>
                                 <?php
-                                echo eideasyTemplate(eideasyTemplateFiles()['adminCheckbox'], [
+                                echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                                     'label' => 'Enable debug mode. Sends login progress to server if there are login issues.',
                                     'name' => 'smartid_debug_mode',
                                     'id' => 'smartid_debug_mode',
