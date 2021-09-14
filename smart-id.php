@@ -384,44 +384,47 @@ if (!class_exists("IdCardLogin")) {
             return $pUrl . '/' . $pluginFolder;
         }
 
-        static function curlCall($apiPath, $params, $postParams = null)
+        static function apiCall($apiPath, $params, $postParams = null)
         {
+            $accessToken = null;
+            $headers = [];
+
             $paramString = "?client_id=" . get_option("smartid_client_id");
             if ($params != null) {
                 foreach ($params as $key => $value) {
                     if ($key === "access_token") {
-                        $token = "authorization: Bearer $value";
+                        $accessToken = $value;
                     } else {
                         $paramString .= "&$key=$value";
                     }
                 }
             }
 
-            $postParamString = "";
+            $bodyParams = [];
             if ($postParams != null) {
                 foreach ($postParams as $key => $value) {
-                    $postParamString .= "$key=$value&";
+                    $bodyParams[$key] = $value;
                 }
             }
 
-            $ch  = curl_init();
+            if (isset($accessToken)) {
+                $headers['authorization'] = 'Bearer ' . $accessToken;
+            }
+
             $url = "https://id.eideasy.com/" . $apiPath . $paramString;
-            curl_setopt($ch, CURLOPT_URL, $url);
-            if (isset($token)) {
-                curl_setopt($ch, CURLOPT_HTTPHEADER, [$token]);
+
+            if (!empty($bodyParams)) {
+                $response = wp_remote_post($url, [
+                    'headers' => $headers,
+                    'body' => $bodyParams,
+                ]);
+            } else {
+                $response = wp_remote_get($url, [
+                    'headers' => $headers,
+                ]);
             }
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            if ($postParams != null) {
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postParamString);
-            }
 
-            $curlResult = curl_exec($ch);
-
-            $result = json_decode($curlResult, true);
-            curl_close($ch);
-
-            return $result;
+            return json_decode(wp_remote_retrieve_body($response), true);
         }
 
         static function idcard_install()

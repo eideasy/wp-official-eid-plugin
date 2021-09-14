@@ -67,11 +67,12 @@ class IdcardAuthenticate
             "code"          => $token,
             "grant_type"    => "authorization_code",
             "client_id"     => get_option("smartid_client_id"),
-            'redirect_uri'  => urlencode(get_option("smartid_redirect_uri")),
+            'redirect_uri'  => get_option("smartid_redirect_uri"),
             "client_secret" => get_option("smartid_secret")
         ];
 
-        $accessTokenResult = IdCardLogin::curlCall("oauth/access_token", [], $postParams);
+        $accessTokenResult = IdCardLogin::apiCall("oauth/access_token", [], $postParams);
+
         $accessToken       = $accessTokenResult["access_token"];
 
         if (strlen($accessToken) < 20) {
@@ -81,9 +82,7 @@ class IdcardAuthenticate
         $params         = [
             "access_token" => $accessToken
         ];
-        $userDataResult = IdCardLogin::curlCall("api/v2/user_data", $params);
-
-        return $userDataResult;
+        return IdCardLogin::apiCall("api/v2/user_data", $params);
     }
 
     static function isAlreadyLogged()

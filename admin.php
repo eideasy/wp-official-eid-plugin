@@ -14,11 +14,6 @@ if ( ! class_exists("IdcardAdmin")) {
         static function create_id_settings_page()
         {
             echo "<h1> eID Easy </h1>";
-            if ( ! function_exists('curl_version')) {
-                echo "cURL PHP module not installed or disabled, please enable it before starting to use eID Easy secure logins";
-
-                return;
-            }
 
             if ( ! current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
