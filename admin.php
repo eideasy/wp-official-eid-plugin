@@ -14,7 +14,7 @@ if ( ! class_exists("IdcardAdmin")) {
         static function create_id_settings_page()
         {
             echo "<h1> eID Easy </h1>";
-
+            
             if ( ! current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
@@ -23,7 +23,7 @@ if ( ! class_exists("IdcardAdmin")) {
 
             <?php
 
-            if (get_option("smartid_client_id") === null) {
+            if (get_option("smartid_client_id")) {
                 if (array_key_exists("smartid_change_settings", $_POST) && $_POST["smartid_change_settings"] == "yes") {
                     if (array_key_exists("pt-id-card_enabled", $_POST) && $_POST["pt-id-card_enabled"] == "yes") {
                         update_option("smartid_pt-id-card_enabled", true);
