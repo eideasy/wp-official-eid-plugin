@@ -23,6 +23,15 @@
  */
 
 require_once(plugin_dir_path(__FILE__) . 'functions/eideasyLog.php');
+require_once(plugin_dir_path(__FILE__) . 'eideasyOptions.php');
+require_once(plugin_dir_path(__FILE__) . 'eideasyTemplate.php');
+
+// Register all the templates here
+function eideasyTemplateFiles() {
+    return [
+        'adminCheckbox' => plugin_dir_path(__FILE__) . 'templates/checkbox-template.php',
+    ];
+}
 
 if (!class_exists("IdCardLogin")) {
     require_once(plugin_dir_path(__FILE__) . 'admin.php');
@@ -88,7 +97,7 @@ if (!class_exists("IdCardLogin")) {
                     <th><label for="smartid_user_idcode">Country + ID code (EE_47102281234)</label></th>
                     <td>
                         <input name="smartid_user_idcode"
-                               value="<?php echo sanitize_text_field(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
+                               value="<?php echo esc_attr(IdCardLogin::getIdcodeByUserId($user->ID)); ?>"
                                class='regular-text'/>
                         <br>
                         <small>To remove ID code value write here dash without quotes "-". Empty field will be

@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="client_id">Client ID</label>
                         </td>
                         <td>
-                            <input type="text" name="client_id" class="column-cb" value="<?php echo get_option('smartid_client_id');?>">
+                            <input type="text" name="client_id" class="column-cb" value="<?php echo esc_attr(get_option('smartid_client_id'));?>">
                         </td>
                     </tr>
                     <tr>
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="client_secret">Secret</label>
                         </td>
                         <td>
-                            <input type="password" name="client_secret" class="column-cb" value="<?php echo get_option('smartid_secret');?>">
+                            <input type="password" name="client_secret" class="column-cb" value="<?php echo esc_attr(get_option('smartid_secret'));?>">
                         </td>
                     </tr>
                     <tr>
@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
                             <label for="redirect_uri">Redirect URI</label>
                         </td>
                         <td>
-                            <input type="text" name="redirect_uri" class="column-cb" value="<?php echo get_option('smartid_redirect_uri', home_url());?>">
+                            <input type="text" name="redirect_uri" class="column-cb" value="<?php echo esc_attr(get_option('smartid_redirect_uri', home_url()));?>">
                         </td>
                     </tr>
                 </table>
