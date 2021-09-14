@@ -5,7 +5,7 @@ Plugin URL: https://eideasy.com
 Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
 Requires at least: 4.5
 Tested up to: 5.8
-Stable tag: trunk
+Stable tag: 4.8.0
 
 == Description==
 This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.
