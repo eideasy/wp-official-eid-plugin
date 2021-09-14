@@ -18,23 +18,18 @@ if (!class_exists("LoginCommon")) {
                         $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $country);
                     }
                 } else {
-                    if (get_option('smartid_debug_mode')) {
-                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login user already exists $identityCode"));
-                    }
+                    eideasyLog("WP login user already exists $identityCode");
                     $user_id = $user->userid;
                 }
             } else {
-                if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email"));
-                }
+                eideasyLog("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
                 wp_die("ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
             }
             if (is_multisite()) {
                 add_user_to_blog(get_current_blog_id(), $user_id, get_option('default_role'));
             }
-            if (get_option('smartid_debug_mode')) {
-                file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
-            }
+            eideasyLog("WP login Authenticating WP user $identityCode");
+
 
             /**
              * Fires before the user is logged-in.
@@ -66,9 +61,7 @@ if (!class_exists("LoginCommon")) {
                 ];
 
                 if (username_exists($userName)) {
-                    if (get_option('smartid_debug_mode')) {
-                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
-                    }
+                    eideasyLog("WP login Cannot create user. Username $userName exists");
                     wp_die("Cannot create user. Username $userName exists");
                 }
 
@@ -76,9 +69,7 @@ if (!class_exists("LoginCommon")) {
 
                 if (is_wp_error($user_id)) {
                     include 'iframe_break_free_errorhandler.php';
-                    if (get_option('smartid_debug_mode')) {
-                        file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
-                    }
+                    eideasyLog("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
 
                     wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
                 }
@@ -95,9 +86,7 @@ if (!class_exists("LoginCommon")) {
                 ]
             );
 
-            if (get_option('smartid_debug_mode')) {
-                file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login new ID user created"));
-            }
+            eideasyLog("WP login new ID user created");
 
             do_action('eideasy_user_created', $user_id, [
                 'userName'     => $userName,

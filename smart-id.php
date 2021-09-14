@@ -22,6 +22,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+require_once(plugin_dir_path(__FILE__) . 'functions/eideasyLog.php');
+
 if (!class_exists("IdCardLogin")) {
     require_once(plugin_dir_path(__FILE__) . 'admin.php');
 
@@ -171,9 +173,7 @@ if (!class_exists("IdCardLogin")) {
                     wp_redirect($loginUrl);
                     exit;
                 }
-                if (get_option('smartid_debug_mode')) {
-                    file_get_contents("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
-                }
+                eideasyLog("WP plugin login with code=" . $_GET['code']);
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
                 $userId = IdcardAuthenticate::login($_GET['code']);
                 if ($userId) {

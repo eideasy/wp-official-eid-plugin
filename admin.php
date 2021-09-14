@@ -1,4 +1,5 @@
 <?php
+
 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
 if ( ! class_exists("IdcardAdmin")) {
 
@@ -14,7 +15,7 @@ if ( ! class_exists("IdcardAdmin")) {
         static function create_id_settings_page()
         {
             echo "<h1> eID Easy </h1>";
-            
+
             if ( ! current_user_can('manage_options')) {
                 wp_die(__('You do not have sufficient permissions to access this page.'));
             }
