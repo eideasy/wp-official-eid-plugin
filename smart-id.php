@@ -183,9 +183,9 @@ if (!class_exists("IdCardLogin")) {
                     wp_redirect($loginUrl);
                     exit;
                 }
-                eideasyLog("WP plugin login with code=" . $_GET['code']);
+                eideasyLog("WP plugin login with code=" . sanitize_text_field($_GET['code']));
                 require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
-                $userId = IdcardAuthenticate::login($_GET['code']);
+                $userId = IdcardAuthenticate::login(sanitize_text_field($_GET['code']));
                 if ($userId) {
                     wp_redirect($loginUrl);
                     exit;
