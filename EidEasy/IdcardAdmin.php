@@ -257,7 +257,7 @@ class IdcardAdmin
 
         <input type="checkbox" name="eideasy_only_identify" class="column-cb"
                value="yes" <?php echo get_option("eideasy_only_identify") ? "checked" : "" ?> >
-        <label for="eideasy_only_identify">No accounts are created nor any users are logged in. You can get users details using action "eideasy_only_identify.</label>
+        <label for="eideasy_only_identify">No accounts are created nor any users are logged in. You can get users details using action "eideasy_user_identified.</label>
 
         <h3> Configure visible login method icons</h3>
         Make sure all of these are allowed in eID Easy admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>

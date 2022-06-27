@@ -360,7 +360,7 @@ class IdCardLogin
         foreach (IdCardLogin::getSupportedMethods() as $method => $params) {
             if (get_option($method)) {
                 $loginCode   .= '<div id="' . $method . '"  class="login-button">' .
-                    apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon']) . '">' .
+                    apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon'] . '"/>') .
                     '</div>';
                 $extraParams = "";
                 $country     = $params['country'] ?? $loginCountry ?? null;
