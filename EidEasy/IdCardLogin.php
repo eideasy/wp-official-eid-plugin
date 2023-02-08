@@ -180,6 +180,13 @@ class IdCardLogin
                 'start_action' => 'zealid-login',
                 'class'        => 'login-middle-w',
             ],
+            'eideasy_itsme_standard_enabled'           => [
+                'name'         => 'Itsme (Standard)',
+                'icon'         => 'img/itsme.svg',
+                'filter'       => 'eideasy-itsme-standard-login',
+                'start_action' => 'itsme-login-standard',
+                'class'        => 'login-middle-w',
+            ],
         ];
 
         return $supportedMethods;
@@ -492,6 +499,7 @@ class IdCardLogin
             'lveid_enabled'                    => 'eideasy_lv_idcard_enabled',
             'smartid_lt-id-card_enabled'       => 'eideasy_lt_idcard_enabled',
             'eideasy-eparaksts-mobile_enabled' => 'eideasy_eparaksts_mobile_enabled',
+            'eideasy-itsme-standard-login' => 'eideasy_itsme_standard_enabled',
 
         ];
 

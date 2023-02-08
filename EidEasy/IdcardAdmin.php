@@ -269,8 +269,9 @@ class IdcardAdmin
                 <tr>
                     <td>
                         <input type="checkbox" name="<?php echo $method ?>" class="column-cb"
+                               id="<?php echo $method ?>"
                                value="1" <?php checked('1', get_option($method)); ?> />
-                        <label for="<?php echo $method ?> "><?php echo $params['name'] ?></label>
+                        <label for="<?php echo $method ?>"><?php echo $params['name'] ?></label>
                     </td>
                 </tr>
                 <?php
@@ -281,7 +282,7 @@ class IdcardAdmin
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="eideasy_debug_mode" class="column-cb"
+                    <input type="checkbox" name="eideasy_debug_mode" id="eideasy_debug_mode" class="column-cb"
                            value="yes" <?php echo get_option("eideasy_debug_mode") ? "checked" : "" ?>>
                     <label for="eideasy_debug_mode">Enable debug mode. Sends login progress to server if
                         there are login issues.</label>
@@ -319,5 +320,6 @@ class IdcardAdmin
         register_setting('eideasy', 'eideasy_pt_idcard_enabled');
         register_setting('eideasy', 'eideasy_be_idcard_enabled');
         register_setting('eideasy', 'eideasy_zealid_enabled');
+        register_setting('eideasy', 'eideasy_itsme_standard_enabled');
     }
 }
