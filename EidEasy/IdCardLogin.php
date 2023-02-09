@@ -183,7 +183,7 @@ class IdCardLogin
             'eideasy_itsme_standard_enabled'           => [
                 'name'         => 'Itsme (Standard)',
                 'icon'         => 'img/itsme.svg',
-                'filter'       => 'eideasy-itsme-standard-login',
+                'filter'       => 'eideasy-itsme-login-standard',
                 'start_action' => 'itsme-login-standard',
                 'class'        => 'login-middle-w',
             ],
@@ -499,7 +499,7 @@ class IdCardLogin
             'lveid_enabled'                    => 'eideasy_lv_idcard_enabled',
             'smartid_lt-id-card_enabled'       => 'eideasy_lt_idcard_enabled',
             'eideasy-eparaksts-mobile_enabled' => 'eideasy_eparaksts_mobile_enabled',
-            'eideasy-itsme-standard-login' => 'eideasy_itsme_standard_enabled',
+            'eideasy-itsme-login-standard' => 'eideasy_itsme_standard_enabled',
 
         ];
 
