@@ -308,8 +308,6 @@ class IdcardAdmin
         register_setting('eideasy', 'eideasy_redirect_uri');
         register_setting('eideasy', 'eideasy_only_identify');
         register_setting('eideasy', 'eideasy_debug_mode');
-        register_setting('eideasy', 'eideasy_google_enabled');
-        register_setting('eideasy', 'eideasy_facebook_enabled');
         register_setting('eideasy', 'eideasy_smartid_enabled');
         register_setting('eideasy', 'eideasy_ee_mobileid_enabled');
         register_setting('eideasy', 'eideasy_lt_mobileid_enabled');

@@ -22,7 +22,7 @@ It is using service and API-s from https://eideasy.com. To activate the signing 
 There are several filters for customizing the plugin behaviour using add_filter() Wordpress function.
 1. Filter "eideasy_login" enables customizing the page where user will be redirected after login completed.
 2. Filter "eideasy_new_user_email" enabled setting user e-mail to something else that default idcode@local.localhost
-3. Filters to customize login buttons look and feel are: "ee-id-card-login, ee-mobile-id-login, lv-id-card-login, lt-id-card-login, lt-mobile-id-login, pt-id-card-login, smart-id-login, google-login, facebook-login"
+3. Filters to customize login buttons look and feel are: "ee-id-card-login, ee-mobile-id-login, lv-id-card-login, lt-id-card-login, lt-mobile-id-login, pt-id-card-login, smart-id-login"
 4. Action eideasy_user_created. Will be executed when new user has been created. Will get new user ID and user data as arguments.
 5. Action eideasy_after_logged_in. Will be executed every time when user info has been received and just before setting login cookie. Gets user data and user ID as arguments.
 6. Action eideasy_user_identified. Runs immediately after user data has been received and includes array of data returned by eID Easy.
