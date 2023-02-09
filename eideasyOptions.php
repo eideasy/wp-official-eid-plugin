@@ -84,6 +84,15 @@ function eideasyOptions() {
                 'filterName' => 'smart-id-login',
                 'image' => '/img/Smart-ID_login_btn.png',
             ],
+            [
+                'inputName' => 'itsme_login_standard_enabled',
+                'optionName' => 'eideasy-itsme-login-standard_enabled',
+                'label' => 'Itsme Login (Standard)',
+                'actionType' => 'itsme-login-standard',
+                'buttonId' => 'eideasy-itsme-login-standard',
+                'filterName' => 'eideasy-itsme-login-standard',
+                'image' => '/img/itsme.svg',
+            ],
         ]
     ];
 }

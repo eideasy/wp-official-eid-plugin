@@ -141,6 +141,7 @@ if (!class_exists("IdCardLogin")) {
                 "smartid_idcard_enabled",
                 "smartid_mobileid_enabled",
                 "smartid_smartid_enabled",
+                "eideasy-itsme-login-standard_enabled",
             ];
 
             return $smartid_supportedMethods;
@@ -343,6 +344,9 @@ if (!class_exists("IdCardLogin")) {
                 '    });' .
                 '    if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
                 '        startEidEasyLogin("' . $loginUri . '&method=smart-id");' .
+                '    });' .
+                '    if(document.getElementById("eideasy-itsme-login-standard")) document.getElementById("eideasy-itsme-login-standard").addEventListener("click", function () {' .
+                '        startEidEasyLogin("' . $loginUri . '&method=itsme-login-standard");' .
                 '    });' .
                 '</script>';
 
