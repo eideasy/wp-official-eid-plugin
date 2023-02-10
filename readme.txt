@@ -44,6 +44,8 @@ eID Easy terms and conditions can be found here https://eideasy.com/terms-of-ser
 2. Login view
 
 == Changelog ==
+= 5.3.0 =
+Added itsme login method.
 
 = 5.2 =
 WooCommerce integration is supporting variable products.
