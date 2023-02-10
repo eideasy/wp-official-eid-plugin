@@ -38,6 +38,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.9.0 =
+Added itsme login method.
+
 = 4.8 =
 Refactored and cleaned up the codebase
 
