@@ -159,25 +159,18 @@ class IdCardLogin
                 'class'        => 'login-middle-w',
                 'start_action' => 'be-id-card',
             ],
-            'eideasy_google_enabled'           => [
-                'name'         => 'Google',
-                'icon'         => 'img/gp.png',
-                'filter'       => 'google-login',
-                'start_action' => 'google-login',
-                'class'        => 'login-square-w',
-            ],
-            'eideasy_facebook_enabled'         => [
-                'name'         => 'Facebook',
-                'icon'         => 'img/fb.png',
-                'filter'       => 'facebook-login',
-                'start_action' => 'facebook-login',
-                'class'        => 'login-square-w',
-            ],
             'eideasy_zealid_enabled'           => [
                 'name'         => 'ZealID',
                 'icon'         => 'img/zealid.svg',
                 'filter'       => 'eideasy-zealid-login',
                 'start_action' => 'zealid-login',
+                'class'        => 'login-middle-w',
+            ],
+            'eideasy_itsme_standard_enabled'           => [
+                'name'         => 'Itsme (Standard)',
+                'icon'         => 'img/itsme.svg',
+                'filter'       => 'eideasy-itsme-login-standard',
+                'start_action' => 'itsme-login-standard',
                 'class'        => 'login-middle-w',
             ],
         ];
@@ -481,8 +474,6 @@ class IdCardLogin
             'smartid_redirect_uri'             => 'eideasy_redirect_uri',
             'smartid_registration_disabled'    => 'eideasy_registration_disabled',
             'smartid_debug_mode'               => 'eideasy_debug_mode',
-            'smartid_google_enabled'           => 'eideasy_google_enabled',
-            'smartid_facebook_enabled'         => 'eideasy_facebook_enabled',
             'smartid_smartid_enabled'          => 'eideasy_smartid_enabled',
             'smartid_mobileid_enabled'         => 'eideasy_ee_mobileid_enabled',
             'eideasy_lt-mobile-id_enabled'     => 'eideasy_lt_mobileid_enabled',
@@ -492,6 +483,7 @@ class IdCardLogin
             'lveid_enabled'                    => 'eideasy_lv_idcard_enabled',
             'smartid_lt-id-card_enabled'       => 'eideasy_lt_idcard_enabled',
             'eideasy-eparaksts-mobile_enabled' => 'eideasy_eparaksts_mobile_enabled',
+            'eideasy-itsme-login-standard' => 'eideasy_itsme_standard_enabled',
 
         ];
 
