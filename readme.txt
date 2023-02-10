@@ -38,6 +38,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.9.1 =
+Added correct itsme logo.
+
 = 4.9.0 =
 Added itsme login method.
 
