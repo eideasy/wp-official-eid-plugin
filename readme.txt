@@ -34,7 +34,7 @@ Use shortcode [contract id="123ABC"] to create document signing page. Get the ac
 
 Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and filter eideasy_new_user_email. By default email will be idcode@local.localhost
 
-Support email: help@eideasy.com
+Support email: support@eideasy.com
 Support phone +372 555 29 332
 
 eID Easy terms and conditions can be found here https://eideasy.com/terms-of-service/, privacy policy here https://eideasy.com/privacy-policy/
