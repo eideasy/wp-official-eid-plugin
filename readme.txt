@@ -4,7 +4,7 @@ Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
 Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
 Requires at least: 4.5
-Tested up to: 5.8
+Tested up to: 6.7.1
 Stable tag: 4.8
 
 == Description==
@@ -29,7 +29,7 @@ Use shortcode [contract id="123ABC"] to create document signing page. Get the ac
 
 Since Wordpress needs user e-mail and e-mail for users is not part of the data received during identification then fake e-mail is created. Change the new user account e-mail with add_filter() and filter eideasy_new_user_email. By default email will be idcode@local.localhost
 
-Support email: help@eideasy.com
+Support email: support@eideasy.com
 Support phone +372 555 29 332
 
 == Screenshots ==
