@@ -38,6 +38,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.9.2 =
+Corrected the support email address.
+
 = 4.9.1 =
 Added correct itsme logo.
 
