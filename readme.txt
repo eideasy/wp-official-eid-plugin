@@ -44,6 +44,10 @@ eID Easy terms and conditions can be found here https://eideasy.com/terms-of-ser
 2. Login view
 
 == Changelog ==
+
+= 5.3.2 =
+Fixed the migration formats.
+
 = 5.3.1 =
 Corrected the support email address.
 
