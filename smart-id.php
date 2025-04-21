@@ -433,10 +433,10 @@ if (!class_exists("IdCardLogin")) {
                 id mediumint(9) NOT NULL AUTO_INCREMENT,                
                 firstname tinytext NOT NULL,
                 lastname tinytext NOT NULL,
-                identitycode VARCHAR(21) NOT NULL,
+                identitycode varchar(21) NOT NULL,
                 userid bigint(20) unsigned NOT NULL,
                 created_at datetime NOT NULL,
-		        access_token VARCHAR(32),
+		        access_token varchar(32),
                 UNIQUE KEY id (id),
                 UNIQUE KEY identitycode (identitycode)
                   );";
@@ -462,7 +462,6 @@ if (!class_exists("IdCardLogin")) {
 
     register_activation_hook(__FILE__, 'IdCardLogin::idcard_install');
 
-    add_action('plugins_loaded', 'IdCardLogin::idcard_install');
     add_action('admin_notices', 'IdCardLogin::admin_notice');
 
     add_action('admin_menu', 'IdcardAdmin::id_settings_page');
