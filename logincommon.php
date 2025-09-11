@@ -13,7 +13,7 @@ if (!class_exists("LoginCommon")) {
                 $user = LoginCommon::getUser($identityCode, $country);
                 if ($user == null) {
                     if (get_option('smartid_registration_disabled')) {
-                        wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
+                        wp_die("User with ID code " . esc_html($identityCode) . " not found and registration disabled. Contact site admin");
                     } else {
                         $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $country);
                     }
@@ -23,7 +23,7 @@ if (!class_exists("LoginCommon")) {
                 }
             } else {
                 eideasyLog("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
-                wp_die("ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
+                wp_die("ERROR: Idcode not received from the login. Please try again " . esc_html($identityCode) . ", " . esc_html($firstName) . ", " . esc_html($lastName) . ", " . esc_html($email));
             }
             if (is_multisite()) {
                 add_user_to_blog(get_current_blog_id(), $user_id, get_option('default_role'));
@@ -62,7 +62,7 @@ if (!class_exists("LoginCommon")) {
 
                 if (username_exists($userName)) {
                     eideasyLog("WP login Cannot create user. Username $userName exists");
-                    wp_die("Cannot create user. Username $userName exists");
+                    wp_die("Cannot create user. Username " . esc_html($userName) . " exists");
                 }
 
                 $user_id = wp_insert_user($user_data);
@@ -71,7 +71,7 @@ if (!class_exists("LoginCommon")) {
                     include 'iframe_break_free_errorhandler.php';
                     eideasyLog("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
 
-                    wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
+                    wp_die("Cannot create user. Message=" . esc_html($user_id->get_error_message()) . ". Email: " . esc_html($email));
                 }
             }
 
@@ -105,16 +105,17 @@ if (!class_exists("LoginCommon")) {
             global $wpdb;
 
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+            $table_name = $prefix . "idcard_users";
 
             $user = $wpdb->get_row(
-                $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s",
+                $wpdb->prepare("select * from " . esc_sql($table_name) . " WHERE identitycode=%s",
                     $country . "_" . $identityCode)
             );
 
             //backward compatibility
             if (!$user) {
                 $user = $wpdb->get_row(
-                    $wpdb->prepare("select * from $prefix" . "idcard_users WHERE identitycode=%s",
+                    $wpdb->prepare("select * from " . esc_sql($table_name) . " WHERE identitycode=%s",
                         $identityCode)
                 );
             }
@@ -126,4 +127,3 @@ if (!class_exists("LoginCommon")) {
     }
 
 }
-

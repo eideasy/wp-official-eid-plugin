@@ -44,29 +44,23 @@ if (!class_exists("IdCardLogin")) {
             if (!current_user_can('administrator')) {
                 return;
             }
-
+            check_admin_referer('update-user_' . $user_id);
             if (!array_key_exists('smartid_user_idcode', $_POST)) {
                 return; // New idcode not included in post, not changing the idcode field.
             }
-
-            $idcode = sanitize_text_field($_POST['smartid_user_idcode']);
+            $idcode = sanitize_text_field(wp_unslash($_POST['smartid_user_idcode']));
             if (!$idcode || strlen($idcode) === 0) {
                 return; // Not allowing to completely remove idcode.
             }
-
             global $wpdb;
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
-
             $table_name = $prefix . "idcard_users";
-
             $existingUser = $wpdb->get_row(
-                $wpdb->prepare("select * from $table_name WHERE identitycode=%s", $idcode)
+                $wpdb->prepare("SELECT * FROM " . esc_sql($table_name) . " WHERE identitycode = %s", $idcode)
             );
-
             if ($existingUser != null && $existingUser->userid == $user_id) {
                 return; // same user updated, no need to do anything
             }
-
             if ($existingUser != null) {
                 if ($idcode != "-") {
                     $wpdb->delete($table_name, ['identitycode' => $idcode]);
@@ -83,6 +77,8 @@ if (!class_exists("IdCardLogin")) {
                     )
                 );
             }
+            wp_cache_delete('idcode_user_' . $user_id, 'idcard_users');
+            wp_cache_delete('userdata_' . $user_id, 'idcard_users');
         }
 
         public static function custom_user_profile_fields($user)
@@ -113,20 +109,20 @@ if (!class_exists("IdCardLogin")) {
 
         public static function getIdcodeByUserId($userId)
         {
+            $cache_key = 'idcode_user_' . $userId;
+            $cached_idcode = wp_cache_get($cache_key, 'idcard_users');
+            if ($cached_idcode !== false) {
+                return $cached_idcode;
+            }
             global $wpdb;
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
-
             $table_name = $prefix . "idcard_users";
             $user       = $wpdb->get_row(
-                $wpdb->prepare("select * from $table_name WHERE userid=%s", $userId)
+                $wpdb->prepare("SELECT * FROM " . esc_sql($table_name) . " WHERE userid = %d", $userId)
             );
-
-            if ($user == null) {
-                return "";
-            } else {
-                return $user->identitycode;
-            }
-
+            $idcode = ($user == null) ? "" : $user->identitycode;
+            wp_cache_set($cache_key, $idcode, 'idcard_users');
+            return $idcode;
         }
 
         public static function getSupportedMethods()
@@ -152,52 +148,80 @@ if (!class_exists("IdCardLogin")) {
             global $wpdb;
             $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
             $wpdb->delete($prefix . "idcard_users", array('userid' => $user_id));
+            wp_cache_delete('idcode_user_' . $user_id, 'idcard_users');
+            wp_cache_delete('userdata_' . $user_id, 'idcard_users');
         }
 
         static function getStoredUserData()
         {
             global $wpdb;
             $current_user = wp_get_current_user();
+            $user_id = $current_user->ID;
+            $cache_key = 'userdata_' . $user_id;
+            $cached_user = wp_cache_get($cache_key, 'idcard_users');
+            if ($cached_user !== false) {
+                return $cached_user;
+            }
             $prefix       = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
+            $table_name = $prefix . "idcard_users";
             $user         = $wpdb->get_row(
-                $wpdb->prepare("select * from $prefix" . "idcard_users WHERE userid=%s", $current_user->ID)
+                $wpdb->prepare("SELECT * FROM " . esc_sql($table_name) . " WHERE userid = %d", $user_id)
             );
+            wp_cache_set($cache_key, $user, 'idcard_users');
 
             return $user;
         }
 
-        static function isLogin()
+        static function getPluginVersion()
         {
-            return array_key_exists('code', $_GET) && strlen($_GET['code']) > 20;
+            $pluginVersion = get_plugin_data(__FILE__);
+            return isset($pluginVersion['Version']) ? $pluginVersion['Version'] : gmdate("ymd-Gis", filemtime(plugin_dir_path(__FILE__)));
         }
 
         static function wpInitProcess()
         {
-            $pluginVersion = get_plugin_data(__FILE__);
-            $version       = isset($pluginVersion['Version']) ? $pluginVersion['Version'] : date("ymd-Gis", filemtime(plugin_dir_path(__FILE__)));
-            wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], $version);
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
 
-            if (IdCardLogin::isLogin()) {
-                $loginUrl = apply_filters('smartid_login', get_option('smartid_redirect_uri'));
-                $loginUrl = apply_filters('eideasy_login', $loginUrl);
-                if (IdcardAuthenticate::isAlreadyLogged() && !get_option('eideasy_only_identify')) {
-                    wp_redirect($loginUrl);
-                    exit;
+            wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], self::getPluginVersion(), true);
+
+            if (isset($_GET['code'])) {
+                if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'eid_easy_login_action')) {
+                    wp_die(esc_html__('Security check failed. Please try again.', 'wp-official-eid-easy'));
                 }
-                eideasyLog("WP plugin login with code=" . sanitize_text_field($_GET['code']));
-                require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
-                $userId = IdcardAuthenticate::login(sanitize_text_field($_GET['code']));
-                if ($userId) {
-                    wp_redirect($loginUrl);
-                    exit;
+                $code = sanitize_text_field(wp_unslash($_GET['code']));
+
+                if (strlen($code) > 20) {
+                    $state = isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '';
+
+                    if (empty($state) || empty($_SESSION['eideasy_state']) || !hash_equals($_SESSION['eideasy_state'], $state)) {
+                        wp_die(esc_html__('Invalid state', 'wp-official-eid-easy'));
+                    }
+                    unset($_SESSION['eideasy_state']);
+
+                    $loginUrl = apply_filters('smartid_login', get_option('smartid_redirect_uri'));
+                    $loginUrl = apply_filters('eideasy_login', $loginUrl);
+                    if (IdcardAuthenticate::isAlreadyLogged() && !get_option('eideasy_only_identify')) {
+                        wp_redirect($loginUrl);
+                        exit;
+                    }
+
+                    eideasyLog("WP plugin login with code=" . $code);
+                    require_once(plugin_dir_path(__FILE__) . 'securelogin.php');
+                    $userId = IdcardAuthenticate::login($code);
+                    if ($userId) {
+                        wp_redirect($loginUrl);
+                        exit;
+                    }
                 }
             }
         }
 
         static function admin_notice()
         {
-            if (get_option("smartid_client_id") == null && array_key_exists("page",
-                    $_GET) && $_GET['page'] !== "smart-id-settings") {
+            $screen = get_current_screen();
+            if (get_option("smartid_client_id") == null && isset($screen) && $screen->id !== 'toplevel_page_eid-easy-settings') {
                 ?>
                 <div class="notice notice-success is-dismissible">
                     <p>Your eID Easy is almost ready! Please open
@@ -216,16 +240,46 @@ if (!class_exists("IdCardLogin")) {
             return $links;
         }
 
+        private static function get_allowed_html_for_login_buttons()
+        {
+            return [
+                'div' => [
+                    'id'    => [],
+                    'style' => [],
+                    'align' => [],
+                ],
+                'a'   => [
+                    'id'    => [],
+                    'class' => [],
+                    'href'  => [],
+                    'style' => [],
+                ],
+                'img' => [
+                    'src'    => [],
+                    'height' => [],
+                    'width'  => [],
+                    'class'  => [],
+                    'alt'    => [],
+                    'style'  => [],
+                ],
+                'b'   => [],
+            ];
+        }
+
         static function echo_id_login()
         {
-            echo '<div style="margin:auto" align="center">'
-                . IdCardLogin::getLoginButtonCode()
-                . "</div>";
+            echo wp_kses(
+                '<div style="margin:auto" align="center">' . IdCardLogin::getLoginButtonCode() . "</div>",
+                IdCardLogin::get_allowed_html_for_login_buttons()
+            );
         }
 
         static function return_id_login()
         {
-            return IdCardLogin::getLoginButtonCode();
+            return wp_kses(
+                IdCardLogin::getLoginButtonCode(),
+                IdCardLogin::get_allowed_html_for_login_buttons()
+            );
         }
 
         static function display_contract_to_sign($atts)
@@ -237,7 +291,7 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
             $code = '<iframe src="https://id.eideasy.com/sign_contract?client_id='
-                . get_option("smartid_client_id") . "&contract_id=" . $atts["id"] . '"'
+                . get_option("smartid_client_id") . "&contract_id=" . esc_attr($atts["id"]) . '"'
                 . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
             return $code;
@@ -276,23 +330,28 @@ if (!class_exists("IdCardLogin")) {
             if ($allDisabled) {
                 return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from eID Easy config</b>";
             }
+
+            $state = bin2hex(random_bytes(16));
+            $_SESSION['eideasy_state'] = $state;
+
             $redirectUri = urlencode(get_option("smartid_redirect_uri"));
             $clientId    = get_option("smartid_client_id");
             $urlParams   = '?client_id=' . $clientId
                 . '&redirect_uri=' . $redirectUri
-                . '&response_type=code';
+                . '&response_type=code'
+                . '&state=' . $state;
             $baseUri     = 'https://id.eideasy.com';
             $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
 
             wp_enqueue_script("smartid_functions_js");
 
-            $loginCode = '<style>
+            $style = '
                 #smartid-login-block .login-button {
                     display:inline;
                     margin-left: 5px;
                     margin-right: 5px;
                 }
-                #smartid-login-block .login-button img {                    
+                #smartid-login-block .login-button img {
                     margin: 3px;
                     height: 46px;
                 }
@@ -304,51 +363,61 @@ if (!class_exists("IdCardLogin")) {
                 }
                 #smartid-login-block .login-wide-w img {
                     width: 200px;
-                }                
-            </style><div id="smartid-login-block">';
+                }
+            ';
+            wp_register_style('smart-id-inline-style', false, [], self::getPluginVersion());
+            wp_enqueue_style('smart-id-inline-style');
+            wp_add_inline_style('smart-id-inline-style', $style);
+
+
+            $loginCode = '<div id="smartid-login-block">';
 
             foreach (eideasyOptions()['methods'] as $method) {
                 if (get_option($method['optionName'])) {
                     $loginCode .= eideasyTemplate(eideasyTemplateFiles()['login-button-template'], [
-                        'id' => $method['buttonId'],
+                        'id'         => $method['buttonId'],
                         'filterName' => $method['filterName'],
-                        'imageSrc' => IdCardLogin::getPluginBaseUrl() . $method['image'],
-                    ]);;
+                        'imageSrc'   => IdCardLogin::getPluginBaseUrl() . $method['image'],
+                    ]);
                 }
             }
 
-            $loginCode .= '</div><script>' .
-                '    if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=ee-id-card");' .
-                '    });' .
-                '    if(document.getElementById("smartid-mid-login")) document.getElementById("smartid-mid-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&method=ee-mobile-id");' .
-                '    });' .
-                '    if(document.getElementById("smartid-lveid-login")) document.getElementById("smartid-lveid-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=lv-id-card");' .
-                '    });' .
-                '    if(document.getElementById("smartid-lt-id-card-login")) document.getElementById("smartid-lt-id-card-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=lt-id-card");' .
-                '    });' .
-                '    if(document.getElementById("eideasy-eparaksts-mobile-login")) document.getElementById("eideasy-eparaksts-mobile-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $baseUri . "/oauth/start/lv-eparaksts-mobile-login$urlParams" . '");' .
-                '    });' .
-                '    if(document.getElementById("smartid-be-id-card-login")) document.getElementById("smartid-be-id-card-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=be-id-card");' .
-                '    });' .
-                '    if(document.getElementById("smartid-pt-id-card-login")) document.getElementById("smartid-pt-id-card-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&start=pt-id-card");' .
-                '    });' .
-                '    if(document.getElementById("smartid-lt-mobile-id-login")) document.getElementById("smartid-lt-mobile-id-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&method=lt-mobile-id");' .
-                '    });' .
-                '    if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&method=smart-id");' .
-                '    });' .
-                '    if(document.getElementById("eideasy-itsme-login-standard")) document.getElementById("eideasy-itsme-login-standard").addEventListener("click", function () {' .
-                '        startEidEasyLogin("' . $loginUri . '&method=itsme-login-standard");' .
-                '    });' .
-                '</script>';
+            $loginCode .= '</div>';
+
+            $script = 'document.addEventListener("DOMContentLoaded", function() {
+                if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&start=ee-id-card");
+                });
+                if(document.getElementById("smartid-mid-login")) document.getElementById("smartid-mid-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&method=ee-mobile-id");
+                });
+                if(document.getElementById("smartid-lveid-login")) document.getElementById("smartid-lveid-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&start=lv-id-card");
+                });
+                if(document.getElementById("smartid-lt-id-card-login")) document.getElementById("smartid-lt-id-card-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&start=lt-id-card");
+                });
+                if(document.getElementById("eideasy-eparaksts-mobile-login")) document.getElementById("eideasy-eparaksts-mobile-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($baseUri . "/oauth/start/lv-eparaksts-mobile-login" . $urlParams) . '");
+                });
+                if(document.getElementById("smartid-be-id-card-login")) document.getElementById("smartid-be-id-card-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&start=be-id-card");
+                });
+                if(document.getElementById("smartid-pt-id-card-login")) document.getElementById("smartid-pt-id-card-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&start=pt-id-card");
+                });
+                if(document.getElementById("smartid-lt-mobile-id-login")) document.getElementById("smartid-lt-mobile-id-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&method=lt-mobile-id");
+                });
+                if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&method=smart-id");
+                });
+                if(document.getElementById("eideasy-itsme-login-standard")) document.getElementById("eideasy-itsme-login-standard").addEventListener("click", function () {
+                    startEidEasyLogin("' . esc_js($loginUri) . '&method=itsme-login-standard");
+                });
+            });';
+
+            wp_add_inline_script('smartid_functions_js', $script);
 
             return $loginCode;
         }
@@ -429,7 +498,7 @@ if (!class_exists("IdCardLogin")) {
 
             $table_name = $prefix . "idcard_users";
 
-            $sqlCreate = "CREATE TABLE $table_name (
+            $sqlCreate = "CREATE TABLE " . $table_name . " (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,                
                 firstname tinytext NOT NULL,
                 lastname tinytext NOT NULL,

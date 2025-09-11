@@ -23,7 +23,7 @@ class IdcardAuthenticate
                 $current_user = wp_get_current_user();
 
                 if (!($current_user instanceof WP_User)) {
-                    $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
+                    $extraMessage = "Current user is not WP_User, it is of type " . gettype($current_user);
                     eideasyLog("WP login failed: $token - $extraMessage");
                 } else {
                     global $wpdb;
@@ -31,7 +31,7 @@ class IdcardAuthenticate
 
                     $table_name = $prefix . "idcard_users";
                     $user       = $wpdb->get_row(
-                        $wpdb->prepare("select * from $table_name WHERE userid=%s", $current_user->ID)
+                        $wpdb->prepare("select * from " . esc_sql($table_name) . " WHERE userid=%s", $current_user->ID)
                     );
 
                     $extraMessage = "Logged in user is $user->identitycode";
@@ -97,7 +97,7 @@ class IdcardAuthenticate
         $table_name = $prefix . "idcard_users";
 
         $user = $wpdb->get_row(
-            $wpdb->prepare("select * from $table_name WHERE userid=%s", wp_get_current_user()->ID)
+            $wpdb->prepare("select * from " . esc_sql($table_name) . " WHERE userid=%s", wp_get_current_user()->ID)
         );
 
         return wp_get_current_user()->ID != '' && $user !== null;

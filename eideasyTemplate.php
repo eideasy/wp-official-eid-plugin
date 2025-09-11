@@ -14,7 +14,7 @@ function eideasyTemplate( $file, $args ){
 
     // Make values in the associative array easier to access by extracting them
     if ( is_array( $args ) ){
-        extract( $args );
+        extract( $args, EXTR_SKIP );
     }
 
     // buffer the output (including the file is "output")

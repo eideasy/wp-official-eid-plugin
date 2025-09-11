@@ -2,13 +2,16 @@
 Contributors: EID Easy OÜ
 Author URI: https://eideasy.com
 Plugin URL: https://eideasy.com
-Tags: eParaksts, eParaksts Mobile, eID Karte, ID-card, IDcard, smartID, mobile-ID, mobileID, identification, security, eID, IDaaS, eIDAS, OAuth, OAUTH2, Personas apliecība, Asmens tapatybės kortelė,  Cartão de Cidadão, beid, belgium identity card
+Tags: Bank-ID, Smart-ID, Itsme, SPID, Franceconnect
 Requires at least: 4.5
-Tested up to: 6.7.1
-Stable tag: 4.8
+Tested up to: 6.8
+Stable tag: 4.9.3
+License: GPLv2 or later
+
+Short Description: Secure identification and Qualified Electronic Signature plugin for WordPress using eID methods and eideasy.com Oauth 2.0 protocol.
 
 == Description==
-This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Each method can be turned on and off individually.
+This plugin makes secure identification and creating Qualified Electronic Signatures using eID methods much easier than implementing these identification methods yourself. Supported methods among others are: Belgian eID card, Latvian Personas apliecība, Latvian eParaksts Mobile, Lithuanian Asmens tapatybės kortelė and M. parašas, Portugese Cartão de Cidadão, Estonian ID card + Mobile-ID, Smart-ID. Full list check at https://www.eideasy.com/supported-methods. Each method can be turned on and off individually.
 
 Plugin implements eideasy.com Oauth 2.0 protocol like Facebook and Google login.
 
