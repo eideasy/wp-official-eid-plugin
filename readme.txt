@@ -41,6 +41,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.9.4 =
+Security update.
+
 = 4.9.3 =
 Fixed a migration that ran during the plugins_loaded action.
 
