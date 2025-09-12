@@ -1,3 +1,5 @@
+<?php
+?>
 <script>
     if (top != self) {
         console.log("Breaking free from iFrame to show errors");
