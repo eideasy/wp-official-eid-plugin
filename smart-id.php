@@ -180,26 +180,12 @@ if (!class_exists("IdCardLogin")) {
 
         static function wpInitProcess()
         {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-
             wp_register_script('smartid_functions_js', plugins_url('smartid_functions.js', __FILE__), [], self::getPluginVersion(), true);
 
             if (isset($_GET['code'])) {
-                if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'eid_easy_login_action')) {
-                    wp_die(esc_html__('Security check failed. Please try again.', 'wp-official-eid-easy'));
-                }
                 $code = sanitize_text_field(wp_unslash($_GET['code']));
 
                 if (strlen($code) > 20) {
-                    $state = isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '';
-
-                    if (empty($state) || empty($_SESSION['eideasy_state']) || !hash_equals($_SESSION['eideasy_state'], $state)) {
-                        wp_die(esc_html__('Invalid state', 'wp-official-eid-easy'));
-                    }
-                    unset($_SESSION['eideasy_state']);
-
                     $loginUrl = apply_filters('smartid_login', get_option('smartid_redirect_uri'));
                     $loginUrl = apply_filters('eideasy_login', $loginUrl);
                     if (IdcardAuthenticate::isAlreadyLogged() && !get_option('eideasy_only_identify')) {
@@ -246,6 +232,7 @@ if (!class_exists("IdCardLogin")) {
                 'div' => [
                     'id'    => [],
                     'style' => [],
+                    'class' => [],
                     'align' => [],
                 ],
                 'a'   => [
@@ -331,15 +318,11 @@ if (!class_exists("IdCardLogin")) {
                 return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from eID Easy config</b>";
             }
 
-            $state = bin2hex(random_bytes(16));
-            $_SESSION['eideasy_state'] = $state;
-
             $redirectUri = urlencode(get_option("smartid_redirect_uri"));
             $clientId    = get_option("smartid_client_id");
             $urlParams   = '?client_id=' . $clientId
                 . '&redirect_uri=' . $redirectUri
-                . '&response_type=code'
-                . '&state=' . $state;
+                . '&response_type=code';
             $baseUri     = 'https://id.eideasy.com';
             $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
 
@@ -375,9 +358,9 @@ if (!class_exists("IdCardLogin")) {
             foreach (eideasyOptions()['methods'] as $method) {
                 if (get_option($method['optionName'])) {
                     $loginCode .= eideasyTemplate(eideasyTemplateFiles()['login-button-template'], [
-                        'id'         => $method['buttonId'],
+                        'id' => $method['buttonId'],
                         'filterName' => $method['filterName'],
-                        'imageSrc'   => IdCardLogin::getPluginBaseUrl() . $method['image'],
+                        'imageSrc' => IdCardLogin::getPluginBaseUrl() . $method['image'],
                     ]);
                 }
             }
@@ -386,34 +369,34 @@ if (!class_exists("IdCardLogin")) {
 
             $script = 'document.addEventListener("DOMContentLoaded", function() {
                 if(document.getElementById("smartid-id-login")) document.getElementById("smartid-id-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&start=ee-id-card");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&start=ee-id-card");
                 });
                 if(document.getElementById("smartid-mid-login")) document.getElementById("smartid-mid-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&method=ee-mobile-id");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&method=ee-mobile-id");
                 });
                 if(document.getElementById("smartid-lveid-login")) document.getElementById("smartid-lveid-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&start=lv-id-card");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&start=lv-id-card");
                 });
                 if(document.getElementById("smartid-lt-id-card-login")) document.getElementById("smartid-lt-id-card-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&start=lt-id-card");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&start=lt-id-card");
                 });
                 if(document.getElementById("eideasy-eparaksts-mobile-login")) document.getElementById("eideasy-eparaksts-mobile-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($baseUri . "/oauth/start/lv-eparaksts-mobile-login" . $urlParams) . '");
+                    startEidEasyLogin("' . esc_url_raw($baseUri . "/oauth/start/lv-eparaksts-mobile-login" . $urlParams) . '");
                 });
                 if(document.getElementById("smartid-be-id-card-login")) document.getElementById("smartid-be-id-card-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&start=be-id-card");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&start=be-id-card");
                 });
                 if(document.getElementById("smartid-pt-id-card-login")) document.getElementById("smartid-pt-id-card-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&start=pt-id-card");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&start=pt-id-card");
                 });
                 if(document.getElementById("smartid-lt-mobile-id-login")) document.getElementById("smartid-lt-mobile-id-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&method=lt-mobile-id");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&method=lt-mobile-id");
                 });
                 if(document.getElementById("smartid-smartid-login")) document.getElementById("smartid-smartid-login").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&method=smart-id");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&method=smart-id");
                 });
                 if(document.getElementById("eideasy-itsme-login-standard")) document.getElementById("eideasy-itsme-login-standard").addEventListener("click", function () {
-                    startEidEasyLogin("' . esc_js($loginUri) . '&method=itsme-login-standard");
+                    startEidEasyLogin("' . esc_url_raw($loginUri) . '&method=itsme-login-standard");
                 });
             });';
 

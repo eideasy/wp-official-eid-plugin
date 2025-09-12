@@ -21,10 +21,6 @@ if (!class_exists("IdcardAdmin")) {
                 wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'wp-official-eid-easy'));
             }
 
-            ?>
-
-            <?php
-
             if (get_option("smartid_client_id")) {
                 if (
                     array_key_exists("smartid_change_settings", $_POST) &&
