@@ -44,11 +44,11 @@ if (!class_exists("IdCardLogin")) {
             if (!current_user_can('administrator')) {
                 return;
             }
-            check_admin_referer('update-user_' . $user_id);
-            if (!array_key_exists('smartid_user_idcode', $_POST)) {
-                return; // New idcode not included in post, not changing the idcode field.
-            }
-            $idcode = sanitize_text_field(wp_unslash($_POST['smartid_user_idcode']));
+	        if (!array_key_exists('smartid_user_idcode', $_POST)) {
+		        return; // New idcode not included in post, not changing the idcode field.
+	        }
+	        check_admin_referer('update-user_' . $user_id);
+	        $idcode = sanitize_text_field(wp_unslash($_POST['smartid_user_idcode']));
             if (!$idcode || strlen($idcode) === 0) {
                 return; // Not allowing to completely remove idcode.
             }
