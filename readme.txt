@@ -42,7 +42,7 @@ Support phone +372 555 29 332
 == Changelog ==
 
 = 4.9.6 =
-Version bump
+WooCommerce compatibility improvements
 
 = 4.9.5 =
 WooCommerce compatibility improvements
