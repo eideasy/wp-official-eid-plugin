@@ -320,7 +320,8 @@ class IdCardLogin
         $clientId    = get_option("eideasy_client_id");
         $urlParams   = '?client_id=' . $clientId
             . '&redirect_uri=' . $redirectUri
-            . '&response_type=code';
+            . '&response_type=code'
+            . '&country=' . WC()->countries->get_base_country();
         $baseUri     = 'https://id.eideasy.com';
         $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
         $loginCountry     = apply_filters('eideasy_select_country', null);

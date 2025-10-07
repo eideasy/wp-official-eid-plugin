@@ -171,7 +171,7 @@ class IdcardAdmin
                     <td>
                         <select name="eideasy_woo_age_restricted_categories[]" multiple size="<?php echo count($allCategories) ?>">
                             <?php
-                            $selectedOptions = get_option('eideasy_woo_age_restricted_categories');
+                            $selectedOptions = get_option('eideasy_woo_age_restricted_categories', []);
                             foreach ($allCategories as $category) {
                                 if (in_array($category['id'], $selectedOptions)) {
                                     echo '<option value="' . $category['id'] . '" selected>' . $category['name'] . '</option>';
