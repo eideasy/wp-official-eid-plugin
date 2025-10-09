@@ -320,8 +320,7 @@ class IdCardLogin
         $clientId    = get_option("eideasy_client_id");
         $urlParams   = '?client_id=' . $clientId
             . '&redirect_uri=' . $redirectUri
-            . '&response_type=code'
-            . '&country=' . WC()->countries->get_base_country();
+            . '&response_type=code';
         $baseUri     = 'https://id.eideasy.com';
         $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
         $loginCountry     = apply_filters('eideasy_select_country', null);
@@ -357,12 +356,12 @@ class IdCardLogin
                     apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon'] . '"/>') .
                     '</div>';
                 $extraParams = "";
-                $country     = $params['country'] ?? $loginCountry ?? null;
+                $country     = $params['country'] ?? $loginCountry ?? WC()->countries->get_base_country();
                 if (isset($country)) {
                     $extraParams = "&country=$country";
                 }
                 $loginCode .= '<script>if(document.getElementById("' . $method . '")) document.getElementById("' . $method . '").addEventListener("click", function () {' .
-                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . $extraParams . '&lang=' . get_locale() . '&state=' . $state . '");' .
+                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . $extraParams . '&lang=lv&state=' . $state . '");' .
                     '    });</script>';
             }
         }
