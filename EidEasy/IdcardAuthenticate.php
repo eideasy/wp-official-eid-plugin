@@ -22,8 +22,8 @@ class IdcardAuthenticate
 
                 if (!($current_user instanceof WP_User)) {
                     $extraMessage = "Current user is not WP_User" . print_r($current_user, true);
-                    $baseUri = IdCardLogin::getBaseUri();
-                    wp_remote_get($baseUri . "/confirm_progress?message=" . urlencode("WP login failed: $token - $extraMessage"));
+					$requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login failed: $token - $extraMessage")]);
+                    wp_remote_get($requestUri);
                 } else {
                     global $wpdb;
                     $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
@@ -34,8 +34,8 @@ class IdcardAuthenticate
                     );
 
                     $extraMessage = "Logged in user is $user->identitycode";
-                    $baseUri = IdCardLogin::getBaseUri();
-                    wp_remote_get($baseUri . "/confirm_progress?message=" . urlencode("WP login already completed $token - $extraMessage"));
+	                $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login already completed $token - $extraMessage")]);
+                    wp_remote_get($requestUri);
                 }
             }
             if (get_option('eideasy_registration_disabled')) {
