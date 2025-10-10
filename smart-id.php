@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.9.6
+ * Version: 4.9.7
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -25,6 +25,14 @@
 require_once(plugin_dir_path(__FILE__) . 'functions/eideasyLog.php');
 require_once(plugin_dir_path(__FILE__) . 'eideasyOptions.php');
 require_once(plugin_dir_path(__FILE__) . 'eideasyTemplate.php');
+
+// Get the eID Easy base URL based on test mode setting
+function eideasyGetBaseUrl() {
+    if (get_option('eideasy_test_mode')) {
+        return 'https://test.eideasy.com';
+    }
+    return 'https://id.eideasy.com';
+}
 
 // Register all the templates here
 function eideasyTemplateFiles() {
@@ -277,7 +285,7 @@ if (!class_exists("IdCardLogin")) {
             if (!array_key_exists("id", $atts)) {
                 return "<b>Contract ID missing, cannot show signing page</b>";
             }
-            $code = '<iframe src="https://id.eideasy.com/sign_contract?client_id='
+            $code = '<iframe src="' . eideasyGetBaseUrl() . '/sign_contract?client_id='
                 . get_option("smartid_client_id") . "&contract_id=" . esc_attr($atts["id"]) . '"'
                 . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
@@ -323,7 +331,7 @@ if (!class_exists("IdCardLogin")) {
             $urlParams   = '?client_id=' . $clientId
                 . '&redirect_uri=' . $redirectUri
                 . '&response_type=code';
-            $baseUri     = 'https://id.eideasy.com';
+            $baseUri     = eideasyGetBaseUrl();
             $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
 
             wp_enqueue_script("smartid_functions_js");
@@ -442,7 +450,7 @@ if (!class_exists("IdCardLogin")) {
                 $headers['authorization'] = 'Bearer ' . $accessToken;
             }
 
-            $url = "https://id.eideasy.com/" . $apiPath . $paramString;
+            $url = eideasyGetBaseUrl() . "/" . $apiPath . $paramString;
 
             if (!empty($bodyParams)) {
                 $response = wp_remote_post($url, [

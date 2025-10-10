@@ -53,10 +53,16 @@ if (!class_exists("IdcardAdmin")) {
                 }
                 ?>
                 <h3> This site eID Easy is now active!</h3>
-                eID Easy shortcode:
+                eID Easy shortcodes:
                 <ol>
                     <li>
                         <b>[eid_easy]</b> - Creates configured login buttons.
+                    </li>
+                    <li>
+                        <b>[smart_id]</b> - Alternative shortcode for login buttons (legacy).
+                    </li>
+                    <li>
+                        <b>[contract id="123ABC"]</b> - Creates document signing page. Replace 123ABC with actual contract ID from <?= eideasyGetBaseUrl() ?>
                     </li>
                 </ol>
                 <br>
@@ -68,39 +74,39 @@ if (!class_exists("IdcardAdmin")) {
 
                     <h3>Registration disabled</h3>
                     <?php
-                    echo wp_kses_post(eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
+                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                         'label' => 'Disable automatic registration. In this case admin must add idcode to each user manually to allow ID card login.',
                         'name' => 'smartid_registration_disabled',
                         'id' => 'smartid_registration_disabled',
                         'checked' => get_option("smartid_registration_disabled"),
-                    ]));
+                    ]);
                     ?>
 
                     <h3>Only identify users (no user login)</h3>
                     <?php
-                    echo wp_kses_post(eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
+                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                         'label' => 'No accounts are created nor any users are logged in.',
                         'name' => 'eideasy_only_identify',
                         'id' => 'eideasy_only_identify',
                         'checked' => get_option("eideasy_only_identify"),
-                    ]));
+                    ]);
                     ?>
                     <small>You can get users details using action "eideasy_only_identify"</small>
 
                     <h3> Configure visible login method icons</h3>
-                    Make sure all of these are allowed in eID Easy admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
+                    Make sure all of selected methods are allowed in eID Easy admin site at <a href="<?= eideasyGetBaseUrl() ?>"><?= eideasyGetBaseUrl() ?></a>
 
                     <table>
                         <?php foreach (eideasyOptions()['methods'] as $method) : ?>
                             <tr>
                                 <td>
                                     <?php
-                                    echo wp_kses_post(eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
+                                    echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                                         'label' => $method['label'],
                                         'name' => $method['inputName'],
                                         'id' => $method['label'],
                                         'checked' => get_option($method['optionName']),
-                                    ]));
+                                    ]);
                                     ?>
                                 </td>
                             </tr>
@@ -114,12 +120,24 @@ if (!class_exists("IdcardAdmin")) {
                         <tr>
                             <td>
                                 <?php
-                                echo wp_kses_post(eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
+                                echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
                                     'label' => 'Enable debug mode. Sends login progress to server if there are login issues.',
                                     'name' => 'smartid_debug_mode',
                                     'id' => 'smartid_debug_mode',
                                     'checked' => get_option('smartid_debug_mode'),
-                                ]));
+                                ]);
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                echo eideasyTemplate(eideasyTemplateFiles()['checkbox-template'], [
+                                    'label' => 'Enable test mode. All requests will be sent to test.eideasy.com instead of id.eideasy.com',
+                                    'name' => 'eideasy_test_mode',
+                                    'id' => 'eideasy_test_mode',
+                                    'checked' => get_option('eideasy_test_mode'),
+                                ]);
                                 ?>
                             </td>
                         </tr>
