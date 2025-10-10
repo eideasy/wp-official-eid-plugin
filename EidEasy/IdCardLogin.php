@@ -5,6 +5,16 @@ require_once 'IdcardAuthenticate.php';
 
 class IdCardLogin
 {
+    /**
+     * Get the base URI for eID Easy API
+     * Returns test.eideasy.com if test mode is enabled, otherwise id.eideasy.com
+     */
+    public static function getBaseUri()
+    {
+        $isTestMode = get_option('eideasy_test_mode');
+        return $isTestMode ? 'https://test.eideasy.com' : 'https://id.eideasy.com';
+    }
+
     public static function save_custom_user_profile_fields($user_id)
     {
         if (!current_user_can('administrator')) {
@@ -222,7 +232,8 @@ class IdCardLogin
                 exit;
             }
             if (get_option('eideasy_debug_mode')) {
-                wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
+                $baseUri = self::getBaseUri();
+                wp_remote_get($baseUri . "/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
             }
 
             $userId = IdcardAuthenticate::login($_GET['code']);
@@ -276,7 +287,8 @@ class IdCardLogin
         if (!array_key_exists("id", $atts)) {
             return "<b>Contract ID missing, cannot show signing page</b>";
         }
-        $code = '<iframe src="https://id.eideasy.com/sign_contract?client_id='
+        $baseUri = self::getBaseUri();
+        $code = '<iframe src="' . $baseUri . '/sign_contract?client_id='
             . get_option("eideasy_client_id") . "&contract_id=" . $atts["id"] . '"'
             . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
@@ -321,7 +333,7 @@ class IdCardLogin
         $urlParams   = '?client_id=' . $clientId
             . '&redirect_uri=' . $redirectUri
             . '&response_type=code';
-        $baseUri     = 'https://id.eideasy.com';
+        $baseUri     = self::getBaseUri();
         $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
         $loginCountry     = apply_filters('eideasy_select_country', null);
 
@@ -401,7 +413,8 @@ class IdCardLogin
         }
 
         $ch  = curl_init();
-        $url = "https://id.eideasy.com/" . $apiPath . $paramString;
+        $baseUri = self::getBaseUri();
+        $url = $baseUri . "/" . $apiPath . $paramString;
         curl_setopt($ch, CURLOPT_URL, $url);
         if (isset($token)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, [$token]);

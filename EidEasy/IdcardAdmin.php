@@ -29,7 +29,8 @@ class IdcardAdmin
 
             <?php if (!get_option('eideasy_client_id') || !get_option('eideasy_secret')) { ?>
                 <p>
-                    Sign up for client_id/secret from <a href="https://id.eideasy.com/signup?source=wp_plugin&domain=<?php echo home_url(); ?>" target="_blank">https://id.eideasy.com/signup</a>
+                    <?php $baseUri = IdCardLogin::getBaseUri(); ?>
+                    Sign up for client_id/secret from <a href="<?php echo $baseUri; ?>/signup?source=wp_plugin&domain=<?php echo home_url(); ?>" target="_blank"><?php echo $baseUri; ?>/signup</a>
                 </p>
             <?php } ?>
 
@@ -236,6 +237,16 @@ class IdcardAdmin
                                value="<?php echo strlen(get_option('eideasy_redirect_uri')) > 5 ? get_option('eideasy_redirect_uri') : home_url(); ?>">
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <label for="eideasy_test_mode">Test Mode</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="eideasy_test_mode" id="eideasy_test_mode" class="column-cb"
+                               value="1" <?php checked('1', get_option('eideasy_test_mode')); ?> />
+                        <label for="eideasy_test_mode">Enable test mode (uses test.eideasy.com instead of id.eideasy.com)</label>
+                    </td>
+                </tr>
             </table>
             <br>
         </div>
@@ -260,7 +271,8 @@ class IdcardAdmin
         <label for="eideasy_only_identify">No accounts are created nor any users are logged in. You can get users details using action "eideasy_user_identified.</label>
 
         <h3> Configure visible login method icons</h3>
-        Make sure all of these are allowed in eID Easy admin site at <a href="https://id.eideasy.com">https://id.eideasy.com</a>
+        <?php $baseUri = IdCardLogin::getBaseUri(); ?>
+        Make sure all of these are allowed in eID Easy admin site at <a href="<?php echo $baseUri; ?>"><?php echo $baseUri; ?></a>
 
         <table>
             <?php
@@ -283,7 +295,7 @@ class IdcardAdmin
             <tr>
                 <td>
                     <input type="checkbox" name="eideasy_debug_mode" id="eideasy_debug_mode" class="column-cb"
-                           value="yes" <?php echo get_option("eideasy_debug_mode") ? "checked" : "" ?>>
+                           value="1" <?php checked('1', get_option('eideasy_debug_mode')); ?> />
                     <label for="eideasy_debug_mode">Enable debug mode. Sends login progress to server if
                         there are login issues.</label>
                 </td>
@@ -306,6 +318,7 @@ class IdcardAdmin
         register_setting('eideasy', 'eideasy_client_id');
         register_setting('eideasy', 'eideasy_secret');
         register_setting('eideasy', 'eideasy_redirect_uri');
+        register_setting('eideasy', 'eideasy_test_mode');
         register_setting('eideasy', 'eideasy_only_identify');
         register_setting('eideasy', 'eideasy_debug_mode');
         register_setting('eideasy', 'eideasy_smartid_enabled');
