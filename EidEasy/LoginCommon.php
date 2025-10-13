@@ -16,7 +16,7 @@ class LoginCommon
                     wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
                 } else {
                     $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $country);
-                }
+                } // test
             } else {
                 if (get_option('eideasy_debug_mode')) {
 	                $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login user already exists $identityCode")]);
