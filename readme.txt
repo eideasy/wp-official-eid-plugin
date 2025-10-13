@@ -45,6 +45,10 @@ eID Easy terms and conditions can be found here https://eideasy.com/terms-of-ser
 
 == Changelog ==
 
+= 5.3.3 =
+Fixed country code issue for Smart ID login method.
+Fixed list of woocommerce product categories in plugin settings.
+
 = 5.3.2 =
 Fixed the migration formats.
 
