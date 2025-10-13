@@ -5,6 +5,24 @@ require_once 'IdcardAuthenticate.php';
 
 class IdCardLogin
 {
+    /**
+     * Get the base URI for eID Easy API
+     * Returns test.eideasy.com if test mode is enabled, otherwise id.eideasy.com
+     */
+    public static function getBaseUri(string $path = '')
+    {
+        $baseUrl = get_option('eideasy_test_mode') ? 'https://test.eideasy.com' : 'https://id.eideasy.com';
+
+        return $path ? $baseUrl . '/' . stripslashes($path) : $baseUrl;
+    }
+
+    public static function buildUrl(string $endpoint, array $params = []): string
+    {
+        $path = stripslashes($endpoint) . (count($params) > 0 ? '?' . http_build_query($params) : '');
+
+        return self::getBaseUri($path);
+    }
+
     public static function save_custom_user_profile_fields($user_id)
     {
         if (!current_user_can('administrator')) {
@@ -222,7 +240,7 @@ class IdCardLogin
                 exit;
             }
             if (get_option('eideasy_debug_mode')) {
-                wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP plugin login with code=" . $_GET['code']));
+                wp_remote_get(self::buildUrl('confirm_progress', ['message' => urlencode('WP plugin login with code=' . $_GET['code'])]));
             }
 
             $userId = IdcardAuthenticate::login($_GET['code']);
@@ -276,8 +294,11 @@ class IdCardLogin
         if (!array_key_exists("id", $atts)) {
             return "<b>Contract ID missing, cannot show signing page</b>";
         }
-        $code = '<iframe src="https://id.eideasy.com/sign_contract?client_id='
-            . get_option("eideasy_client_id") . "&contract_id=" . $atts["id"] . '"'
+        $requestUri = self::buildUrl('sign_contract', [
+            'client_id' => get_option("eideasy_client_id"),
+            'contract_id' => $atts["id"]
+        ]);
+        $code = '<iframe src="' . $requestUri . '"'
             . 'style="height: 100vh; width: 100vw" frameborder="0"></iframe>';
 
         return $code;
@@ -318,12 +339,7 @@ class IdCardLogin
         }
         $redirectUri = urlencode(get_option("eideasy_redirect_uri"));
         $clientId    = get_option("eideasy_client_id");
-        $urlParams   = '?client_id=' . $clientId
-            . '&redirect_uri=' . $redirectUri
-            . '&response_type=code';
-        $baseUri     = 'https://id.eideasy.com';
-        $loginUri    = $baseUri . "/oauth/authorize" . $urlParams;
-        $loginCountry     = apply_filters('eideasy_select_country', null);
+        $loginCountry = apply_filters('eideasy_select_country', null);
 
         wp_enqueue_script("eideasy_functions_js");
 
@@ -355,13 +371,25 @@ class IdCardLogin
                 $loginCode   .= '<div id="' . $method . '"  class="login-button">' .
                     apply_filters($params['filter'], '<img src="' . IdCardLogin::getPluginBaseUrl() . "/" . $params['icon'] . '"/>') .
                     '</div>';
-                $extraParams = "";
-                $country     = $params['country'] ?? $loginCountry ?? null;
+                $country     = $params['country'] ?? $loginCountry ?? WC()->countries->get_base_country();
+
+                $params = [
+                    'client_id' => $clientId,
+                    'redirect_uri' => $redirectUri,
+                    'response_type' => 'code',
+                    'state' => $state,
+                    'start' => $params['start_action'],
+                    'lang' => get_locale(),
+                ];
+
                 if (isset($country)) {
-                    $extraParams = "&country=$country";
+                    $params['country'] = $country;
                 }
+
+                $loginUri = self::buildUrl('oauth/authorize', $params);
+
                 $loginCode .= '<script>if(document.getElementById("' . $method . '")) document.getElementById("' . $method . '").addEventListener("click", function () {' .
-                    '        startEidEasyLogin("' . $loginUri . '&start=' . $params['start_action'] . $extraParams . '&lang=' . get_locale() . '&state=' . $state . '");' .
+                    '        startEidEasyLogin("' . $loginUri . '");' .
                     '    });</script>';
             }
         }
@@ -401,7 +429,7 @@ class IdCardLogin
         }
 
         $ch  = curl_init();
-        $url = "https://id.eideasy.com/" . $apiPath . $paramString;
+        $url = self::getBaseUri($apiPath . $paramString);
         curl_setopt($ch, CURLOPT_URL, $url);
         if (isset($token)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, [$token]);

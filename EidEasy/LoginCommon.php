@@ -16,16 +16,18 @@ class LoginCommon
                     wp_die("User with ID code $identityCode not found and registration disabled. Contact site admin");
                 } else {
                     $user_id = LoginCommon::createUser($userName, $firstName, $lastName, $email, $identityCode, $country);
-                }
+                } // test
             } else {
                 if (get_option('eideasy_debug_mode')) {
-                    wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login user already exists $identityCode"));
+	                $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login user already exists $identityCode")]);
+	                wp_remote_get($requestUri);
                 }
                 $user_id = $user->userid;
             }
         } else {
             if (get_option('eideasy_debug_mode')) {
-                wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email"));
+	            $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login. Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email")]);
+	            wp_remote_get($requestUri);
             }
             wp_die("ERROR: Idcode not received from the login. Please try again $identityCode, $firstName, $lastName, $email");
         }
@@ -33,7 +35,8 @@ class LoginCommon
             add_user_to_blog(get_current_blog_id(), $user_id, get_option('default_role'));
         }
         if (get_option('eideasy_debug_mode')) {
-            wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Authenticating WP user $identityCode"));
+	        $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login Authenticating WP user $identityCode")]);
+	        wp_remote_get($requestUri);
         }
 
         /**
@@ -68,7 +71,8 @@ class LoginCommon
 
             if (username_exists($userName)) {
                 if (get_option('eideasy_debug_mode')) {
-                    wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login Cannot create user. Username $userName exists"));
+	                $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login Cannot create user. Username $userName exists")]);
+	                wp_remote_get($requestUri);
                 }
                 wp_die("Cannot create user. Username $userName exists");
             }
@@ -78,7 +82,8 @@ class LoginCommon
             if (is_wp_error($user_id)) {
                 include 'iframe_break_free_errorhandler.php';
                 if (get_option('eideasy_debug_mode')) {
-                    wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email));
+	                $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email)]);
+	                wp_remote_get($requestUri);
                 }
 
                 wp_die("Cannot create user. Message=" . $user_id->get_error_message() . ". Email: " . $email);
@@ -97,7 +102,8 @@ class LoginCommon
         );
 
         if (get_option('eideasy_debug_mode')) {
-            wp_remote_get("https://id.eideasy.com/confirm_progress?message=" . urlencode("WP login new ID user created"));
+	        $requestUri = IdCardLogin::buildUrl('confirm_progress', ['message' => urlencode("WP login new ID user created")]);
+	        wp_remote_get($requestUri);
         }
 
         do_action('eideasy_user_created', $user_id, [
