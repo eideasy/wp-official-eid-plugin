@@ -15,35 +15,7 @@ class IdcardAuthenticate
         if (get_option('eideasy_only_identify')) {
             return "eideasy_only_identify";
         }
-        if ($result == null) {
-            if (IdcardAuthenticate::isAlreadyLogged()) {
-                return null; // Maybe logged in during API call
-            }
-            if (get_option('smartid_debug_mode')) {
-                $current_user = wp_get_current_user();
 
-                if (!($current_user instanceof WP_User)) {
-                    $extraMessage = "Current user is not WP_User, it is of type " . gettype($current_user);
-                    eideasyLog("WP login failed: $token - $extraMessage");
-                } else {
-                    global $wpdb;
-                    $prefix = is_multisite() ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->prefix;
-
-                    $table_name = $prefix . "idcard_users";
-                    $user       = $wpdb->get_row(
-                        $wpdb->prepare("select * from " . esc_sql($table_name) . " WHERE userid=%s", $current_user->ID)
-                    );
-
-                    $extraMessage = "Logged in user is $user->identitycode";
-                    eideasyLog("WP login already completed $token - $extraMessage");
-                }
-            }
-            if (get_option('smartid_registration_disabled')) {
-                wp_die("User not found and registration disabled. Go back and contact site admin. ");
-            } else {
-                wp_die("Login failed, please contact site admin.");
-            }
-        }
         $firstName    = $result['firstname'];
         $lastName     = $result['lastname'];
         $identityCode = $result['idcode'];
