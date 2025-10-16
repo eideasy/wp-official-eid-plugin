@@ -41,6 +41,9 @@ Support phone +372 555 29 332
 
 == Changelog ==
 
+= 4.9.8 =
+* Removed deprecated access_token verification that was causing issues with eID logins in some cases.
+
 = 4.9.7 =
 * Added test mode functionality - switch between production (id.eideasy.com) and test (test.eideasy.com) environments
 * Fixed checkbox visibility issue in admin settings

@@ -73,13 +73,9 @@ class IdcardAuthenticate
 
         $accessTokenResult = IdCardLogin::apiCall("oauth/access_token", [], $postParams);
 
-        $accessToken       = $accessTokenResult["access_token"];
+        $accessToken = $accessTokenResult["access_token"];
 
-        if (strlen($accessToken) < 20) {
-            return null; //login already completed
-        }
-
-        $params         = [
+        $params = [
             "access_token" => $accessToken
         ];
         return IdCardLogin::apiCall("api/v2/user_data", $params);
