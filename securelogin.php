@@ -76,6 +76,7 @@ class IdcardAuthenticate
         $accessToken       = $accessTokenResult["access_token"];
 
         if (strlen($accessToken) < 20) {
+            error_log('eID Easy SecureLogin: Access token too short: ' . print_r($accessTokenResult, true));
             return null; //login already completed
         }
 

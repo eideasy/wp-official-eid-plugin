@@ -50,6 +50,11 @@ if (!class_exists("IdcardAdmin")) {
                     } else {
                         update_option("eideasy_only_identify", false);
                     }
+                    if (array_key_exists("eideasy_test_mode", $_POST) && $_POST["eideasy_test_mode"] == "yes") {
+                        update_option("eideasy_test_mode", true);
+                    } else {
+                        update_option("eideasy_test_mode", false);
+                    }
                 }
                 ?>
                 <h3> This site eID Easy is now active!</h3>
