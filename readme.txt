@@ -42,7 +42,7 @@ Support phone +372 555 29 332
 == Changelog ==
 
 = 4.9.8 =
-* Added additional logs to understand issues with login in some environments
+* Improved test mode and it's logging
 
 = 4.9.7 =
 * Added test mode functionality - switch between production (id.eideasy.com) and test (test.eideasy.com) environments
