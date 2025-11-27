@@ -3,7 +3,7 @@
  * Plugin Name: eID Easy
  * Plugin URI: https://eideasy.com/
  * Description: Allow your visitors to login to Wordpress ID-card, Mobile-ID, Smart-ID mobile app and other methods.
- * Version: 4.9.8
+ * Version: 4.9.9
  * Author: EID Easy OÜ
  * Author URI: https://eideasy.com/
  * License: GPLv2 or later
@@ -456,14 +456,18 @@ if (!class_exists("IdCardLogin")) {
                 $response = wp_remote_post($url, [
                     'headers' => $headers,
                     'body' => $bodyParams,
+                    'timeout' => 8,
                 ]);
             } else {
                 $response = wp_remote_get($url, [
                     'headers' => $headers,
+                    'timeout' => 8,
                 ]);
             }
 
-            return json_decode(wp_remote_retrieve_body($response), true);
+            $body = wp_remote_retrieve_body($response);
+
+            return json_decode($body, true);
         }
 
         static function idcard_install()
