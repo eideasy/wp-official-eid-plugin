@@ -5,7 +5,7 @@ Plugin URL: https://eideasy.com
 Tags: Bank-ID, Smart-ID, Itsme, SPID, Franceconnect
 Requires at least: 4.5
 Tested up to: 6.8
-Stable tag: 4.9.8
+Stable tag: 4.9.9
 License: GPLv2 or later
 
 Short Description: Secure identification and Qualified Electronic Signature plugin for WordPress using eID methods and eideasy.com Oauth 2.0 protocol.
@@ -40,6 +40,9 @@ Support phone +372 555 29 332
 2. Login view
 
 == Changelog ==
+
+= 4.9.9 =
+* Increased default WP request time to fix login errors when response takes a bit more time
 
 = 4.9.8 =
 * Improved test mode and it's logging
