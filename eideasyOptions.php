@@ -13,6 +13,15 @@ function eideasyOptions() {
                 'image' => '/img/eid_idkaart_mark.png',
             ],
             [
+                'inputName' => 'ee-web-eid-login_enabled',
+                'optionName' => 'smartid_ee-web-eid-login_enabled',
+                'label' => 'Estonian Web-eID login',
+                'actionType' => 'ee-web-eid-login',
+                'buttonId' => 'eideasy-ee-web-eid-login',
+                'filterName' => 'ee-web-eid-login',
+                'image' => '/img/eid_idkaart_mark.png',
+            ],
+            [
                 'inputName' => 'ee-mobile-id_enabled',
                 'optionName' => 'smartid_mobileid_enabled',
                 'label' => 'Estonian Mobile-ID',
