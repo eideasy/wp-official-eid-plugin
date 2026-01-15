@@ -18,7 +18,7 @@ class IdCardLogin
 
     public static function buildUrl(string $endpoint, array $params = []): string
     {
-        $path = stripslashes($endpoint) . (count($params) > 0 ? '?' . http_build_query($params) : '');
+        $path = stripslashes($endpoint) . (count($params) > 0 ? '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986) : '');
 
         return self::getBaseUri($path);
     }
@@ -128,6 +128,13 @@ class IdCardLogin
                 'filter'       => 'ee-mobile-id-login',
                 'start_action' => 'ee-mid-login',
                 'country'      => 'EE',
+            ],
+            'eideasy_ee_web_eid_enabled'       => [
+                'name'         => 'Estonian ID card over Web-eID',
+                'icon'         => 'img/eid_idkaart_mark.png',
+                'filter'       => 'ee-web-eid-login',
+                'class'        => 'login-middle-w',
+                'start_action' => 'ee-web-eid-login',
             ],
             'eideasy_ee_idcard_enabled'        => [
                 'name'         => 'Estonian ID card',
@@ -337,7 +344,7 @@ class IdCardLogin
         if ($allDisabled) {
             return "<b>No Secure login methods enabled yet in Wordpress admin, please contact administrator to enable these from eID Easy config</b>";
         }
-        $redirectUri = urlencode(get_option("eideasy_redirect_uri"));
+        $redirectUri = get_option("eideasy_redirect_uri");
         $clientId    = get_option("eideasy_client_id");
         $loginCountry = apply_filters('eideasy_select_country', null);
 
@@ -416,16 +423,14 @@ class IdCardLogin
                 if ($key === "access_token") {
                     $token = "authorization: Bearer $value";
                 } else {
-                    $paramString .= "&$key=$value";
+                    $paramString .= "&$key=" . urlencode($value);
                 }
             }
         }
 
         $postParamString = "";
         if ($postParams != null) {
-            foreach ($postParams as $key => $value) {
-                $postParamString .= "$key=$value&";
-            }
+            $postParamString = http_build_query($postParams, '', '&', PHP_QUERY_RFC3986);
         }
 
         $ch  = curl_init();

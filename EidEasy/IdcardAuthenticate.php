@@ -74,7 +74,7 @@ class IdcardAuthenticate
             "code"          => $token,
             "grant_type"    => "authorization_code",
             "client_id"     => get_option("eideasy_client_id"),
-            'redirect_uri'  => urlencode(get_option("eideasy_redirect_uri")),
+            'redirect_uri'  => get_option("eideasy_redirect_uri"),
             "client_secret" => get_option("eideasy_secret")
         ];
 
