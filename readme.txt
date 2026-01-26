@@ -45,6 +45,9 @@ eID Easy terms and conditions can be found here https://eideasy.com/terms-of-ser
 
 == Changelog ==
 
+= 5.3.5 =
+Fixed list of woocommerce product categories in plugin settings for new plugin users.
+
 = 5.3.4 =
 Added Estonian Web-eID login method.
 
